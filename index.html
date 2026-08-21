@@ -360,6 +360,7 @@ html{background:#F5F7FA;scroll-behavior:smooth}body{background:linear-gradient(1
  <h2>👥 今天谁在买卖？ <small>全 A 股市场（亿元）</small></h2>
  <div class="whogrid" id="who"><div class="loading" style="grid-column:1/-1">加载中…</div></div>
  <div class="note" id="whonote">加载中…</div>
+ <div id="whoAI" class="muted" style="font-size:12px;padding:10px 12px;background:linear-gradient(135deg,#f7faff,#f3f7fc);border:1px solid rgba(10,132,255,.10);border-radius:14px;line-height:1.7;color:#46566a;margin-top:8px">🤖 AI 资金目的分析：等待资金与板块数据…</div>
 </div>
 
 <div class="card" data-tab="act">
@@ -1503,6 +1504,21 @@ function render(data){
  }
  document.getElementById('whonote').innerHTML = whoInterpret(w);
 
+ // AI 资金目的：先用本地规则即时给出初判，绝不让页面因为 AI 请求而卡在"加载中"。
+ function whoPurposeLocal(w, sectors){
+   const tech = (sectors||[]).filter(s=>/(CPO|光模块|通信|PCB|算力|半导体|存储|芯片)/i.test(s.name)).sort((a,b)=>(b.main||0)-(a.main||0));
+   const techIn = tech.filter(s=>(s.main||0)>0).slice(0,3).map(s=>`${s.name}（${moneyStr(s.main)}）`).join('、');
+   let purpose='资金目的偏向调仓与主线集中';
+   if(w.inst>80 && w.retail<-80) purpose='机构承接散户抛售，偏向增仓主线';
+   else if(w.inst>50 && w.big>30) purpose='机构与大户同步加仓，偏向趋势强化';
+   else if(w.inst< -50 && w.retail>50) purpose='大资金撤退、散户接盘，偏向高位分歧';
+   else if(w.inst< -50 && w.big< -50) purpose='大资金同步流出，偏向降风险/兑现';
+   const target=techIn?`当前更集中在${techIn}`:'当前板块资金分布较分散';
+   return `🤖 <b>AI 资金目的初判</b>：${purpose}。${target}。结合机构/大户/散户方向看，更像是“${w.inst>80?'承接换手、向强势科技方向集中':'结构性调仓'}”，但仅凭单日资金流不能断言真实意图，还要看连续性、价格与成交量是否配合。`;
+ }
+ const whoAI=document.getElementById('whoAI');
+ if(whoAI) whoAI.innerHTML=whoPurposeLocal(w, sectors);
+
  document.getElementById('advise').innerHTML=data.adviseRows;
  document.getElementById('midlong').innerHTML=data.midlong;
  document.getElementById('posadv').innerHTML=data.posadv;
@@ -2251,6 +2267,11 @@ if(showOfficial){
     // 4. 资金流一句话
     aiComment(`【任务】用 1-2 句话点评今天大户/游资资金的动向（流入哪些板块、流出哪些板块、背后意图）。要有专业感但通俗易懂，不超过 130 字。
 【格式要求】不要使用 ** 或 * 等 Markdown 标记。\n【数据】流入 TOP5：${inflowTxt}；流出 TOP5：${outflowTxt}。大单净 ${moneyStr(totalIn-totalOut)}。${common}`, 'flowAI');
+    // 4.5 谁在买卖：分析资金"去了哪里、可能想干什么"。先本地初判，AI 仅负责进一步解释。
+    aiComment(`【任务】分析今天全A股不同类型资金的可能目的：机构、游资/大户、散户分别在做什么；资金主要流向哪些板块；更像建仓、调仓、抱团、拉升、兑现还是防御。必须强调：资金流数据只能推断概率，不能声称知道资金真实意图。请结合资金方向、板块涨跌、资金集中度给出最可能的1个主判断+1个备选判断，并说明需要观察什么来验证。语言通俗、专业，不超过180字。
+【格式要求】不要使用 ** 或 * 等 Markdown 标记，直接输出纯文本。
+【数据】机构 ${moneyStr(who.inst)}；游资/大户 ${moneyStr(who.big)}；散户 ${moneyStr(who.retail)}；成交额 ${moneyStr(who.turnover)}。流入TOP5：${inflowTxt}；流出TOP5：${outflowTxt}。板块：${secTxt}。${common}`, 'whoAI');
+
     // 5. 中长期布局（替换 midlong）—— 考虑 T+1 滞后
     aiComment(`【任务】用 2-3 句话给出中长期布局建议（哪些板块适合分批布局、哪些应该规避）。要有专业分析感但通俗易懂，不超过 220 字。
 【格式要求】不要使用 ** 或 * 等 Markdown 标记。\n【重要提醒】基金是 T+1，今天看到的板块涨跌今天买入明天才能成交，存在滞后。不能只看主力今天流入就建议加仓，要看持续性、估值、新闻面是否支持。综合判断。\n【数据】${common}`, 'midlong');
