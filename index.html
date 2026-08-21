@@ -142,17 +142,211 @@ details a:hover{text-decoration:underline}
 details code{background:#eef0f4;padding:1px 5px;border-radius:4px;font-size:11px;color:#c0392b;font-family:monospace}
 details table{margin:6px 0}
 details th,details td{font-size:11px}
+
+/* ===== iOS 26 Liquid Glass · Final Visual Pass ===== */
+/* 顶部：从亮蓝改为浅色液态玻璃 */
+.hd{
+  background:
+    radial-gradient(circle at 88% 18%,rgba(180,205,240,.24),transparent 24%),
+    linear-gradient(135deg,rgba(255,255,255,.84),rgba(239,245,252,.70))!important;
+  color:#142238!important;
+  border:1px solid rgba(255,255,255,.82)!important;
+  border-top:0!important;
+  border-radius:0 0 28px 28px!important;
+  box-shadow:0 12px 34px rgba(40,65,95,.10),inset 0 1px 0 rgba(255,255,255,.95)!important;
+  backdrop-filter:saturate(190%) blur(30px)!important;
+  -webkit-backdrop-filter:saturate(190%) blur(30px)!important;
+}
+.hd::after{
+  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(190,215,245,.10) 55%,transparent 70%)!important;
+}
+.hd::before{
+  background:rgba(255,255,255,.38)!important;
+  box-shadow:0 0 28px rgba(130,165,210,.12);
+}
+.hd h1,.hd .sub,.hd .tm{color:#142238!important}
+.hd .sub,.hd .tm{opacity:.72!important}
+.hd .rbtn{
+  background:rgba(255,255,255,.72)!important;
+  color:#263449!important;
+  border:1px solid rgba(255,255,255,.92)!important;
+  box-shadow:0 7px 18px rgba(40,60,90,.10),inset 0 1px 0 rgba(255,255,255,.96)!important;
+  backdrop-filter:blur(18px)!important;
+  -webkit-backdrop-filter:blur(18px)!important;
+}
+.idxbar span{
+  background:rgba(255,255,255,.64)!important;
+  color:#445269!important;
+  border:1px solid rgba(255,255,255,.88)!important;
+  box-shadow:0 4px 12px rgba(40,60,90,.06),inset 0 1px 0 rgba(255,255,255,.9)!important;
+}
+.idxbar span b{color:#24334a!important}
+#idxAI{
+  background:rgba(255,255,255,.46)!important;
+  color:#52627a!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  backdrop-filter:blur(18px)!important;
+  -webkit-backdrop-filter:blur(18px)!important;
+}
+
+/* 所有可见板块统一玻璃边缘 */
+.card,.headline,.fundcard,.sc,.wc,details,.band-panel,.ai-predict,.trend-row{
+  border:1px solid rgba(255,255,255,.86)!important;
+  box-shadow:
+    0 12px 30px rgba(39,62,94,.09),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -1px 0 rgba(174,191,213,.12)!important;
+}
+.card::after,.headline::after,.fundcard::after,.sc::after,.wc::after,details::after{
+  opacity:.85!important;
+}
+
+/* 底部：更像 iOS 26 的悬浮玻璃岛 */
+.tabbar{
+  width:min(94%,580px)!important;
+  height:68px!important;
+  bottom:12px!important;
+  padding:7px!important;
+  gap:5px!important;
+  border-radius:26px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(236,243,251,.58))!important;
+  border:1px solid rgba(255,255,255,.92)!important;
+  box-shadow:
+    0 18px 42px rgba(35,57,87,.16),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -1px 0 rgba(166,184,207,.14)!important;
+  backdrop-filter:saturate(200%) blur(32px)!important;
+  -webkit-backdrop-filter:saturate(200%) blur(32px)!important;
+}
+.tabbar::before{
+  background:
+    radial-gradient(circle at 15% 20%,rgba(255,255,255,.65),transparent 25%),
+    linear-gradient(110deg,rgba(255,255,255,.28),transparent 40%,rgba(190,215,245,.12))!important;
+}
+.tab{
+  color:#718096!important;
+  border-radius:20px!important;
+}
+.tab.active{
+  color:#172f55!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.90),rgba(222,234,249,.68))!important;
+  box-shadow:
+    0 6px 17px rgba(48,78,116,.11),
+    inset 0 1px 0 rgba(255,255,255,.98)!important;
+}
+.tab.active .ico svg{stroke:#172f55!important}
+.tab .lb{color:inherit!important}
+
+/* 小屏幕保持舒服的间距 */
+@media(max-width:430px){
+  .hd{border-radius:0 0 24px 24px!important}
+  .tabbar{width:94%!important;height:64px!important;bottom:10px!important;border-radius:24px!important}
+}
+
 </style>
 
 <style id="fund-ai-pro-ultimate-theme">
-:root{--primary:#8ab4ff;--primary-light:#b9d4ff;--primary-dark:#6ea0ff;--primary-bg:rgba(138,180,255,.10);--primary-border:rgba(138,180,255,.24);--text:#f5f7fb;--text2:#a8afbd;--text3:#707887;--bg:#05070b;--card:rgba(20,23,30,.72);--border:rgba(255,255,255,.09);--divider:rgba(255,255,255,.07);--up:#ff5f6d;--down:#53d769;--flat:#9aa3b2}
-html,body{background:#05070b;color:var(--text)} body{max-width:760px}
-.hd{background:#000!important;color:#fff!important;border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 10px 40px rgba(0,0,0,.35)}
-.card,.fundcard,.sc,.wc,.headline,details{background:rgba(18,21,28,.72)!important;border-color:rgba(255,255,255,.08)!important;box-shadow:0 10px 30px rgba(0,0,0,.18)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-th{background:rgba(255,255,255,.04)!important;color:#a8afbd!important} td{border-color:rgba(255,255,255,.07)!important}.note,.warnbox{background:rgba(255,255,255,.045)!important;color:#b9c0cc!important;border-color:rgba(255,255,255,.08)!important}.tabbar{background:rgba(8,10,14,.88)!important;border-color:rgba(255,255,255,.08)!important}.tab.active{color:#8ab4ff}.tab.active::before{background:#8ab4ff}.tab:active{background:rgba(138,180,255,.08)}
-.fundcard:active,.fundcard.selected{background:rgba(138,180,255,.08)!important;border-color:#8ab4ff!important}
+:root{--primary:#4b8df8;--primary-light:#7eb0ff;--primary-dark:#2f6fd6;--primary-bg:#eef5ff;--primary-border:#cfe0ff;--text:#172033;--text2:#5f6b7d;--text3:#8b95a5;--bg:#f3f6fa;--card:#ffffff;--border:#e5eaf1;--divider:#edf0f5;--up:#e5484d;--down:#18a957;--flat:#7d8796}
+html,body{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%)!important;color:var(--text)!important}body{max-width:760px}
+.hd{background:linear-gradient(135deg,#eef4fb 0%,#e8f0fa 55%,#f5f8fc 100%)!important;color:#172033!important;border-bottom:1px solid #dfe6ef;box-shadow:0 8px 30px rgba(31,48,73,.08)}
+.hd h1{color:#172033}.hd .sub,.hd .tm{color:#687487;opacity:1}.hd .rbtn{background:rgba(255,255,255,.72)!important;color:#263449!important;border:1px solid rgba(80,100,130,.12);box-shadow:0 4px 12px rgba(40,60,90,.08)}
+.idxbar span{background:rgba(255,255,255,.78)!important;color:#445269;border:1px solid rgba(80,110,150,.10);box-shadow:0 3px 10px rgba(40,60,90,.05)}
+.badge.ok{background:#e9f8ef;color:#168b4c}.badge.warn{background:#fff5df;color:#a86b00}.badge.err{background:#ffe8e9;color:#c73840}
+.card,.fundcard,.sc,.wc,.headline,details{background:rgba(255,255,255,.88)!important;border-color:rgba(220,227,237,.95)!important;box-shadow:0 8px 24px rgba(37,58,88,.07)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.card h2,.fundcard .fn,.sc .nm,.assetval,.subttl{color:#172033}.card h2 small,.muted,.band-title,.assetlabel2{color:#738095!important}
+th{background:#f5f7fa!important;color:#59667a!important}td{border-color:#edf0f5!important}.note,.warnbox{background:#f5f8fc!important;color:#59667a!important;border-color:#e3eaf3!important}.tabbar{background:rgba(255,255,255,.88)!important;border-color:rgba(210,218,229,.9)!important;box-shadow:0 -6px 24px rgba(37,58,88,.08)!important}.tab.active{color:#3f84ee}.tab.active::before{background:#3f84ee}.tab:active{background:#edf5ff}.fundcard:active,.fundcard.selected{background:#f1f6ff!important;border-color:#8fb7ff!important}
+.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.band-panel{padding:14px;border-radius:18px;border:1px solid #e4e9f0;min-height:116px}.band-panel.low{background:linear-gradient(135deg,#fff3f4,#fff9f9)}.band-panel.high{background:linear-gradient(135deg,#f0faf4,#f9fcfa)}.band-title{font-size:12px;color:#5e6b7f}.band-main{font-size:20px;font-weight:800;margin-top:10px;color:#172033}.band-sub{font-size:11px;color:#667388;line-height:1.5;margin-top:6px}.ai-predict{margin-top:10px;padding:11px 12px;border-radius:14px;background:#eef5ff;border:1px solid #d8e7ff;color:#315d9c;font-size:12px;line-height:1.6}.trend-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:14px;background:#f5f7fa;border:1px solid #e7ebf1;color:#56647a;font-size:12px}.trend-row b{font-size:15px;color:#172033}.metric-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.metric-row span{font-size:10px;color:#667388;padding:4px 7px;border-radius:8px;background:#f1f4f8;border:1px solid #e6ebf1}@media(max-width:430px){.band-grid{grid-template-columns:1fr}}
+/* 可读性兜底：避免任何组件出现浅底白字/深底黑字 */
+.headline,.card,.fundcard,.sc,.wc,details,details summary{color:#172033}.headline *,.card *,.fundcard *,.sc *,.wc *{text-shadow:none}.src{color:#7a8595!important}
 
-.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.band-panel{padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.08);min-height:116px}.band-panel.low{background:linear-gradient(135deg,rgba(255,95,109,.12),rgba(255,255,255,.025))}.band-panel.high{background:linear-gradient(135deg,rgba(83,215,105,.10),rgba(255,255,255,.025))}.band-title{font-size:12px;color:#a8afbd}.band-main{font-size:20px;font-weight:800;margin-top:10px}.band-sub{font-size:11px;color:#7f8998;line-height:1.5;margin-top:6px}.ai-predict{margin-top:10px;padding:11px 12px;border-radius:14px;background:rgba(138,180,255,.08);border:1px solid rgba(138,180,255,.15);font-size:12px;line-height:1.6}.trend-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);font-size:12px}.trend-row b{font-size:15px}.metric-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.metric-row span{font-size:10px;color:#a8afbd;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.05)}@media(max-width:430px){.band-grid{grid-template-columns:1fr}}
+/* ===== iOS 26 Liquid Glass Final ===== */
+:root{
+ --glass-bg:rgba(255,255,255,.62);
+ --glass-bg-strong:rgba(255,255,255,.78);
+ --glass-border:rgba(255,255,255,.82);
+ --glass-border-dark:rgba(180,194,214,.34);
+ --glass-shadow:0 12px 34px rgba(39,62,94,.10), inset 0 1px 0 rgba(255,255,255,.92), inset 0 -1px 0 rgba(180,194,214,.16);
+ --glass-blur:28px;
+}
+html,body{
+ background:
+ radial-gradient(circle at 12% 8%,rgba(190,220,255,.45),transparent 28%),
+ radial-gradient(circle at 88% 18%,rgba(225,210,255,.34),transparent 30%),
+ linear-gradient(180deg,#f7faff 0%,#edf3f9 52%,#e9f0f7 100%)!important;
+}
+body{overflow-x:hidden;}
+body::before{
+ content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
+ background:linear-gradient(120deg,rgba(255,255,255,.22),transparent 45%,rgba(255,255,255,.18));
+}
+/* 所有主要板块：统一液态玻璃 */
+.card,.headline,.fundcard,.sc,.wc,details{
+ background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,.48))!important;
+ border:1px solid var(--glass-border)!important;
+ box-shadow:var(--glass-shadow)!important;
+ backdrop-filter:saturate(180%) blur(var(--glass-blur));
+ -webkit-backdrop-filter:saturate(180%) blur(var(--glass-blur));
+ position:relative;overflow:hidden;
+}
+.card::before,.headline::before,.fundcard::before,.sc::before,.wc::before,details::before{
+ content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+ background:linear-gradient(120deg,rgba(255,255,255,.48),transparent 32%,transparent 68%,rgba(255,255,255,.18));
+}
+.card::after,.headline::after,.fundcard::after,.sc::after,.wc::after,details::after{
+ content:'';position:absolute;left:12%;right:12%;top:0;height:1px;pointer-events:none;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
+}
+.card h2,.fundcard .fn,.sc .nm,.assetval,.subttl{color:#142238!important}
+.card h2 small,.muted,.band-title,.assetlabel2,.assetlabel{color:#68778d!important}
+.note,.warnbox,.trend-row,.metric-row span{
+ background:rgba(246,249,253,.55)!important;
+ border-color:rgba(205,216,231,.60)!important;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+/* 波段内部卡片也做玻璃化 */
+.band-panel,.ai-predict,.trend-row,.metric-row span{
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 6px 18px rgba(50,70,100,.06)!important;
+}
+.band-panel{border-color:rgba(255,255,255,.78)!important;background:rgba(255,255,255,.48)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.band-panel.low{background:linear-gradient(135deg,rgba(255,238,242,.72),rgba(255,255,255,.42))!important}
+.band-panel.high{background:linear-gradient(135deg,rgba(235,249,242,.72),rgba(255,255,255,.42))!important}
+.ai-predict{background:linear-gradient(135deg,rgba(226,239,255,.72),rgba(255,255,255,.46))!important;border-color:rgba(190,214,248,.72)!important;color:#315d9c!important}
+/* 基金条目 */
+.fundcard{border-color:rgba(255,255,255,.9)!important}
+.fundcard:active,.fundcard.selected{background:rgba(236,245,255,.78)!important;border-color:rgba(126,174,247,.75)!important;box-shadow:0 10px 28px rgba(56,111,190,.12),inset 0 1px 0 rgba(255,255,255,.95)!important}
+/* 顶部也保留轻玻璃质感 */
+.hd{background:linear-gradient(135deg,rgba(61,115,205,.94),rgba(91,146,231,.88))!important;box-shadow:0 8px 28px rgba(53,91,145,.15);}
+/* iOS 26 风格底部液态玻璃菜单：悬浮胶囊 */
+.tabbar{
+ left:50%!important;right:auto!important;bottom:12px!important;transform:translateX(-50%);
+ width:min(92%,560px)!important;height:66px!important;
+ padding:7px!important;gap:4px!important;
+ border:1px solid rgba(255,255,255,.78)!important;
+ border-radius:25px!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(238,245,253,.52))!important;
+ box-shadow:0 16px 38px rgba(38,60,91,.16),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(170,188,210,.18)!important;
+ backdrop-filter:saturate(200%) blur(30px)!important;
+ -webkit-backdrop-filter:saturate(200%) blur(30px)!important;
+ overflow:hidden;
+}
+.tabbar::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.32),transparent 35%,rgba(255,255,255,.18));}
+.tab{border-radius:19px!important;color:#718096!important;z-index:1;transition:transform .18s ease,background .18s ease,color .18s ease}
+.tab .ico svg{stroke-width:1.75!important}
+.tab.active{
+ color:#236fe8!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(221,235,255,.62))!important;
+ box-shadow:0 5px 16px rgba(56,111,190,.12),inset 0 1px 0 rgba(255,255,255,.96)!important;
+}
+.tab.active .ico svg{stroke:#236fe8!important;transform:scale(1.08)}
+.tab.active::before{display:none!important}
+.tab:active{transform:scale(.94);background:rgba(255,255,255,.55)!important}
+/* 避免底部内容被悬浮菜单遮挡 */
+body{padding-bottom:94px!important}
+@media(max-width:480px){
+ .tabbar{width:94%!important;height:64px!important;bottom:10px!important;border-radius:24px!important}
+ .card,.headline{border-radius:18px!important}
+}
+
 </style>
 </head>
 <body>
