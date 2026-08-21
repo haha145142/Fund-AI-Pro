@@ -89,7 +89,65 @@ color:white;
 <div class="logo">Fund AI</div>
 <div class="time" id="time"></div>
 </div>
+<!-- 搜索栏 -->
+<div class="card" style="padding:14px;margin-top:10px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="font-size:20px;">🔍</span>
+    <input id="searchInput"
+      placeholder="搜索基金名称或代码（如：广发半导体 014861）"
+      style="flex:1;background:transparent;border:none;color:white;font-size:16px;outline:none;">
+  </div>
+</div>
 
+<!-- 持仓模块 -->
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-size:22px;font-weight:800;">基金持仓</div>
+      <div style="font-size:13px;color:#888;margin-top:4px;">官方净值 · AI分析</div>
+    </div>
+    <button style="background:#111;color:white;border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:8px 16px;">
+      + 添加
+    </button>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:16px;">
+    <button style="flex:1;padding:10px;border-radius:14px;background:white;color:black;border:none;font-weight:700;">
+      持有+自选
+    </button>
+    <button style="flex:1;padding:10px;border-radius:14px;background:#111;color:white;border:1px solid rgba(255,255,255,.08);">
+      全部
+    </button>
+  </div>
+
+  <div id="fundList" style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
+    <div class="fund-item" style="padding:16px;border-radius:18px;background:rgba(255,255,255,.05);">
+      <div style="display:flex;justify-content:space-between;">
+        <div>
+          <div style="font-weight:700;">广发半导体设备联接C</div>
+          <div style="font-size:13px;color:#888;">014861</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="color:#4cd964;font-weight:700;">+2.36%</div>
+          <div style="font-size:13px;color:#888;">AI评分 A+</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fund-item" style="padding:16px;border-radius:18px;background:rgba(255,255,255,.05);">
+      <div style="display:flex;justify-content:space-between;">
+        <div>
+          <div style="font-weight:700;">东方人工智能主题</div>
+          <div style="font-size:13px;color:#888;">017586</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="color:#4cd964;font-weight:700;">+1.83%</div>
+          <div style="font-size:13px;color:#888;">AI评分 A</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="card">
 <div style="font-size:14px;color:#aaa;">AI 市场总览</div>
 <div class="score">A+</div>
@@ -156,7 +214,18 @@ String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+"
 String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
 }
 updateTime();
-setInterval(updateTime,60000);
+setInterval(updateTime,60000);// 基金搜索
+const search=document.getElementById("searchInput");
+
+if(search){
+  search.addEventListener("input",()=>{
+    const keyword=search.value.toLowerCase();
+    document.querySelectorAll(".fund-item").forEach(item=>{
+      const txt=item.innerText.toLowerCase();
+      item.style.display=txt.includes(keyword)?"block":"none";
+    });
+  });
+}
 </script>
 
 </body>
