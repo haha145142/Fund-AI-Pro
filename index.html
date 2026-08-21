@@ -142,107 +142,6 @@ details a:hover{text-decoration:underline}
 details code{background:#eef0f4;padding:1px 5px;border-radius:4px;font-size:11px;color:#c0392b;font-family:monospace}
 details table{margin:6px 0}
 details th,details td{font-size:11px}
-
-/* ===== iOS 26 Liquid Glass · Final Visual Pass ===== */
-/* 顶部：从亮蓝改为浅色液态玻璃 */
-.hd{
-  background:
-    radial-gradient(circle at 88% 18%,rgba(180,205,240,.24),transparent 24%),
-    linear-gradient(135deg,rgba(255,255,255,.84),rgba(239,245,252,.70))!important;
-  color:#142238!important;
-  border:1px solid rgba(255,255,255,.82)!important;
-  border-top:0!important;
-  border-radius:0 0 28px 28px!important;
-  box-shadow:0 12px 34px rgba(40,65,95,.10),inset 0 1px 0 rgba(255,255,255,.95)!important;
-  backdrop-filter:saturate(190%) blur(30px)!important;
-  -webkit-backdrop-filter:saturate(190%) blur(30px)!important;
-}
-.hd::after{
-  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(190,215,245,.10) 55%,transparent 70%)!important;
-}
-.hd::before{
-  background:rgba(255,255,255,.38)!important;
-  box-shadow:0 0 28px rgba(130,165,210,.12);
-}
-.hd h1,.hd .sub,.hd .tm{color:#142238!important}
-.hd .sub,.hd .tm{opacity:.72!important}
-.hd .rbtn{
-  background:rgba(255,255,255,.72)!important;
-  color:#263449!important;
-  border:1px solid rgba(255,255,255,.92)!important;
-  box-shadow:0 7px 18px rgba(40,60,90,.10),inset 0 1px 0 rgba(255,255,255,.96)!important;
-  backdrop-filter:blur(18px)!important;
-  -webkit-backdrop-filter:blur(18px)!important;
-}
-.idxbar span{
-  background:rgba(255,255,255,.64)!important;
-  color:#445269!important;
-  border:1px solid rgba(255,255,255,.88)!important;
-  box-shadow:0 4px 12px rgba(40,60,90,.06),inset 0 1px 0 rgba(255,255,255,.9)!important;
-}
-.idxbar span b{color:#24334a!important}
-#idxAI{
-  background:rgba(255,255,255,.46)!important;
-  color:#52627a!important;
-  border:1px solid rgba(255,255,255,.72)!important;
-  backdrop-filter:blur(18px)!important;
-  -webkit-backdrop-filter:blur(18px)!important;
-}
-
-/* 所有可见板块统一玻璃边缘 */
-.card,.headline,.fundcard,.sc,.wc,details,.band-panel,.ai-predict,.trend-row{
-  border:1px solid rgba(255,255,255,.86)!important;
-  box-shadow:
-    0 12px 30px rgba(39,62,94,.09),
-    inset 0 1px 0 rgba(255,255,255,.95),
-    inset 0 -1px 0 rgba(174,191,213,.12)!important;
-}
-.card::after,.headline::after,.fundcard::after,.sc::after,.wc::after,details::after{
-  opacity:.85!important;
-}
-
-/* 底部：更像 iOS 26 的悬浮玻璃岛 */
-.tabbar{
-  width:min(94%,580px)!important;
-  height:68px!important;
-  bottom:12px!important;
-  padding:7px!important;
-  gap:5px!important;
-  border-radius:26px!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(236,243,251,.58))!important;
-  border:1px solid rgba(255,255,255,.92)!important;
-  box-shadow:
-    0 18px 42px rgba(35,57,87,.16),
-    inset 0 1px 0 rgba(255,255,255,.98),
-    inset 0 -1px 0 rgba(166,184,207,.14)!important;
-  backdrop-filter:saturate(200%) blur(32px)!important;
-  -webkit-backdrop-filter:saturate(200%) blur(32px)!important;
-}
-.tabbar::before{
-  background:
-    radial-gradient(circle at 15% 20%,rgba(255,255,255,.65),transparent 25%),
-    linear-gradient(110deg,rgba(255,255,255,.28),transparent 40%,rgba(190,215,245,.12))!important;
-}
-.tab{
-  color:#718096!important;
-  border-radius:20px!important;
-}
-.tab.active{
-  color:#172f55!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.90),rgba(222,234,249,.68))!important;
-  box-shadow:
-    0 6px 17px rgba(48,78,116,.11),
-    inset 0 1px 0 rgba(255,255,255,.98)!important;
-}
-.tab.active .ico svg{stroke:#172f55!important}
-.tab .lb{color:inherit!important}
-
-/* 小屏幕保持舒服的间距 */
-@media(max-width:430px){
-  .hd{border-radius:0 0 24px 24px!important}
-  .tabbar{width:94%!important;height:64px!important;bottom:10px!important;border-radius:24px!important}
-}
-
 </style>
 
 <style id="fund-ai-pro-ultimate-theme">
@@ -521,13 +420,13 @@ body{padding-bottom:94px!important}
  <summary style="cursor:pointer;color:#2b6cb0;font-size:13px;font-weight:500">🤖 AI 深度解读设置（默认折叠）</summary>
  <div class="card" style="margin-top:8px;background:#f0f4ff;border-color:#c3d5f2">
   <div style="font-size:14px;font-weight:600;margin-bottom:6px">🤖 AI 深度解读设置</div>
-  <span style="font-size:12px;color:#666">当前已接入 Cloudflare Worker → DeepSeek。API Key 保存在 Worker Secret，前端无需填写；下面的 Key 仅作为网关故障时的备用直连。</span>
+  <span style="font-size:12px;color:#666">填入大模型 API Key 后，"AI 智能解读"会用大模型深度分析当日新闻+行情（不填则用内置规则版，功能完整）。Key 只存在你的浏览器 localStorage，不会上传。</span>
   <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center">
    <select id="llmProvider" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px">
     <option value="deepseek">DeepSeek</option>
-    
+    <option value="qwen">通义千问</option>
    </select>
-   <input id="llmKey" placeholder="可选：DeepSeek API Key（仅作备用直连）" style="flex:1;min-width:160px;padding:4px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px">
+   <input id="llmKey" placeholder="sk-... (API Key)" style="flex:1;min-width:160px;padding:4px 8px;border:1px solid #ddd;border-radius:4px;font-size:12px">
    <button id="llmSave" style="padding:4px 12px;background:#2b6cb0;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px">保存</button>
   </div>
   <div id="llmStatus" style="font-size:11px;color:#888;margin-top:6px"></div>
@@ -1055,7 +954,7 @@ function summarizeNews(mapped, sectors, indices, who){
  return { judge, bullish, bearish, watch, plain, interpret, posCnt, negCnt };
 }
 
-/* ===== LLM 深度解读（可选：DeepSeek / DeepSeek，浏览器直连，CORS 已验证支持）===== */
+/* ===== LLM 深度解读（可选：DeepSeek / 通义千问，浏览器直连，CORS 已验证支持）===== */
 function getLLMConfig(){
   try{
     return {
@@ -1188,61 +1087,35 @@ async function aiNewsInterpret(news, elId){
     }
   }catch(e){ el.innerHTML='<span class="muted">AI 解读失败</span>'; }
 }
-/* ===== V9：Cloudflare Worker → DeepSeek =====
- * Worker Secret 中保存 DeepSeek API Key，前端不再要求用户填写 Key。
- * Worker 当前可用接口：POST /chat/completions
- */
-const FUND_AI_GATEWAY_URL = 'https://fund-ai-gateway.276353662.workers.dev';
-
 async function callLLM(prompt){
   const cfg=getLLMConfig();
-  const gateway=(localStorage.getItem('fund_ai_gateway')||FUND_AI_GATEWAY_URL).replace(/\/$/,'');
-  const payload={
-    messages:[{role:'user',content:prompt}],
-    temperature:0.5,
-    max_tokens:800
-  };
-
-  /* ① 优先走 Cloudflare Worker。这里不带 API Key。 */
-  try{
-    const c=new AbortController(); const t=setTimeout(()=>c.abort(),30000);
-    const resp=await fetch(gateway+'/chat/completions',{
-      method:'POST',
-      signal:c.signal,
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
-    });
-    clearTimeout(t);
-    if(resp.ok){
-      const j=await resp.json();
-      const txt=(j&&j.content)||(j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content);
-      if(txt) return txt;
-    }
-  }catch(e){}
-
-  /* ② 网关失败时，若用户自己配置了 Key，再尝试直连 DeepSeek。 */
-  if(cfg.key){
+  if(!cfg.key) return null;
+  const gateway=localStorage.getItem('fund_ai_gateway')||'';
+  if(gateway){
     try{
       const c=new AbortController(); const t=setTimeout(()=>c.abort(),30000);
-      const resp=await fetch('https://api.deepseek.com/chat/completions',{
-        method:'POST',
-        signal:c.signal,
-        headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.key},
-        body:JSON.stringify({
-          model:'deepseek-chat',
-          messages:payload.messages,
-          max_tokens:800,
-          temperature:0.5
-        })
-      });
-      clearTimeout(t);
-      if(!resp.ok) return null;
-      const j=await resp.json();
-      return j&&j.choices&&j.choices[0]&&j.choices[0].message
-        ? j.choices[0].message.content||null : null;
+      const resp=await fetch(gateway.replace(/\/$/,'')+'/api/ai',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:cfg.provider||'auto',messages:[{role:'user',content:prompt}]})});
+      clearTimeout(t); if(resp.ok){const j=await resp.json(); if(j&&j.content) return j.content;}
     }catch(e){}
   }
-  return null;
+  const url = cfg.provider==='qwen'
+    ? 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions'
+    : 'https://api.deepseek.com/chat/completions';
+  const model = cfg.provider==='qwen' ? 'qwen-turbo' : 'deepseek-chat';
+  try{
+    const c=new AbortController(); const t=setTimeout(()=>c.abort(), 30000);
+    const resp=await fetch(url,{
+      method:'POST',
+      signal:c.signal,
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+cfg.key},
+      body:JSON.stringify({model, messages:[{role:'user',content:prompt}], max_tokens:800, temperature:0.5})
+    });
+    clearTimeout(t);
+    if(!resp.ok) return null;
+    const j=await resp.json();
+    const txt=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+    return txt||null;
+  }catch(e){ return null; }
 }
 // 通用 AI 短点评：调用大模型，填入指定元素。带 5 分钟缓存。
 const _aiCache = {};
@@ -1372,13 +1245,13 @@ function buildNewsAnalysis(sectors, indices, who, news){
    let llmCacheTs=0, llmCacheTxt='';
    try{ const c=JSON.parse(localStorage.getItem('aapp_llm_cache')||'null'); if(c){ llmCacheTs=c.ts; llmCacheTxt=c.txt; } }catch(e){}
    if(llmCacheTxt && Date.now()-llmCacheTs<10*60*1000){
-     judgeEl.innerHTML='<b>🤖 大模型深度解读</b>（'+(cfg.provider==='qwen'?'DeepSeek':'DeepSeek')+'）：<br>'+llmCacheTxt.replace(/\n/g,'<br>');
+     judgeEl.innerHTML='<b>🤖 大模型深度解读</b>（'+(cfg.provider==='qwen'?'通义千问':'DeepSeek')+'）：<br>'+llmCacheTxt.replace(/\n/g,'<br>');
      return;
    }
    const prompt=buildLLMPrompt(sectors, indices, who, mapped);
    const txt=await callLLM(prompt);
    if(txt){
-     judgeEl.innerHTML='<b>🤖 大模型深度解读</b>（'+(cfg.provider==='qwen'?'DeepSeek':'DeepSeek')+'）：<br>'+txt.replace(/\n/g,'<br>');
+     judgeEl.innerHTML='<b>🤖 大模型深度解读</b>（'+(cfg.provider==='qwen'?'通义千问':'DeepSeek')+'）：<br>'+txt.replace(/\n/g,'<br>');
      try{ localStorage.setItem('aapp_llm_cache', JSON.stringify({ts:Date.now(),txt})); }catch(e){}
    }else{
      judgeEl.innerHTML+='<div style="font-size:11px;color:#c0392b;margin-top:4px">（大模型调用失败，已回退规则引擎版。请检查 API Key 是否有效。）</div>';
@@ -2319,14 +2192,14 @@ function manualRefresh(){ loadAll(); }
   const cfg=getLLMConfig();
   if(cfg.provider) provider.value=cfg.provider;
   if(cfg.key) keyInput.value=cfg.key;
-  status.textContent = '✅ Cloudflare Worker → DeepSeek 已接入（Worker Secret）'+(cfg.key?' · 已配置备用直连 Key':'');
+  status.textContent = cfg.key ? '✅ 已配置 '+(cfg.provider==='qwen'?'通义千问':'DeepSeek')+'（深度解读已启用，10分钟缓存）' : '未配置，使用内置规则解读';
   saveBtn.addEventListener('click', ()=>{
     const p=provider.value, k=keyInput.value.trim();
     try{
       if(k){ localStorage.setItem('aapp_llm_provider',p); localStorage.setItem('aapp_llm_key',k); }
       else { localStorage.removeItem('aapp_llm_provider'); localStorage.removeItem('aapp_llm_key'); localStorage.removeItem('aapp_llm_cache'); }
     }catch(e){}
-    status.textContent = k ? '✅ 已保存备用 DeepSeek Key；主链路仍走 Cloudflare Worker' : '已清除备用 Key；主链路仍走 Cloudflare Worker';
+    status.textContent = k ? '✅ 已保存 '+(p==='qwen'?'通义千问':'DeepSeek')+' Key，刷新页面后生效（10分钟内缓存）' : '已清除，回到规则引擎版';
     // 清 LLM 缓存，让下次刷新重新生成
     try{ localStorage.removeItem('aapp_llm_cache'); }catch(e){}
   });
@@ -2392,193 +2265,5 @@ document.addEventListener('click', (e)=>{
   }
 });
 </script>
-\n<script>\n(function(){\n  function sma(a,n){if(a.length<n)return null;return a.slice(-n).reduce((x,y)=>x+y,0)/n}\n  function rsi(a,n=14){if(a.length<n+1)return null;let g=0,l=0;for(let i=a.length-n;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}if(l===0)return 100;return 100-100/(1+g/l)}\n  function ema(a,n){if(!a.length)return null;let k=2/(n+1),e=a[0];for(let i=1;i<a.length;i++)e=e+(a[i]-e)*k;return e}\n  function macd(a){let e12=ema(a,12),e26=ema(a,26);return e12-e26}\n  function boll(a,n=20){let x=a.slice(-n),m=x.reduce((s,v)=>s+v,0)/x.length,sd=Math.sqrt(x.reduce((s,v)=>s+(v-m)**2,0)/x.length);return {m,up:m+2*sd,lo:m-2*sd}}\n  function analyze(a){if(!Array.isArray(a)||a.length<20)return null;let last=a.at(-1),R=rsi(a),m5=sma(a,5),m20=sma(a,20),b=boll(a),M=macd(a),bias=(last/m20-1)*100;let low=R<30&&last<=b.lo*1.01,high=R>70&&last>=b.up*.99,strong=m5>m20&&M>0;let score=Math.max(0,Math.min(100,50+(strong?20:-15)+(R<30?18:R>70?-18:0)+(bias>0?Math.min(10,bias*2):Math.max(-10,bias*2))));return {R,m5,m20,b,M,bias,low,high,strong,score}}\n  window.renderBandSignal=function(values){let x=analyze(values);if(!x)return;const q=id=>document.getElementById(id);q('bandLow').textContent=x.low?'低位区 · 关注':'未进入低位';q('bandHigh').textContent=x.high?'高位区 · 谨慎':'未进入高位';q('bandLowReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL下轨 ${x.b.lo.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('bandHighReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL上轨 ${x.b.up.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('trendSignal').textContent=x.strong?'走强':'走弱';q('trendScore').textContent=`势值 ${x.score.toFixed(0)}`;q('bandMetrics').innerHTML=`<span>RSI ${x.R.toFixed(1)}</span><span>MA5 ${x.m5.toFixed(4)}</span><span>MA20 ${x.m20.toFixed(4)}</span><span>MACD ${x.M.toFixed(4)}</span>`;q('bandAIPredict').textContent='🤖 AI 智能预测：'+(x.low?'偏低位，关注超卖反弹机会':x.high?'偏高位，注意回撤风险':x.strong?'趋势偏强，等待回踩确认':'震荡区，建议继续观察');q('bandTimestamp').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};\n})();\n</script>\n
-/* ===== V5：真实基金历史净值 → RSI/BOLL/BIAS/MACD/MA → 波段信号 ===== */
-(function(){
-  const bandState = {items:[], loading:false, last:0};
-
-  function fmt(v,n=2){ return Number.isFinite(v) ? v.toFixed(n) : '--'; }
-
-  function calcIndicators(a){
-    if(!Array.isArray(a) || a.length < 26) return null;
-    const n=a.length, last=a[n-1];
-    const sma=(arr,k)=>arr.length<k?null:arr.slice(-k).reduce((s,v)=>s+v,0)/k;
-    const ema=(arr,k)=>{
-      if(arr.length<k) return null;
-      let e=arr.slice(0,k).reduce((s,v)=>s+v,0)/k, alpha=2/(k+1);
-      for(let i=k;i<arr.length;i++) e=alpha*arr[i]+(1-alpha)*e;
-      return e;
-    };
-    let gain=0,loss=0;
-    for(let i=n-14;i<n;i++){
-      const d=a[i]-a[i-1];
-      if(d>0) gain+=d; else loss-=d;
-    }
-    const rsi=loss===0?100:100-100/(1+gain/loss);
-    const ma5=sma(a,5), ma20=sma(a,20);
-    const mean=ma20;
-    const tail=a.slice(-20);
-    const sd=Math.sqrt(tail.reduce((s,v)=>s+(v-mean)**2,0)/20);
-    const bollUp=mean+2*sd, bollLo=mean-2*sd;
-    const bias=(last/mean-1)*100;
-    const e12=ema(a,12), e26=ema(a,26);
-    const macd=e12-e26;
-    const low=rsi<30 && last<=bollLo*1.012;
-    const high=rsi>70 && last>=bollUp*0.988;
-    const strong=ma5>ma20 && macd>0;
-    let score=50;
-    score += strong?22:-18;
-    if(rsi<30) score+=16;
-    if(rsi>70) score-=16;
-    score += Math.max(-10,Math.min(10,bias*2));
-    score=Math.max(0,Math.min(100,score));
-    return {last,rsi,ma5,ma20,bollUp,bollLo,bias,macd,low,high,strong,score};
-  }
-
-  async function history(code){
-    return await new Promise(resolve=>{
-      const s=document.createElement('script');
-      let done=false;
-      const finish=(values)=>{
-        if(done)return; done=true;
-        try{s.remove()}catch(e){}
-        resolve(values&&values.length>=26?values:null);
-      };
-      const timer=setTimeout(()=>finish(null),12000);
-      s.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js';
-      s.onload=()=>{
-        clearTimeout(timer);
-        let trend=null;
-        try{ trend=window.Data_netWorthTrend; }catch(e){}
-        const values=Array.isArray(trend)
-          ? trend.map(x=>Number(x.y)).filter(Number.isFinite)
-          : [];
-        finish(values);
-      };
-      s.onerror=()=>{clearTimeout(timer);finish(null)};
-      document.head.appendChild(s);
-    });
-  }
-
-  function paint(items){
-    const valid=items.filter(x=>x.ind);
-    if(!valid.length){
-      const q0=document.getElementById('bandAIPredict');
-      if(q0) q0.textContent='🤖 AI 智能预测：暂时无法读取基金历史净值，请稍后刷新；不会用虚假数据代替真实指标。';
-      const ts=document.getElementById('bandTimestamp');
-      if(ts) ts.textContent='数据源暂不可用';
-      return;
-    }
-    const lows=valid.filter(x=>x.ind.low);
-    const highs=valid.filter(x=>x.ind.high);
-    const strong=valid.filter(x=>x.ind.strong);
-    const weak=valid.length-strong.length;
-
-    // 低位/高位显示“持仓中满足条件的基金”，避免伪造单只基金结论
-    const lowText=lows.length
-      ? `${lows.length}只 · ${lows.slice(0,2).map(x=>x.name).join('、')}`
-      : '未进入低位';
-    const highText=highs.length
-      ? `${highs.length}只 · ${highs.slice(0,2).map(x=>x.name).join('、')}`
-      : '未进入高位';
-
-    const avgR=valid.reduce((s,x)=>s+x.ind.rsi,0)/valid.length;
-    const avgBias=valid.reduce((s,x)=>s+x.ind.bias,0)/valid.length;
-    const avgMacd=valid.reduce((s,x)=>s+x.ind.macd,0)/valid.length;
-    const avgScore=valid.reduce((s,x)=>s+x.ind.score,0)/valid.length;
-
-    const lowReasons=lows.length
-      ? lows.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
-      : `平均 RSI ${fmt(avgR,1)}，未同时满足 RSI<30 + BOLL下轨`;
-    const highReasons=highs.length
-      ? highs.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
-      : `平均 RSI ${fmt(avgR,1)}，未同时满足 RSI>70 + BOLL上轨`;
-
-    const q=id=>document.getElementById(id);
-    if(q('bandLow')) q('bandLow').textContent=lowText;
-    if(q('bandHigh')) q('bandHigh').textContent=highText;
-    if(q('bandLowReason')) q('bandLowReason').textContent=lowReasons;
-    if(q('bandHighReason')) q('bandHighReason').textContent=highReasons;
-    if(q('trendSignal')) q('trendSignal').textContent=strong.length>=weak?'走强':'走弱';
-    if(q('trendScore')) q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong}强/${weak}弱`;
-    if(q('bandMetrics')) q('bandMetrics').innerHTML=
-      `<span>平均RSI ${fmt(avgR,1)}</span><span>BIAS ${fmt(avgBias,2)}%</span><span>MACD ${fmt(avgMacd,4)}</span><span>样本 ${valid.length}只</span>`;
-
-    let verdict='震荡观察';
-    if(lows.length && !highs.length) verdict='偏低位 · 关注超卖反弹';
-    else if(highs.length && !lows.length) verdict='偏高位 · 注意回撤风险';
-    else if(lows.length && highs.length) verdict='分化 · 个别基金处于极端区';
-    else if(strong.length>weak) verdict='趋势偏强 · 等待回踩确认';
-    else if(weak>strong) verdict='趋势偏弱 · 控制追高风险';
-
-    if(q('bandAIPredict')) q('bandAIPredict').textContent=
-      `🤖 AI 智能预测：${verdict}｜基于 ${valid.length} 只持仓基金最近净值历史计算；正式大模型解读将在双 AI 网关接通后加入。`;
-    if(q('bandTimestamp')) q('bandTimestamp').textContent=
-      '指标更新 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-  }
-
-  window.refreshRealBandSignal=async function(){
-    if(bandState.loading) return;
-    bandState.loading=true;
-    try{
-      const list=(typeof USER_HOLDINGS!=='undefined' ? USER_HOLDINGS : (typeof FUNDS!=='undefined' ? FUNDS : [])).slice(0,8);
-      if(!list.length){
-        if(document.getElementById('bandAIPredict'))
-          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：正在读取持仓基金历史净值…';
-        return;
-      }
-      const results=[];
-      for(const f of list){
-        const values=await history(f.code);
-        const ind=calcIndicators(values||[]);
-        results.push({code:f.code,name:f.name||f.code,ind});
-        const ts=document.getElementById('bandTimestamp');
-        if(ts) ts.textContent=`正在读取 ${results.length}/${list.length} 只基金`;
-      }
-      bandState.items=results;
-      bandState.last=Date.now();
-      paint(results);
-    }finally{
-      bandState.loading=false;
-    }
-  };
-
-  // 等主程序完成首屏数据加载后再取历史净值，避免阻塞首页。
-  window.addEventListener('load',()=>setTimeout(()=>window.refreshRealBandSignal(),6000));
-  setInterval(()=>window.refreshRealBandSignal(),10*60*1000);
-})();
-
-
-<style id="fund-ai-final-glass">
-.hd{background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(232,240,250,.78))!important;color:#142238!important;border:1px solid rgba(255,255,255,.9)!important;border-top:0!important;border-radius:0 0 28px 28px!important;box-shadow:0 14px 36px rgba(35,58,90,.12),inset 0 1px 0 rgba(255,255,255,.98)!important;backdrop-filter:saturate(190%) blur(30px)!important;-webkit-backdrop-filter:saturate(190%) blur(30px)!important}
-.hd h1,.hd .sub,.hd .tm{color:#142238!important}
-.hd .rbtn{background:rgba(255,255,255,.78)!important;color:#20324a!important;border:1px solid rgba(255,255,255,.95)!important;box-shadow:0 8px 20px rgba(35,58,90,.10),inset 0 1px 0 #fff!important}
-.tabbar{height:68px!important;bottom:12px!important;padding:7px!important;border-radius:26px!important;background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(232,240,250,.66))!important;border:1px solid rgba(255,255,255,.94)!important;box-shadow:0 18px 42px rgba(35,57,87,.16),inset 0 1px 0 rgba(255,255,255,.98)!important;backdrop-filter:saturate(200%) blur(32px)!important;-webkit-backdrop-filter:saturate(200%) blur(32px)!important}
-.tab.active{color:#17345c!important;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(220,233,249,.72))!important;box-shadow:0 6px 17px rgba(48,78,116,.12),inset 0 1px 0 rgba(255,255,255,.98)!important}
-</style>
-
-
-/* ===== V9：DeepSeek-only Cloudflare Worker gateway =====
-   API Key is stored only in the Cloudflare Worker Secret.
- */
-window.FUND_AI_CONFIG = Object.assign(window.FUND_AI_CONFIG || {}, {
-  aiProvider: "deepseek",
-  aiEndpoint: FUND_AI_GATEWAY_URL + "/chat/completions"
-});
-
-window.askDeepSeek = async function(payload){
-  const res = await fetch(window.FUND_AI_CONFIG.aiEndpoint, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      messages: payload.messages || [],
-      temperature: payload.temperature ?? 0.2,
-      max_tokens: payload.max_tokens ?? 800
-    })
-  });
-  if(!res.ok) throw new Error("DeepSeek 网关请求失败："+res.status);
-  return await res.json();
-};
-
-</body>
+\n<script>\n(function(){\n  function sma(a,n){if(a.length<n)return null;return a.slice(-n).reduce((x,y)=>x+y,0)/n}\n  function rsi(a,n=14){if(a.length<n+1)return null;let g=0,l=0;for(let i=a.length-n;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}if(l===0)return 100;return 100-100/(1+g/l)}\n  function ema(a,n){if(!a.length)return null;let k=2/(n+1),e=a[0];for(let i=1;i<a.length;i++)e=e+(a[i]-e)*k;return e}\n  function macd(a){let e12=ema(a,12),e26=ema(a,26);return e12-e26}\n  function boll(a,n=20){let x=a.slice(-n),m=x.reduce((s,v)=>s+v,0)/x.length,sd=Math.sqrt(x.reduce((s,v)=>s+(v-m)**2,0)/x.length);return {m,up:m+2*sd,lo:m-2*sd}}\n  function analyze(a){if(!Array.isArray(a)||a.length<20)return null;let last=a.at(-1),R=rsi(a),m5=sma(a,5),m20=sma(a,20),b=boll(a),M=macd(a),bias=(last/m20-1)*100;let low=R<30&&last<=b.lo*1.01,high=R>70&&last>=b.up*.99,strong=m5>m20&&M>0;let score=Math.max(0,Math.min(100,50+(strong?20:-15)+(R<30?18:R>70?-18:0)+(bias>0?Math.min(10,bias*2):Math.max(-10,bias*2))));return {R,m5,m20,b,M,bias,low,high,strong,score}}\n  window.renderBandSignal=function(values){let x=analyze(values);if(!x)return;const q=id=>document.getElementById(id);q('bandLow').textContent=x.low?'低位区 · 关注':'未进入低位';q('bandHigh').textContent=x.high?'高位区 · 谨慎':'未进入高位';q('bandLowReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL下轨 ${x.b.lo.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('bandHighReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL上轨 ${x.b.up.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('trendSignal').textContent=x.strong?'走强':'走弱';q('trendScore').textContent=`势值 ${x.score.toFixed(0)}`;q('bandMetrics').innerHTML=`<span>RSI ${x.R.toFixed(1)}</span><span>MA5 ${x.m5.toFixed(4)}</span><span>MA20 ${x.m20.toFixed(4)}</span><span>MACD ${x.M.toFixed(4)}</span>`;q('bandAIPredict').textContent='🤖 AI 智能预测：'+(x.low?'偏低位，关注超卖反弹机会':x.high?'偏高位，注意回撤风险':x.strong?'趋势偏强，等待回踩确认':'震荡区，建议继续观察');q('bandTimestamp').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};\n})();\n</script>\n</body>
 </html>
