@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#B9DDF7">
-<title>基金实时预览</title>
+<title>基金实时预览 · V5稳定极速版</title>
 <style>
 :root{
  --primary:#6FAFE0; --primary-light:#9DCCEE; --primary-dark:#3E7FAE;
@@ -421,6 +421,7 @@ details th,details td{font-size:11px}
 </nav>
 
 <script>
+window.__APP_BUILD__ = "Fund-AI-Pro V5 Stable-Speed 2026-08-22";
 // ============ 持仓配置（9只·2026-06-30 季报）============
 // USER_HOLDINGS 是运行时可变数组（用户可加/减基金），默认从 FUNDS 初始化
 // 每只基金额外有 shares(份)/cost(元/份) 字段——用户填入后可算实际盈亏金额
@@ -677,15 +678,16 @@ async function emUlist(secids){
 }
 
 // 单个板块双端点校验：失败时返回 null，不允许阻塞整页渲染
-async function emPct(secid){
+// 全局安全版 emPct：即使某个旧模块意外调用，也绝不让主流程中断。
+window.emPct = async function emPct(secid){
   try{
     const r=await fetchT(EM+'/api/qt/ulist.np/get?secids='+encodeURIComponent(secid)+'&fields=f12,f14,f2,f18',2500);
     const j=await r.json();
     const x=((j.data||{}).diff||[])[0];
-    if(!x || x.f2==null || x.f18==null) return null;
+    if(!x || x.f2==null || x.f18==null || Number(x.f18)===0) return null;
     return {name:x.f14,pct:(Number(x.f2)-Number(x.f18))/Number(x.f18)*100};
   }catch(e){ return null; }
-}
+};
 
 async function emBoards(){
   // 极速首屏：有历史板块缓存就先直接返回；同时后台更新，不让首屏等待网络。
@@ -2281,18 +2283,20 @@ if(showOfficial){
    const totalOut=Math.abs(boards.filter(b=>b.f62<0).reduce((s,b)=>s+b.f62,0))/1e8;
    const totalNet=(totalIn-totalOut);
 
-  // 谁在买卖：用全 A 股市场（四大指数汇总）资金流
-  const marketFlow = await marketFlowPromise;
+  // 谁在买卖：优先使用最近缓存，避免四大指数资金流接口阻塞首屏。
+  // 本轮实时结果在后台写入缓存，下一次刷新立即可用。
+  const cachedMarketFlow = smartCacheGet('aapp_market_flow_v1', 30*1000) || {inst:0,main:0,big:0,retail:0,hotMoney:0,totalIn:0,totalOut:0,turnover:0};
   const who={
-    inst: marketFlow.inst,
-    main: marketFlow.main,
-    big: marketFlow.big,
-    retail: marketFlow.retail,
-    hotMoney: marketFlow.hotMoney,
-    totalIn: marketFlow.totalIn,
-    totalOut: marketFlow.totalOut,
-    turnover: marketFlow.turnover,
+    inst: cachedMarketFlow.inst||0,
+    main: cachedMarketFlow.main||0,
+    big: cachedMarketFlow.big||0,
+    retail: cachedMarketFlow.retail||0,
+    hotMoney: cachedMarketFlow.hotMoney||0,
+    totalIn: cachedMarketFlow.totalIn||0,
+    totalOut: cachedMarketFlow.totalOut||0,
+    turnover: cachedMarketFlow.turnover||0,
   };
+  marketFlowPromise.then(v=>{ if(v) smartCacheSet('aapp_market_flow_v1',v); }).catch(()=>{});
 
   // 操作建议
   const adviseRows=sectors.map(s=>{
@@ -2583,6 +2587,18 @@ function manualRefresh(){ loadAll(); }
   });
 })();
 
+// 最后一层保险：任何未捕获错误都不允许把页面永久留在“加载中”。
+window.addEventListener('error', (ev)=>{
+  console.error('Fund-AI-Pro global error:', ev.error || ev.message);
+  try{
+    document.querySelectorAll('.loading').forEach(el=>{
+      if(/加载中|正在拉取|正在计算/.test(el.textContent||'')){
+        el.textContent='数据源暂时未返回，其他模块仍可继续使用';
+        el.style.color='#999';
+      }
+    });
+  }catch(e){}
+});
 loadAll();
 setInterval(async ()=>{
   // 省算力：盘中 60 秒刷新；盘后/非交易日 5 分钟探测一次。
