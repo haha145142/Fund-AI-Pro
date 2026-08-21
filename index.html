@@ -10,7 +10,7 @@
  --primary:#FF9F0A; --primary-light:#FFB340; --primary-dark:#E88900;
  --primary-bg:#FFF7E8; --primary-border:#FFD9A0;
  --text:#1F1F1F; --text2:#666; --text3:#999;
- --bg:#F5F6F8; --card:#FFFFFF; --border:#EDEEF0; --divider:#ECEDEF;
+ --bg:#F5F7FA; --card:#FFFFFF; --border:#EDEEF0; --divider:#ECEDEF;
  --up:#E02E2C; --down:#0B8A4B; --flat:#999;
  --shadow:0 1px 2px rgba(0,0,0,.025),0 8px 24px rgba(0,0,0,.025);
  --shadow-md:0 8px 24px rgba(0,0,0,.06);
@@ -21,18 +21,18 @@ html,body{background:var(--bg);color:var(--text)}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;padding:0;max-width:760px;margin:0 auto;font-size:14px;letter-spacing:.2px;padding-bottom:62px}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--text3)}
 .muted{color:var(--text3);font-size:11px}
-.hd{background:linear-gradient(180deg,#FFFFFF 0%,#F8F9FB 100%);color:#17181A;padding:18px 16px 16px;position:relative;overflow:hidden;border-bottom:1px solid #E9EAED;box-shadow:0 4px 18px rgba(0,0,0,.035)}
-.hd::after{content:'';position:absolute;right:-38px;top:-42px;width:170px;height:170px;background:rgba(255,159,10,.07);border-radius:50%;filter:blur(1px)}
-.hd::before{content:'';position:absolute;right:56px;top:82px;width:76px;height:76px;background:rgba(255,159,10,.045);border-radius:50%}
+.hd{background:linear-gradient(180deg,#FFFFFF 0%,#F4F9FF 52%,#EDF6FF 100%);color:#17233F;padding:18px 16px 16px;position:relative;overflow:hidden;border-bottom:1px solid #E9EAED;box-shadow:0 4px 18px rgba(0,0,0,.035)}
+.hd::after{content:'';position:absolute;right:-38px;top:-42px;width:170px;height:170px;background:rgba(92,170,235,.08);border-radius:50%;filter:blur(1px)}
+.hd::before{content:'';position:absolute;right:56px;top:82px;width:76px;height:76px;background:rgba(92,170,235,.055);border-radius:50%}
 .hd h1{font-size:20px;font-weight:700;margin-bottom:2px;letter-spacing:.5px;position:relative;z-index:1}
 .hd .sub{font-size:11px;opacity:.85;margin-bottom:12px;position:relative;z-index:1}
 .hd .tm{font-size:11px;opacity:.8;position:relative;z-index:1}
-.hd .rbtn{position:absolute;top:14px;right:14px;background:#FFFFFF;border:1px solid #E7E8EA;color:#FF9F0A;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.hd .rbtn:active{background:#FFF7E8}
+.hd .rbtn{position:absolute;top:14px;right:14px;background:#FFFFFF;border:1px solid #E7E8EA;color:#2B82D8;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.hd .rbtn:active{background:#EEF7FF}
 .hd .rbtn.spin{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .idxbar{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;position:relative;z-index:1}
-.idxbar span{background:#F1F2F4;color:#62656B;padding:4px 9px;border-radius:10px;font-size:11.5px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.idxbar span{background:rgba(255,255,255,.78);color:#62656B;padding:4px 9px;border-radius:10px;font-size:11.5px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .idxbar span b{font-weight:600;margin-left:3px}
 .badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin:3px 4px 0 0;font-weight:500}
 .badge.ok{background:#EAF7F0;color:#16834B}.badge.warn{background:#FFF5E5;color:#A96400}.badge.err{background:#FDECEC;color:#C63A36}
@@ -62,6 +62,38 @@ td{padding:9px 5px;border-bottom:1px solid var(--divider);vertical-align:top}
 .tag.t{background:var(--primary-bg);color:var(--primary-dark);border:.5px solid var(--primary-border)}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.duo{grid-template-columns:1fr}}
+
+/* ===== 动态市场全景：iOS 白底高级版 ===== */
+.market-radar{margin-top:2px}
+.radar-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:9px}
+.radar-head b{font-size:14px;color:#13264b}
+.radar-head span{font-size:10.5px;color:#9aa0aa}
+.fund-dist{background:linear-gradient(180deg,#fbfcff,#f7f9fc);border:1px solid #edf0f5;border-radius:14px;padding:12px 10px 10px;margin-bottom:12px}
+.fund-dist-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.fund-dist-top b{font-size:14px;color:#17264b}
+.fund-dist-top span{font-size:10.5px;color:#9aa0aa}
+.dist-bars{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;align-items:end;height:118px}
+.dist-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.dist-num{font-size:9.5px;color:#657083;font-variant-numeric:tabular-nums;margin-bottom:3px;min-height:12px}
+.dist-bar{width:100%;max-width:26px;border-radius:5px 5px 2px 2px;min-height:3px}
+.dist-bar.upbar{background:#ef6262}.dist-bar.downbar{background:#54b978}.dist-bar.flatbar{background:#aeb7c7}
+.dist-lbl{font-size:8.5px;color:#7c8490;margin-top:4px;white-space:nowrap}
+.dist-summary{display:flex;gap:6px;margin-top:10px}
+.dist-chip{flex:1;border:1px solid #edf0f3;border-radius:10px;background:#fff;padding:7px 6px;text-align:center}
+.dist-chip b{display:block;font-size:15px;line-height:1.15;font-variant-numeric:tabular-nums}.dist-chip span{font-size:9.5px;color:#8b919a}
+.radar-sectors{display:flex;flex-direction:column;gap:8px}
+.radar-sec{border:1px solid #edf0f3;border-radius:14px;background:#fff;padding:11px 11px 10px;overflow:hidden}
+.radar-sec-head{display:flex;align-items:center;gap:7px}.radar-sec-name{font-size:14px;font-weight:750;color:#17233f;flex:1}.radar-sec-pct{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+.radar-sec-meta{font-size:9.5px;color:#9299a4;margin-top:2px}
+.radar-sec-ai{margin-top:8px;padding:7px 9px;border-radius:9px;background:#f7f9fc;color:#5c6470;font-size:10.5px;line-height:1.55}
+.radar-funds{margin-top:8px;border-top:1px dashed #eef0f3;padding-top:7px}
+.radar-fund{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px dashed #f0f1f3;font-size:10.5px}.radar-fund:last-child{border-bottom:none}
+.radar-rank{width:18px;height:18px;border-radius:50%;background:#f1f4f9;color:#55709c;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex:0 0 auto}
+.radar-fname{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#333}.radar-fpct{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.radar-weak{margin-top:5px;font-size:9.5px;color:#b45a5a}.radar-weak b{font-weight:700}
+.radar-foot{font-size:9.5px;color:#a0a6ae;line-height:1.55;margin-top:9px}
+@media(max-width:480px){.dist-bars{height:108px}.dist-lbl{font-size:8px}.radar-sec{padding:10px}}
+
 .fli{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed #f0f0f0}
 .fli:last-child{border-bottom:none}
 .whogrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -458,8 +490,24 @@ body{padding-bottom:94px!important}
  <div id="sectorAI" class="ai-insight"><div class="ai-title"><i>✦</i> AI 资金意图</div><div>结合板块涨跌、主力/机构/散户资金判断：资金正在向哪里集中、可能是在加仓主线还是调仓。</div></div>
 </div>
 
+
+
+<div class="card market-radar" data-tab="board" id="dynamicMarketCard">
+ <div class="radar-head"><b>📊 今日市场全景</b><span id="dynamicMarketTime">动态选股 · 最新交易日</span></div>
+ <div class="fund-dist" id="fundDistribution">
+   <div class="fund-dist-top"><b>基金涨跌分布</b><span>全市场公募基金</span></div>
+   <div class="dist-bars"><div class="loading" style="grid-column:1/-1;text-align:center">正在获取全市场基金分布…</div></div>
+ </div>
+ <div class="radar-head"><b>🔥 今日板块总览</b><span>不固定 · 每次按市场实时强弱自动选</span></div>
+ <div class="radar-sectors" id="dynamicSectorOverview"><div class="loading">正在从全市场板块中选出今日强弱…</div></div>
+ <div class="ai-insight" id="dynamicSectorAI" style="margin-top:10px">
+   <div class="ai-title"><i>✦</i> AI 板块总结</div>
+   <div>正在分析今天为什么涨、为什么跌：政策面 / 国际面 / 资金面 / 产业面。</div>
+ </div>
+</div>
+
 <div class="card" data-tab="board">
- <h2>💰 板块关联基金排行 <small>8大关注板块 · 强弱基金同步</small></h2>
+ <h2>💰 板块关联基金排行 <small>我的关注板块 · 强弱基金同步</small></h2>
  <div class="warnbox" id="rankwarn">每天从每板块基金池中动态选出<b>涨幅 TOP3 + 跌幅 TOP3</b>：<b>指数型</b>直接采用板块涨跌，<b>主动型</b>用重仓股穿透反推（同样三路估值逻辑）。</div>
  <div id="fundRanking"><div class="loading">加载中…</div></div>
  <div class="src" id="ranksrc"></div>
@@ -481,7 +529,7 @@ body{padding-bottom:94px!important}
  </div>
 </div>
 
-<div class="card" data-tab="money">
+<div class="card" data-tab="board">
  <h2>👥 今天谁在买卖？ <small>全 A 股市场资金结构（亿元）</small></h2>
  <div class="whogrid" id="who"><div class="loading" style="grid-column:1/-1">加载中…</div></div>
  <div class="note" id="whonote">加载中…</div>
@@ -1545,6 +1593,10 @@ function render(data){
  document.getElementById('fundRanking').innerHTML=data.rankHtml;
  document.getElementById('ranksrc').textContent=data.ranksrc;
 
+ // 动态市场全景：核心行情先出，基金全市场排行后台异步加载，避免首屏被拖慢
+ const dsec=data.dynamicSectors||[];
+ refreshDynamicMarket(dsec,data.who,[]).catch(()=>{});
+
  document.getElementById('inflow').innerHTML=data.inflow.map(x=>`<div class="fli"><span>${x.name}<small class="muted"> ${pctStr(x.pct)}</small></span><b class="up">${moneyStr(x.main)}</b></div>`).join('');
 
  document.getElementById('outflow').innerHTML=data.outflow.map(x=>`<div class="fli"><span>${x.name}<small class="muted"> ${pctStr(x.pct)}</small></span><b class="down">${moneyStr(x.main)}</b></div>`).join('');
@@ -1743,6 +1795,168 @@ function closeAddFundDialog(){
   if(dlg) dlg.style.display='none';
 }
 
+
+// ============ 动态市场全景（全市场基金涨跌分布 + 动态强弱板块 + 代表基金）============
+const DYNAMIC_MARKET_TTL = 5*60*1000;
+const DYNAMIC_MARKET_CACHE_KEY = 'aip_dynamic_market_v2';
+
+function loadFundRankSnapshot(){
+  const now=Date.now();
+  try{
+    const c=JSON.parse(localStorage.getItem(DYNAMIC_MARKET_CACHE_KEY)||'null');
+    if(c && c.ts && now-c.ts<DYNAMIC_MARKET_TTL && Array.isArray(c.data)) return Promise.resolve(c.data);
+  }catch(e){}
+  if(window.__aipFundRankPromise) return window.__aipFundRankPromise;
+  window.__aipFundRankPromise=(async()=>{
+    const fetchPage=(page)=>new Promise(resolve=>{
+      const script=document.createElement('script'); let done=false;
+      const finish=(data,total)=>{ if(done)return; done=true; clearTimeout(timer); try{script.remove();}catch(e){}; resolve({data:Array.isArray(data)?data:[],total:Number(total)||0}); };
+      const timer=setTimeout(()=>finish([],0),9000);
+      script.src='https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=zzf&st=desc&pi='+page+'&pn=10000&dx=1&v='+(now+page);
+      script.onload=()=>{
+        const raw=window.rankData;
+        const datas=raw&&Array.isArray(raw.datas)?raw.datas:[];
+        finish(datas,raw&&raw.allRecords);
+      };
+      script.onerror=()=>finish([],0);
+      document.head.appendChild(script);
+    });
+    const first=await fetchPage(1);
+    let all=first.data.slice();
+    // 当前全市场开放式基金约1.5万只，第二页用于补齐“全市场上涨/下跌”统计。
+    if(first.total>first.data.length){
+      const second=await fetchPage(2);
+      all=all.concat(second.data||[]);
+    }
+    const arr=all.map(x=>{
+      if(Array.isArray(x)) return {code:String(x[0]||''),name:String(x[1]||''),date:String(x[3]||''),dayRate:Number(x[6])};
+      return null;
+    }).filter(x=>x&&x.code&&x.name&&Number.isFinite(x.dayRate));
+    try{localStorage.setItem(DYNAMIC_MARKET_CACHE_KEY,JSON.stringify({ts:Date.now(),data:arr}));}catch(e){}
+    window.__aipFundRankPromise=null;
+    return arr;
+  })();
+  return window.__aipFundRankPromise;
+}
+
+const DYNAMIC_SECTOR_ALIAS={
+  '锂':['锂电','锂矿','锂资源','电池','新能源电池','盐湖提锂'],
+  '锂矿':['锂电','锂矿','锂资源','电池','新能源电池'],
+  '锂电':['锂电','电池','新能源电池','锂矿'],
+  '黄金':['黄金','贵金属','黄金ETF','黄金主题','黄金股'],
+  '贵金属':['黄金','贵金属','黄金ETF','白银'],
+  '有色金属':['有色金属','有色','金属资源','资源精选','稀有金属'],
+  '小金属':['小金属','有色金属','稀有金属','资源'],
+  '稀有金属':['稀有金属','有色金属','资源'],
+  '电池':['电池','锂电','新能源电池'],
+  '光伏':['光伏','光伏产业','新能源'],
+  '电力设备':['电力设备','新能源','电网','储能'],
+  '储能':['储能','电池','新能源'],
+  '机器人':['机器人','人形机器人','具身智能'],
+  '军工':['军工','国防军工','航空航天'],
+  '医药':['医药','生物医药','医疗','创新药'],
+  '化学制药':['化学制药','创新药','医药'],
+  '煤炭':['煤炭','能源','资源'],
+  '石油':['石油','油气','能源','原油'],
+  '钢铁':['钢铁','钢铁行业'],
+  '房地产':['房地产','地产'],
+  '银行':['银行','金融'],
+  '证券':['证券','券商'],
+  '保险':['保险','金融'],
+  '通信':['通信','5G','通信设备'],
+  '计算机':['计算机','软件','人工智能','AI'],
+  '电子':['电子','半导体','芯片'],
+  '半导体':['半导体','芯片','集成电路'],
+  '消费电子':['消费电子','电子'],
+  '食品饮料':['食品饮料','白酒','消费'],
+};
+function dynamicFundKeywords(secName){
+  const n=String(secName||'');
+  const keys=[n.replace(/概念|行业|板块|指数|Ⅱ|II/g,''),...(DYNAMIC_SECTOR_ALIAS[n]||[])];
+  // 常见市场板块的语义补全
+  for(const k of Object.keys(DYNAMIC_SECTOR_ALIAS)) if(n.includes(k)) keys.push(...DYNAMIC_SECTOR_ALIAS[k]);
+  return [...new Set(keys.filter(Boolean).map(x=>x.trim()).filter(x=>x.length>=2))].slice(0,8);
+}
+function fundMatchesSector(f,secName){
+  const name=f.name||''; const keys=dynamicFundKeywords(secName);
+  return keys.some(k=>name.includes(k));
+}
+function sectorReasonText(sec, news){
+  const n=(sec.name||'')+' '+(news||[]).slice(0,30).map(x=>x.title||'').join(' ');
+  const pct=Number(sec.pct)||0, main=Number(sec.main)||0;
+  const hits={policy:0,global:0,money:0,industry:0};
+  if(/政策|规划|补贴|监管|会议|国务院|发改|财政|央行|证监会|工信部|专项|利好|支持/.test(n))hits.policy++;
+  if(/美联储|美元|美债|黄金|原油|油价|关税|制裁|伊朗|以色列|乌克兰|欧洲|海外|国际|地缘|战争/.test(n))hits.global++;
+  if(Math.abs(main)>10 || /资金|主力|机构|净流入|净流出/.test(n))hits.money++;
+  if(/涨价|降价|订单|产能|库存|出口|需求|业绩|技术|产品|AI|算力|产业|供需/.test(n))hits.industry++;
+  const max=Math.max(hits.policy,hits.global,hits.money,hits.industry);
+  let cause='资金面';
+  if(max===hits.policy&&max>0)cause='政策面';
+  else if(max===hits.global&&max>0)cause='国际面';
+  else if(max===hits.industry&&max>0)cause='产业面';
+  else if(hits.money>0)cause='资金面';
+  if(pct>0.8) return `${cause}偏利好${sec.name}，同时板块主力${main>=0?'净流入':'偏流出'}，更像资金集中交易强势方向。`;
+  if(pct<-0.8) return `${cause}偏压制${sec.name}，板块走弱${main<0?'且资金同步流出':'但资金未明显撤离'}，继续观察是否只是轮动。`;
+  return `${cause}信号一般，${sec.name}目前更像震荡轮动，暂不宜仅凭一天涨跌下结论。`;
+}
+function buildFundDistributionHtml(ranks){
+  if(!ranks.length) return '<div class="muted" style="padding:12px;text-align:center">全市场基金排行暂时不可用，稍后自动重试。</div>';
+  const bins=[
+    {l:'≤-5',ok:v=>v<=-5,c:'downbar'},
+    {l:'-5~-3',ok:v=>v>-5&&v<=-3,c:'downbar'},
+    {l:'-3~-1',ok:v=>v>-3&&v<=-1,c:'downbar'},
+    {l:'-1~0',ok:v=>v>-1&&v<0,c:'downbar'},
+    {l:'0',ok:v=>v===0,c:'flatbar'},
+    {l:'0~1',ok:v=>v>0&&v<1,c:'upbar'},
+    {l:'1~3',ok:v=>v>=1&&v<3,c:'upbar'},
+    {l:'3~5',ok:v=>v>=3&&v<5,c:'upbar'},
+    {l:'≥5',ok:v=>v>=5,c:'upbar'}
+  ];
+  const counts=bins.map(b=>ranks.reduce((n,x)=>n+(b.ok(x.dayRate)?1:0),0));
+  const max=Math.max(...counts,1);
+  const up=ranks.filter(x=>x.dayRate>0).length,down=ranks.filter(x=>x.dayRate<0).length,flat=ranks.length-up-down;
+  const bars=bins.map((b,i)=>`<div class="dist-col"><div class="dist-num">${counts[i].toLocaleString('zh-CN')}</div><div class="dist-bar ${b.c}" style="height:${Math.max(3,Math.round(counts[i]/max*92))}px"></div><div class="dist-lbl">${b.l}</div></div>`).join('');
+  return `<div class="fund-dist-top"><b>基金涨跌分布</b><span>更新 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}</span></div><div class="dist-bars">${bars}</div><div class="dist-summary"><div class="dist-chip"><b class="up">${up.toLocaleString('zh-CN')}</b><span>上涨</span></div><div class="dist-chip"><b class="down">${down.toLocaleString('zh-CN')}</b><span>下跌</span></div><div class="dist-chip"><b class="flat">${flat.toLocaleString('zh-CN')}</b><span>平盘</span></div></div>`;
+}
+function buildDynamicSectorHtml(sectors,ranks){
+  const valid=(sectors||[]).filter(x=>x&&Number.isFinite(x.pct));
+  if(!valid.length)return '<div class="muted">板块数据暂时不可用。</div>';
+  const strong=valid.filter(x=>x.pct>0).sort((a,b)=>b.pct-a.pct).slice(0,5);
+  const weak=valid.filter(x=>x.pct<0).sort((a,b)=>a.pct-b.pct).slice(0,3);
+  const picked=[...strong,...weak.filter(x=>!strong.some(y=>y.code===x.code))];
+  const rows=picked.map((s,idx)=>{
+    const matches=ranks.filter(f=>fundMatchesSector(f,s.name));
+    const up=matches.filter(f=>f.dayRate>0).sort((a,b)=>b.dayRate-a.dayRate).slice(0,3);
+    const down=matches.filter(f=>f.dayRate<0).sort((a,b)=>a.dayRate-b.dayRate).slice(0,1);
+    const funds=up.length?up:matches.sort((a,b)=>b.dayRate-a.dayRate).slice(0,3);
+    const fhtml=funds.length?funds.map((f,i)=>`<div class="radar-fund"><span class="radar-rank">${i+1}</span><span class="radar-fname">${esc(f.name)}</span><span class="radar-fpct ${cls(f.dayRate)}">${pctArrow(f.dayRate)}</span></div>`).join(''):'<div class="muted" style="padding:5px 0">暂未找到名称高度匹配的代表基金</div>';
+    const whtml=down.length?`<div class="radar-weak">↓ 相对较弱：<b>${esc(down[0].name)}</b> <span class="down">${pctArrow(down[0].dayRate)}</span></div>`:'';
+    return `<div class="radar-sec"><div class="radar-sec-head"><span class="radar-sec-name">${idx<5?'🔥':'⚠️'} ${esc(s.name)}</span><span class="radar-sec-pct ${cls(s.pct)}">${pctStr(s.pct)}</span></div><div class="radar-sec-meta">板块主力 ${moneyStr(s.main)} · ${matches.length?`匹配基金 ${matches.length} 只`:'代表基金待匹配'}</div><div class="radar-funds">${fhtml}${whtml}</div><div class="radar-sec-ai">🤖 AI：${sectorReasonText(s,[])}</div></div>`;
+  }).join('');
+  return rows+`<div class="radar-foot">动态逻辑：不再固定“8大关注板块”。每次刷新从全市场板块行情中自动选出今日涨幅 TOP5 + 跌幅 TOP3，再从全市场基金排行中按板块语义匹配代表基金并选出强弱样本。</div>`;
+}
+function buildDynamicSectorAI(sectors,news,who){
+  const valid=(sectors||[]).filter(Boolean).sort((a,b)=>b.pct-a.pct);
+  const top=valid.slice(0,5).map(x=>`${x.name}${pctStr(x.pct)}主力${moneyStr(x.main)}`).join('、');
+  const bot=valid.slice(-3).reverse().map(x=>`${x.name}${pctStr(x.pct)}主力${moneyStr(x.main)}`).join('、');
+  const newsTxt=(news||[]).slice(0,12).map(x=>x.title||'').join('；');
+  const rule=`今天的热点不是固定板块，而是由市场自己跑出来的：强势方向主要是 ${top||'暂无'}；弱势方向主要是 ${bot||'暂无'}。从资金看，${who?.inst>0?'机构净流入':'机构偏流出'}、${who?.retail>0?'散户偏流入':'散户偏流出'}。原因判断优先看政策、国际事件、产业消息和资金共振；单日涨跌只能作为线索，不能把资金流直接等同于“资金目的”。`;
+  const el=document.getElementById('dynamicSectorAI'); if(!el)return;
+  el._aiOrig='<div class="ai-title"><i>✦</i> AI 板块总结</div><div>'+rule+'</div>';
+  el.innerHTML='<div class="ai-title"><i>✦</i> AI 板块总结</div><div>'+rule+'</div>';
+  const cfg=getLLMConfig();
+  if(!cfg.key)return;
+  aiComment(`【任务】分析今天全市场板块为什么涨跌。必须明确区分：①政策面 ②国际/地缘面 ③资金面 ④产业/基本面。先说最强3个板块为什么涨，再说最弱3个为什么跌，最后判断今天更像“政策驱动、海外事件驱动、资金抱团、产业逻辑、市场轮动”中的哪一种。不要把单日资金流当成确定目的。通俗、有信息量，180-260字。\n【板块】${top}\n【弱势】${bot}\n【机构】${moneyStr(who?.inst)} 【大户】${moneyStr(who?.big)} 【散户】${moneyStr(who?.retail)}\n【新闻】${newsTxt||'暂无新闻'}`, 'dynamicSectorAI');
+}
+async function refreshDynamicMarket(sectors,who,news=[]){
+  const ranks=await loadFundRankSnapshot();
+  const dist=document.getElementById('fundDistribution');
+  if(dist) dist.innerHTML=buildFundDistributionHtml(ranks);
+  const ov=document.getElementById('dynamicSectorOverview');
+  if(ov) ov.innerHTML=buildDynamicSectorHtml(sectors,ranks);
+  buildDynamicSectorAI(sectors,news,who);
+}
+
 // ============ 主流程 ============
 async function loadAll(){
   document.getElementById('rbtn').classList.add('spin');
@@ -1797,6 +2011,12 @@ async function loadAll(){
   const marketFlowPromise=emMarketFlow();
   const [boards,marketFlow]=await Promise.all([boardsPromise,marketFlowPromise]);
   const bmap={}; boards.forEach(b=>bmap[b.f12]=b);
+  // 全市场动态板块：直接使用东财行业板块全集，不再被原来的8个关注板块限制
+  const dynamicMarketSectors=boards.map(b=>({
+    name:String(b.f14||''), code:String(b.f12||''), pct:Number(b.f3)||0,
+    main:(Number(b.f62)||0)/1e8, super:(Number(b.f66)||0)/1e8,
+    big:(Number(b.f72)||0)/1e8, retail:((Number(b.f78)||0)+(Number(b.f84)||0))/1e8
+  })).filter(x=>x.name && Number.isFinite(x.pct));
 
    // ${sectors.length}板块详情
    // 8大关注板块：双源验证并行请求，避免逐个等待造成“卡在加载中”
@@ -2289,6 +2509,7 @@ if(showOfficial){
     ts:new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}),
     phase, navPublished, useThreeWay, indices, fundCards, fundsrc,
     sectorCards,
+    dynamicSectors:dynamicMarketSectors,
     sectorsrc:`东财双端点交叉验证通过 ${sv}/${sectors.length}。`,
     rankHtml, ranksrc,
     inflow, outflow,
@@ -2340,6 +2561,8 @@ if(showOfficial){
     try{
       news=await getNewsCached();
       buildNewsAnalysis(sectors, indices, who, news);
+      // 新闻到位后，重新给动态板块做一次“政策/国际/资金/产业”原因判断；不重新拉全市场基金榜
+      buildDynamicSectorAI(dynamicMarketSectors,news,who);
       callAllAI();
     }catch(e){
       const el=document.getElementById('newsAnalysis');
