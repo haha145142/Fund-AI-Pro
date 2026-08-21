@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05070B">
-<title>Fund AI Pro Ultimate</title>
+<meta name="theme-color" content="#B9DDF7">
+<title>基金实时预览</title>
 <style>
 :root{
- --primary:#F5A623; --primary-light:#FFB940; --primary-dark:#E89519;
- --primary-bg:#FFF8E5; --primary-border:#FFD18B;
+ --primary:#6FAFE0; --primary-light:#9DCCEE; --primary-dark:#3E7FAE;
+ --primary-bg:#EEF7FD; --primary-border:#C8E3F5;
  --text:#1F1F1F; --text2:#666; --text3:#999;
  --bg:#F7F8FA; --card:#FFF; --border:#F0F0F0; --divider:#F2F2F4;
  --up:#E02E2C; --down:#0B8A4B; --flat:#999;
@@ -21,7 +21,7 @@ html,body{background:var(--bg);color:var(--text)}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;padding:0;max-width:760px;margin:0 auto;font-size:14px;letter-spacing:.2px;padding-bottom:62px}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--text3)}
 .muted{color:var(--text3);font-size:11px}
-.hd{background:linear-gradient(135deg,#F5A623 0%,#FFB940 60%,#FFC75A 100%);color:#fff;padding:18px 16px 16px;position:relative;overflow:hidden}
+.hd{background:linear-gradient(135deg,#6FAFE0 0%,#8EC4EA 60%,#B7DCF4 100%);color:#fff;padding:18px 16px 16px;position:relative;overflow:hidden}
 .hd::after{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.12);border-radius:50%}
 .hd::before{content:'';position:absolute;right:30px;top:60px;width:60px;height:60px;background:rgba(255,255,255,.08);border-radius:50%}
 .hd h1{font-size:20px;font-weight:700;margin-bottom:2px;letter-spacing:.5px;position:relative;z-index:1}
@@ -89,7 +89,7 @@ td{padding:9px 5px;border-bottom:1px solid var(--divider);vertical-align:top}
 .cmt{font-size:13px;line-height:1.9;color:var(--text2)}.cmt b{color:var(--text)}
 .subttl{font-size:13px;font-weight:700;color:var(--text);margin:14px 0 6px}
 .fundcard{border:.5px solid var(--border);border-radius:var(--r-md);padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:all .15s;background:#fff}
-.fundcard:active{border-color:var(--primary);background:#FFFCF2}
+.fundcard:active{border-color:var(--primary);background:#F4FAFE}
 .fundcard.selected{border-color:var(--primary);background:var(--primary-bg);box-shadow:0 0 0 2px rgba(245,166,35,.15)}
 .fundcard .fhd{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .fundcard .fn{font-size:13.5px;font-weight:600;line-height:1.3;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
@@ -112,7 +112,7 @@ td{padding:9px 5px;border-bottom:1px solid var(--divider);vertical-align:top}
 .tab.active{color:var(--primary)}
 .tab.active .ico svg{stroke:var(--primary);transform:scale(1.08)}
 .tab.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--primary);border-radius:0 0 2px 2px}
-.tab:active{background:#FFF8E5}
+.tab:active{background:#EEF7FD}
 @media(max-width:380px){.tab .lb{font-size:9.5px}}
 [data-tab]{transition:opacity .15s}
 .src{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
@@ -142,109 +142,96 @@ details a:hover{text-decoration:underline}
 details code{background:#eef0f4;padding:1px 5px;border-radius:4px;font-size:11px;color:#c0392b;font-family:monospace}
 details table{margin:6px 0}
 details th,details td{font-size:11px}
-</style>
 
-<style id="fund-ai-pro-ultimate-theme">
-:root{--primary:#2563D6;--primary-light:#4B83E8;--primary-dark:#1E4FAE;--primary-bg:#eef5ff;--primary-border:#cfe0ff;--text:#172033;--text2:#5f6b7d;--text3:#8b95a5;--bg:#f3f6fa;--card:#ffffff;--border:#e5eaf1;--divider:#edf0f5;--up:#e5484d;--down:#18a957;--flat:#7d8796}
-html,body{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%)!important;color:var(--text)!important}body{max-width:760px}
-.hd{background:linear-gradient(135deg,#eef4fb 0%,#e8f0fa 55%,#f5f8fc 100%)!important;color:#172033!important;border-bottom:1px solid #dfe6ef;box-shadow:0 8px 30px rgba(31,48,73,.08)}
-.hd h1{color:#172033}.hd .sub,.hd .tm{color:#687487;opacity:1}.hd .rbtn{background:rgba(255,255,255,.72)!important;color:#263449!important;border:1px solid rgba(80,100,130,.12);box-shadow:0 4px 12px rgba(40,60,90,.08)}
-.idxbar span{background:rgba(255,255,255,.78)!important;color:#445269;border:1px solid rgba(80,110,150,.10);box-shadow:0 3px 10px rgba(40,60,90,.05)}
-.badge.ok{background:#e9f8ef;color:#168b4c}.badge.warn{background:#fff5df;color:#a86b00}.badge.err{background:#ffe8e9;color:#c73840}
-.card,.fundcard,.sc,.wc,.headline,details{background:rgba(255,255,255,.88)!important;border-color:rgba(220,227,237,.95)!important;box-shadow:0 8px 24px rgba(37,58,88,.07)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-.card h2,.fundcard .fn,.sc .nm,.assetval,.subttl{color:#172033}.card h2 small,.muted,.band-title,.assetlabel2{color:#738095!important}
-th{background:#f5f7fa!important;color:#59667a!important}td{border-color:#edf0f5!important}.note,.warnbox{background:#f5f8fc!important;color:#59667a!important;border-color:#e3eaf3!important}.tabbar{background:rgba(255,255,255,.88)!important;border-color:rgba(210,218,229,.9)!important;box-shadow:0 -6px 24px rgba(37,58,88,.08)!important}.tab.active{color:#245FC7}.tab.active::before{background:#245FC7}.tab:active{background:#edf5ff}.fundcard:active,.fundcard.selected{background:#f1f6ff!important;border-color:#8fb7ff!important}
-.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.band-panel{padding:14px;border-radius:18px;border:1px solid #e4e9f0;min-height:116px}.band-panel.low{background:linear-gradient(135deg,#fff3f4,#fff9f9)}.band-panel.high{background:linear-gradient(135deg,#f0faf4,#f9fcfa)}.band-title{font-size:12px;color:#5e6b7f}.band-main{font-size:20px;font-weight:800;margin-top:10px;color:#172033}.band-sub{font-size:11px;color:#667388;line-height:1.5;margin-top:6px}.ai-predict{margin-top:10px;padding:11px 12px;border-radius:14px;background:#eef5ff;border:1px solid #d8e7ff;color:#245A9E;font-size:12px;line-height:1.6}.trend-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:14px;background:#f5f7fa;border:1px solid #e7ebf1;color:#56647a;font-size:12px}.trend-row b{font-size:15px;color:#172033}.metric-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.metric-row span{font-size:10px;color:#667388;padding:4px 7px;border-radius:8px;background:#f1f4f8;border:1px solid #e6ebf1}@media(max-width:430px){.band-grid{grid-template-columns:1fr}}
-/* 可读性兜底：避免任何组件出现浅底白字/深底黑字 */
-.headline,.card,.fundcard,.sc,.wc,details,details summary{color:#172033}.headline *,.card *,.fundcard *,.sc *,.wc *{text-shadow:none}.src{color:#7a8595!important}
-
-/* ===== iOS 26 Liquid Glass Final ===== */
-:root{
- --glass-bg:rgba(255,255,255,.62);
- --glass-bg-strong:rgba(255,255,255,.78);
- --glass-border:rgba(255,255,255,.82);
- --glass-border-dark:rgba(180,194,214,.34);
- --glass-shadow:0 12px 34px rgba(39,62,94,.10), inset 0 1px 0 rgba(255,255,255,.92), inset 0 -1px 0 rgba(180,194,214,.16);
- --glass-blur:28px;
+/* ============ iOS 26 Liquid Glass visual layer ============ */
+.hd .rbtn{
+  background:linear-gradient(145deg,rgba(255,255,255,.38),rgba(255,255,255,.16));
+  border:1px solid rgba(255,255,255,.38);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 5px 18px rgba(39,92,130,.14);
 }
-html,body{
- background:
- radial-gradient(circle at 12% 8%,rgba(190,220,255,.45),transparent 28%),
- radial-gradient(circle at 88% 18%,rgba(225,210,255,.34),transparent 30%),
- linear-gradient(180deg,#f7faff 0%,#edf3f9 52%,#e9f0f7 100%)!important;
-}
-body{overflow-x:hidden;}
-body::before{
- content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
- background:linear-gradient(120deg,rgba(255,255,255,.22),transparent 45%,rgba(255,255,255,.18));
-}
-/* 所有主要板块：统一液态玻璃 */
-.card,.headline,.fundcard,.sc,.wc,details{
- background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,255,255,.48))!important;
- border:1px solid var(--glass-border)!important;
- box-shadow:var(--glass-shadow)!important;
- backdrop-filter:saturate(180%) blur(var(--glass-blur));
- -webkit-backdrop-filter:saturate(180%) blur(var(--glass-blur));
- position:relative;overflow:hidden;
-}
-.card::before,.headline::before,.fundcard::before,.sc::before,.wc::before,details::before{
- content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
- background:linear-gradient(120deg,rgba(255,255,255,.48),transparent 32%,transparent 68%,rgba(255,255,255,.18));
-}
-.card::after,.headline::after,.fundcard::after,.sc::after,.wc::after,details::after{
- content:'';position:absolute;left:12%;right:12%;top:0;height:1px;pointer-events:none;
- background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);
-}
-.card h2,.fundcard .fn,.sc .nm,.assetval,.subttl{color:#142238!important}
-.card h2 small,.muted,.band-title,.assetlabel2,.assetlabel{color:#68778d!important}
-.note,.warnbox,.trend-row,.metric-row span{
- background:rgba(246,249,253,.55)!important;
- border-color:rgba(205,216,231,.60)!important;
- backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-}
-/* 波段内部卡片也做玻璃化 */
-.band-panel,.ai-predict,.trend-row,.metric-row span{
- box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 6px 18px rgba(50,70,100,.06)!important;
-}
-.band-panel{border-color:rgba(255,255,255,.78)!important;background:rgba(255,255,255,.48)!important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.band-panel.low{background:linear-gradient(135deg,rgba(255,238,242,.72),rgba(255,255,255,.42))!important}
-.band-panel.high{background:linear-gradient(135deg,rgba(235,249,242,.72),rgba(255,255,255,.42))!important}
-.ai-predict{background:linear-gradient(135deg,rgba(226,239,255,.72),rgba(255,255,255,.46))!important;border-color:rgba(190,214,248,.72)!important;color:#245A9E!important}
-/* 基金条目 */
-.fundcard{border-color:rgba(255,255,255,.9)!important}
-.fundcard:active,.fundcard.selected{background:rgba(236,245,255,.78)!important;border-color:rgba(126,174,247,.75)!important;box-shadow:0 10px 28px rgba(56,111,190,.12),inset 0 1px 0 rgba(255,255,255,.95)!important}
-/* 顶部也保留轻玻璃质感 */
-.hd{background:linear-gradient(135deg,rgba(61,115,205,.94),rgba(91,146,231,.88))!important;box-shadow:0 8px 28px rgba(53,91,145,.15);}
-/* iOS 26 风格底部液态玻璃菜单：悬浮胶囊 */
 .tabbar{
- left:50%!important;right:auto!important;bottom:12px!important;transform:translateX(-50%);
- width:min(92%,560px)!important;height:66px!important;
- padding:7px!important;gap:4px!important;
- border:1px solid rgba(255,255,255,.78)!important;
- border-radius:25px!important;
- background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(238,245,253,.52))!important;
- box-shadow:0 16px 38px rgba(38,60,91,.16),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(170,188,210,.18)!important;
- backdrop-filter:saturate(200%) blur(30px)!important;
- -webkit-backdrop-filter:saturate(200%) blur(30px)!important;
- overflow:hidden;
+  background:rgba(248,252,255,.78);
+  border-top:1px solid rgba(255,255,255,.72);
+  box-shadow:0 -8px 28px rgba(60,110,145,.10);
 }
-.tabbar::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.32),transparent 35%,rgba(255,255,255,.18));}
-.tab{border-radius:19px!important;color:#718096!important;z-index:1;transition:transform .18s ease,background .18s ease,color .18s ease}
-.tab .ico svg{stroke-width:1.75!important}
-.tab.active{
- color:#236fe8!important;
- background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(221,235,255,.62))!important;
- box-shadow:0 5px 16px rgba(56,111,190,.12),inset 0 1px 0 rgba(255,255,255,.96)!important;
+.tab .ico{
+  width:34px;height:28px;border-radius:12px;
+  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(221,240,252,.52));
+  border:1px solid rgba(255,255,255,.82);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 3px 10px rgba(73,125,160,.10);
+  -webkit-backdrop-filter:blur(14px) saturate(145%);
+  backdrop-filter:blur(14px) saturate(145%);
+  transition:transform .2s,box-shadow .2s,background .2s;
 }
-.tab.active .ico svg{stroke:#236fe8!important;transform:scale(1.08)}
-.tab.active::before{display:none!important}
-.tab:active{transform:scale(.94);background:rgba(255,255,255,.55)!important}
-/* 避免底部内容被悬浮菜单遮挡 */
-body{padding-bottom:94px!important}
-@media(max-width:480px){
- .tabbar{width:94%!important;height:64px!important;bottom:10px!important;border-radius:24px!important}
- .card,.headline{border-radius:18px!important}
+.tab .ico svg{width:18px;height:18px}
+.tab.active .ico{
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(188,224,245,.72));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,1),0 5px 14px rgba(62,127,174,.18);
+  transform:translateY(-1px);
 }
+.tab.active .ico svg{stroke:var(--primary-dark)}
+.sch i,.schip,.badge,.tag{ -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+.wave-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(241,248,253,.94));
+  border:1px solid rgba(184,215,235,.72)!important;
+  box-shadow:0 8px 26px rgba(58,112,148,.08),inset 0 1px 0 rgba(255,255,255,.95);
+}
+.wave-card::before{
+  content:'';position:absolute;right:-38px;top:-44px;width:130px;height:130px;
+  background:radial-gradient(circle,rgba(143,201,235,.25),rgba(143,201,235,0) 68%);
+  pointer-events:none;
+}
+.wave-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wave-tabs{display:flex;gap:5px;padding:3px;background:#EDF6FC;border-radius:12px}
+.wave-tab{border:0;background:transparent;color:#71808c;font-size:11px;padding:5px 9px;border-radius:9px}
+.wave-tab.active{background:rgba(255,255,255,.9);color:#3E7FAE;box-shadow:0 2px 8px rgba(73,125,160,.10)}
+.wave-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+@media(max-width:480px){.wave-grid{grid-template-columns:1fr}}
+.wave-signal{
+  border-radius:14px;padding:12px;min-height:132px;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.78);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+}
+.wave-signal.low{background:linear-gradient(145deg,#FFF4F4,#FFF9F9)}
+.wave-signal.high{background:linear-gradient(145deg,#F0FAF5,#F8FCFA)}
+.wave-signal.weak{background:linear-gradient(145deg,#EEF7FD,#F8FBFE)}
+.wave-signal.strong{background:linear-gradient(145deg,#FFF1F4,#FFF9FA)}
+.wave-signal .sig-title{font-size:14px;font-weight:750}
+.wave-signal .sig-main{font-size:20px;font-weight:850;margin-top:7px}
+.wave-signal .sig-meta{font-size:10.5px;color:#6f7c86;line-height:1.55;margin-top:6px}
+.wave-lock{
+  position:absolute;right:10px;top:10px;width:28px;height:28px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.wave-fund{
+  margin-top:7px;padding:9px 10px;border-radius:11px;background:rgba(248,251,253,.88);
+  border:1px solid #E4EEF5;
+}
+.wave-fund .wf-row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.wave-fund .wf-name{font-size:12px;font-weight:650;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wave-fund .wf-pill{font-size:9.5px;padding:2px 6px;border-radius:8px;white-space:nowrap}
+.wave-fund .wf-pill.low{background:#FFF0F0;color:#C15A5A}.wave-fund .wf-pill.high{background:#EDF9F2;color:#3C8A63}
+.wave-fund .wf-pill.strong{background:#FFF0F3;color:#B75A70}.wave-fund .wf-pill.weak{background:#EDF6FD;color:#4B7FA6}
+.wave-method{margin-top:9px;font-size:10.5px;color:#6d7880;line-height:1.65;background:#F7FAFC;padding:8px 10px;border-radius:10px}
+.wave-note{font-size:10px;color:#8a949b;margin-top:7px}
+.wave-score{margin-top:9px;padding:10px 11px;border-radius:12px;background:linear-gradient(145deg,#f7fbff,#eef6fd);border:1px solid #dbeaf5;display:flex;align-items:center;gap:10px}
+.wave-ai{margin-top:9px;padding:11px 12px;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#eef6fd);border:1px solid #cfe3f2;color:#31485a}
+.wave-ai-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:750}
+.wave-ai-head b{font-size:13px}
+.wave-ai-score{margin-top:5px;font-size:10.5px;color:#536575;line-height:1.55}
+.wave-ai-action{margin-top:6px;font-size:11px;font-weight:650;color:#2f536f}
+.wave-ai-note{margin-top:5px;font-size:9.5px;color:#71808c;line-height:1.45}
+.wave-ai.strong .wave-ai-head b{color:#b65a70}
+.wave-ai.weak .wave-ai-head b{color:#4f7fa2}
+.wave-ai.high .wave-ai-head b{color:#c27b45}
+
+.wave-score .num{font-size:24px;font-weight:850;min-width:48px;text-align:center;color:#245f91}
+.wave-score .body{flex:1;min-width:0}.wave-score .title{font-size:12px;font-weight:750;color:#263746}.wave-score .desc{font-size:10.5px;color:#536575;line-height:1.55;margin-top:2px}
+.wave-detail{margin-top:7px;border-top:1px dashed #e5edf3;padding-top:7px}.wave-detail summary{font-size:10.5px;color:#4b6f8a;font-weight:600}.wave-detail table{font-size:10px;margin-top:5px}.wave-detail th,.wave-detail td{padding:5px 4px;background:transparent}.wave-detail th{background:#f7fafc;color:#71808c}
+
 
 </style>
 </head>
@@ -260,6 +247,25 @@ body{padding-bottom:94px!important}
 </div>
 
 <div class="headline" id="headline">🗣️ 加载中…</div>
+
+
+<div class="card wave-card" data-tab="home" id="waveSignalCard">
+  <div class="wave-head">
+    <h2 style="margin-bottom:0">〽️ 波段信号 · 趋势强弱 <small>RSI / BOLL / MA / MACD</small></h2>
+    <div class="wave-tabs">
+      <button class="wave-tab active" data-wave-scope="hold">持有+自选</button>
+      <button class="wave-tab" data-wave-scope="all">全部</button>
+    </div>
+  </div>
+  <div id="waveSignalBody">
+    <div class="loading">正在计算波段信号…</div>
+  </div>
+  <div class="wave-method">
+    <b>波段信号：</b>RSI&lt;30 + 触及BOLL下轨 → 今日·低位区；RSI&gt;70 + 触及BOLL上轨 → 今日·高位区。
+    <br><b>趋势强弱：</b>MA5&gt;MA20 且 MACD&gt;0 → 今日·走强；否则 → 今日·走弱。
+  </div>
+  <div class="wave-note">信号用于辅助观察，不代表必然反弹/上涨；基金历史净值与盘中估值存在时差。</div>
+</div>
 
 <div class="card assetcard" data-tab="home" id="assetCard" style="display:none">
  <div class="assetlabel">总资产（持仓金额合计）</div>
@@ -280,26 +286,6 @@ body{padding-bottom:94px!important}
    </div>
   </div>
  </div>
-</div>
-
-<!-- Fund AI Pro Ultimate · 波段信号中心 -->
-<div class="card" data-tab="home" id="bandSignalCard">
- <h2>◈ 波段信号 <small id="bandTimestamp">实时计算</small></h2>
- <div class="band-grid">
-  <div class="band-panel low">
-   <div class="band-title">今日 · 低位区</div>
-   <div class="band-main" id="bandLow">等待数据</div>
-   <div class="band-sub" id="bandLowReason">RSI / BOLL / BIAS / MACD 综合判断</div>
-  </div>
-  <div class="band-panel high">
-   <div class="band-title">今日 · 高位区</div>
-   <div class="band-main" id="bandHigh">等待数据</div>
-   <div class="band-sub" id="bandHighReason">超买与上轨压力综合判断</div>
-  </div>
- </div>
- <div class="ai-predict" id="bandAIPredict">🤖 AI 智能预测：等待实时指标与 AI 分析</div>
- <div class="trend-row"><span>趋势强弱</span><b id="trendSignal">计算中…</b><span id="trendScore">--</span></div>
- <div class="metric-row" id="bandMetrics"><span>RSI --</span><span>MA5 --</span><span>MA20 --</span><span>MACD --</span></div>
 </div>
 
 <div class="card" data-tab="home">
@@ -750,7 +736,11 @@ function loadNavScript(code){
       const yest = trend.length>=2 ? trend[trend.length-2] : null;
       const prev = trend.length>=3 ? trend[trend.length-3] : null;  // 前日净值（用于"昨日收益"）
       const yestDate = yest ? new Date(yest.x+8*3600*1000).toISOString().slice(0,10) : null;
-      nav={nav:last.y, ret:ret, date:d, yestNav:yest?yest.y:null, yestDate, prevNav:prev?prev.y:null};
+      nav={
+        nav:last.y, ret:ret, date:d, yestNav:yest?yest.y:null, yestDate,
+        prevNav:prev?prev.y:null,
+        trend:trend.map(p=>({x:p.x,y:p.y,equityReturn:p.equityReturn}))
+      };
     }
     s.remove(); resolve(nav);
   };
@@ -1090,14 +1080,6 @@ async function aiNewsInterpret(news, elId){
 async function callLLM(prompt){
   const cfg=getLLMConfig();
   if(!cfg.key) return null;
-  const gateway=localStorage.getItem('fund_ai_gateway')||'';
-  if(gateway){
-    try{
-      const c=new AbortController(); const t=setTimeout(()=>c.abort(),30000);
-      const resp=await fetch(gateway.replace(/\/$/,'')+'/api/ai',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:cfg.provider||'auto',messages:[{role:'user',content:prompt}]})});
-      clearTimeout(t); if(resp.ok){const j=await resp.json(); if(j&&j.content) return j.content;}
-    }catch(e){}
-  }
   const url = cfg.provider==='qwen'
     ? 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions'
     : 'https://api.deepseek.com/chat/completions';
@@ -1203,7 +1185,7 @@ function buildNewsAnalysis(sectors, indices, who, news){
  // 顶部 AI 综合解读（一段）
  const sum=summarizeNews(mapped, sectors, indices, who);
  html+='<div class="subttl">🤖 AI 综合解读</div>';
- html+='<div id="aiJudge" class="cmt" style="background:#fff8e1;border-left:3px solid #f59e0b;padding:10px 12px;border-radius:4px;line-height:1.8;font-size:13px">';
+ html+='<div id="aiJudge" class="cmt" style="background:#F0F7FD;border-left:3px solid #78B4DE;padding:10px 12px;border-radius:4px;line-height:1.8;font-size:13px">';
  html+='<b>📊 今日整体：</b>'+sum.judge+'<div style="font-size:11px;color:#999;margin-top:4px">（规则引擎版' + (getLLMConfig().key?' · 大模型分析生成中…':'') + '）</div></div>';
 
  // 📰 快讯列表（每条新闻 + AI 一句话解读）
@@ -1366,6 +1348,193 @@ async function checkNavSettled(){
     const nv=await loadNavScript(FUNDS[0].code);
     return !!(nv && nv.date && nv.date.replace(/-/g,'') >= today.replace(/-/g,''));
   }catch(e){ return false; }
+}
+
+
+// ============ 波段信号 / 趋势强弱技术指标 ============
+function calcRSI(values, period=14){
+  if(!values || values.length < period+1) return null;
+  let gains=0, losses=0;
+  for(let i=1;i<=period;i++){
+    const d=values[i]-values[i-1];
+    if(d>=0) gains+=d; else losses-=d;
+  }
+  let avgGain=gains/period, avgLoss=losses/period;
+  for(let i=period+1;i<values.length;i++){
+    const d=values[i]-values[i-1];
+    const gain=Math.max(d,0), loss=Math.max(-d,0);
+    avgGain=(avgGain*(period-1)+gain)/period;
+    avgLoss=(avgLoss*(period-1)+loss)/period;
+  }
+  if(avgLoss===0) return 100;
+  return 100-(100/(1+avgGain/avgLoss));
+}
+function sma(values, n){
+  if(!values || values.length<n) return null;
+  const a=values.slice(-n);
+  return a.reduce((s,v)=>s+v,0)/n;
+}
+function boll(values, n=20, k=2){
+  if(!values || values.length<n) return null;
+  const a=values.slice(-n), m=a.reduce((s,v)=>s+v,0)/n;
+  const sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/n);
+  return {mid:m, upper:m+k*sd, lower:m-k*sd};
+}
+function macd(values){
+  if(!values || values.length<35) return null;
+  const ema=(arr,n)=>{
+    if(arr.length<n) return null;
+    let e=arr.slice(0,n).reduce((s,v)=>s+v,0)/n, k=2/(n+1);
+    for(let i=n;i<arr.length;i++) e=arr[i]*k+e*(1-k);
+    return e;
+  };
+  const fast=ema(values,12), slow=ema(values,26);
+  if(fast==null||slow==null) return null;
+  return {dif:fast-slow};
+}
+function bandScore(a){
+  if(!a || !a.ready) return null;
+  let score=50;
+  // 越靠近超卖区，短线修复分越高；越靠近超买区则降低
+  if(a.rsi<30) score+=18; else if(a.rsi<40) score+=10; else if(a.rsi>70) score-=18; else if(a.rsi>60) score-=10;
+  // 均线趋势
+  if(a.ma5>a.ma20) score+=12; else score-=12;
+  // MACD
+  if(a.macd.dif>0) score+=10; else score-=10;
+  // BOLL位置：下轨偏低，上轨偏高
+  const span=a.bb.upper-a.bb.lower;
+  if(span>0){ const pos=(a.current-a.bb.lower)/span; if(pos<0.2) score+=10; else if(pos>0.8) score-=10; }
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+function bandScoreLabel(score){
+  if(score==null) return ['--','数据不足'];
+  if(score>=70) return [score,'偏强观察'];
+  if(score<=30) return [score,'偏弱观察'];
+  return [score,'中性观察'];
+}
+function bandAnalyze(navObj, estPct, useThreeWay){
+  const tr=(navObj&&navObj.trend)||[];
+  let vals=tr.map(x=>Number(x.y)).filter(Number.isFinite);
+  if(vals.length<25) return {ready:false};
+  let current=vals[vals.length-1];
+  if(useThreeWay && estPct!=null) current=current*(1+estPct/100);
+  const series=vals.slice(0,-1).concat(current);
+  const rsi=calcRSI(series,14);
+  const bb=boll(series,20,2);
+  const ma5=sma(series,5), ma20=sma(series,20);
+  const mc=macd(series);
+  if(rsi==null||!bb||ma5==null||ma20==null||!mc) return {ready:false};
+  // 使用 0.35% 容差，避免浮点/净值微小误差导致“触轨”完全失效
+  const lowerTouch=current<=bb.lower*1.003;
+  const upperTouch=current>=bb.upper*0.997;
+  let band='震荡区', bandCls='flat';
+  if(rsi<30 && lowerTouch) { band='今日·低位区'; bandCls='low'; }
+  else if(rsi>70 && upperTouch) { band='今日·高位区'; bandCls='high'; }
+  let trend=(ma5>ma20 && mc.dif>0)?'今日·走强':'今日·走弱';
+  let trendCls=(ma5>ma20 && mc.dif>0)?'strong':'weak';
+  const result={
+    ready:true,current,rsi,bb,ma5,ma20,macd:mc,
+    band,bandCls,trend,trendCls,
+    text:`RSI ${rsi.toFixed(1)} · MA5/MA20 ${ma5>ma20?'多头':'空头'} · MACD ${mc.dif>=0?'零轴上':'零轴下'}`
+  };
+  result.score=bandScore(result);
+  return result;
+}
+function waveSignalHtml(scope='hold'){
+  const list = scope==='all' ? USER_HOLDINGS.concat(
+    SECTOR_FUNDS.filter(sf=>!USER_HOLDINGS.some(h=>h.code===sf.code)).slice(0,12)
+  ) : USER_HOLDINGS;
+  if(!list.length) return '<div class="loading">暂无持仓/自选基金</div>';
+  const rows=[];
+  list.forEach(f=>{
+    const nv=window._navCacheAll && window._navCacheAll[f.code];
+    const est=window._waveEstMap ? window._waveEstMap[f.code] : null;
+    const a=bandAnalyze(nv,est,window._waveUseThreeWay);
+    if(a.ready) rows.push({f,a});
+  });
+  if(!rows.length) return '<div class="loading">历史净值不足，暂时无法计算信号</div>';
+  const lows=rows.filter(x=>x.a.bandCls==='low');
+  const highs=rows.filter(x=>x.a.bandCls==='high');
+  const strongs=rows.filter(x=>x.a.trendCls==='strong');
+  const weaks=rows.filter(x=>x.a.trendCls==='weak');
+  const best = rows.slice().sort((a,b)=>a.a.rsi-b.a.rsi)[0];
+  const trendTop = rows.slice().sort((a,b)=>(b.a.ma5/b.a.ma20)-(a.a.ma5/a.a.ma20))[0];
+  const lock = (msg)=>`<span class="wave-lock" title="${msg}">🔒</span>`;
+  const signalCard=(title,clsName,items,empty)=>{
+    const lead=items[0];
+    return `<div class="wave-signal ${clsName}">
+      ${items.length?'' : lock('历史数据不足')}
+      <div class="sig-title">${title}</div>
+      <div class="sig-main">${items.length?items.length+' 只':'—'}</div>
+      <div class="sig-meta">${items.length
+        ? items.slice(0,2).map(x=>`${esc(x.f.name)} · RSI ${x.a.rsi.toFixed(1)}`).join('<br>')
+        : empty}</div>
+    </div>`;
+  };
+  let html=`<div class="wave-grid">
+    ${signalCard('今日·低位区','low',lows,'需 RSI<30 且触及BOLL下轨')}
+    ${signalCard('今日·高位区','high',highs,'需 RSI>70 且触及BOLL上轨')}
+    ${signalCard('今日·走强','strong',strongs,'需 MA5>MA20 且 MACD>0')}
+    ${signalCard('今日·走弱','weak',weaks,'MA5≤MA20 或 MACD≤0')}
+  </div>`;
+  const avgRsi=rows.reduce((s,x)=>s+x.a.rsi,0)/rows.length;
+  const avgScore=rows.reduce((s,x)=>s+(x.a.score||50),0)/rows.length;
+  const [scoreNum,scoreLabel]=bandScoreLabel(Math.round(avgScore));
+  const scoreDesc=`平均 RSI ${avgRsi.toFixed(1)} · ${strongs.length} 只走强 / ${weaks.length} 只走弱；评分综合 RSI、MA5/MA20、MACD、BOLL 位置，仅用于辅助观察。`;
+  html+=`<div class="wave-score"><div class="num">${scoreNum}</div><div class="body"><div class="title">〽️ 波段综合评分 · ${scoreLabel}</div><div class="desc">${scoreDesc}</div></div></div>`;
+  // ===== AI 智能预测：透明规则版，基于当前技术指标，不冒充大模型 =====
+  const avgBias = rows.reduce((s,x)=>s + ((x.a.current/x.a.bb.mid-1)*100),0) / rows.length;
+  const avgMacd = rows.reduce((s,x)=>s + x.a.macd.dif,0) / rows.length;
+  let aiTitle='震荡观察', aiCls='flat', aiAction='暂不追高，等待更明确的信号';
+  if(scoreNum>=70 && avgRsi<68 && strongs.length>=weaks.length){
+    aiTitle='震荡偏强'; aiCls='strong';
+    aiAction='已有仓位可继续观察；新仓等回调，不建议盲目追涨';
+  }else if(scoreNum<=30 || weaks.length>strongs.length*1.5){
+    aiTitle='偏弱观察'; aiCls='weak';
+    aiAction='控制仓位，优先等待趋势和资金面改善';
+  }else if(avgRsi>=70){
+    aiTitle='偏热防追高'; aiCls='high';
+    aiAction='短线偏热，已有仓位注意冲高回落，不宜追涨';
+  }
+  const reasons=[];
+  reasons.push(`平均 RSI ${avgRsi.toFixed(1)}`);
+  reasons.push(`${strongs.length} 只走强 / ${weaks.length} 只走弱`);
+  reasons.push(`平均 BIAS ${avgBias.toFixed(2)}%`);
+  reasons.push(`MACD ${avgMacd>=0?'偏多':'偏弱'}`);
+  html+=`<div class="wave-ai ${aiCls}">
+    <div class="wave-ai-head"><span>🤖 AI 智能预测</span><b>${aiTitle}</b></div>
+    <div class="wave-ai-score">综合 ${scoreNum} 分 · ${reasons.join(' · ')}</div>
+    <div class="wave-ai-action">💡 ${aiAction}</div>
+    <div class="wave-ai-note">基于当前持仓/自选基金的 RSI、BOLL、MA5/MA20、MACD 规则计算；仅作辅助观察，不代表实际收益预测。</div>
+  </div>`;
+
+  html+=`<details class="wave-detail"><summary>查看 ${rows.length} 只基金的 RSI / BOLL / MA / MACD 明细</summary><table><tr><th>基金</th><th>RSI</th><th>MA趋势</th><th>MACD</th><th>评分</th></tr>`;
+  rows.slice(0,12).forEach(({f,a})=>{ html+=`<tr><td>${esc(f.name)}</td><td>${a.rsi.toFixed(1)}</td><td>${a.ma5>a.ma20?'多头':'空头'}</td><td>${a.macd.dif>=0?'上':'下'}</td><td><b>${a.score}</b></td></tr>`; });
+  html+=`</table></details>`;
+  html+=`<div style="margin-top:9px">`;
+  rows.slice(0,9).forEach(({f,a})=>{
+    const bcls=a.bandCls==='low'?'low':a.bandCls==='high'?'high':'';
+    const tcls=a.trendCls;
+    html+=`<div class="wave-fund">
+      <div class="wf-row">
+        <div class="wf-name">${esc(f.name)}</div>
+        <div style="display:flex;gap:4px">
+          <span class="wf-pill ${bcls}">${a.band}</span>
+          <span class="wf-pill ${tcls}">${a.trend}</span>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#7b8790;margin-top:5px">${a.text} · BOLL ${a.current<=a.bb.lower*1.003?'下轨附近':a.current>=a.bb.upper*.997?'上轨附近':'中轨区'}</div>
+    </div>`;
+  });
+  html+='</div>';
+  html+=`<div class="wave-note">当前统计：低位 ${lows.length} · 高位 ${highs.length} · 走强 ${strongs.length} · 走弱 ${weaks.length}。${best?`最低RSI：${esc(best.f.name)} ${best.a.rsi.toFixed(1)}。`:''}${trendTop?`趋势最强：${esc(trendTop.f.name)}。`:''}</div>`;
+  return html;
+}
+function renderWaveSignals(){
+  const el=document.getElementById('waveSignalBody');
+  if(!el) return;
+  const active=document.querySelector('.wave-tab.active')?.dataset.waveScope || 'hold';
+  el.innerHTML=waveSignalHtml(active);
 }
 
 // ============ 渲染 ============
@@ -1726,6 +1895,11 @@ async function loadAll(){
      _navCache[code]=await loadNavScript(code);
     }));
   }
+
+  // 波段信号需要每只持仓的历史净值；盘中用三路估值作为当日临时价格
+  window._waveEstMap = {};
+  holdFunds.forEach(r=>{ if(r && r.f) window._waveEstMap[r.f.code]=r.est; });
+  window._waveUseThreeWay = useThreeWay;
   // 新增的用户自定义基金（USER_EXTRA_FUNDS）合并进 USER_HOLDINGS
   if(USER_EXTRA_FUNDS.length){
     const existCodes=new Set(USER_HOLDINGS.map(f=>f.code));
@@ -1858,7 +2032,7 @@ if(showOfficial){
   }
    // 持仓 H2 标题 + 添加基金按钮
    const firstH2 = document.querySelector('.card[data-tab="home"] h2');
-   if(firstH2) firstH2.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap">基金持仓 <small id="estmode">${useThreeWay?'盘中三路反推估值':'官方净值'}</small></span> <span id="addFundBtn" style="color:#fff;background:var(--primary);cursor:pointer;font-size:11.5px;border-radius:14px;padding:3px 10px;margin-left:auto;font-weight:600;line-height:1.2;box-shadow:0 1px 3px rgba(245,166,35,.3);flex-shrink:0">+ 添加</span>`;
+   if(firstH2) firstH2.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap">基金持仓 <small id="estmode">${useThreeWay?'盘中三路反推估值':'官方净值'}</small></span> <span id="addFundBtn" style="color:#fff;background:var(--primary);cursor:pointer;font-size:11.5px;border-radius:14px;padding:3px 10px;margin-left:auto;font-weight:600;line-height:1.2;box-shadow:0 1px 3px rgba(62,127,174,.20);flex-shrink:0">+ 添加</span>`;
    firstH2.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px';
 
    // 资产卡：总持仓金额 + 昨日收益 + 持有收益
@@ -2264,203 +2438,29 @@ document.addEventListener('click', (e)=>{
     document.querySelectorAll('.fundcard.selected').forEach(c=>c.classList.remove('selected'));
   }
 });
-</script>
 
-<script>
-/* ===== V5：真实基金历史净值 → RSI / BOLL / BIAS / MACD / MA → 波段信号 ===== */
-(function(){
-  const bandState={items:[],loading:false,last:0};
-
-  function fmt(v,n=2){return Number.isFinite(v)?v.toFixed(n):'--';}
-
-  function calcIndicators(a){
-    if(!Array.isArray(a)||a.length<26)return null;
-    const n=a.length,last=a[n-1];
-    const sma=(arr,k)=>arr.length<k?null:arr.slice(-k).reduce((s,v)=>s+v,0)/k;
-    const ema=(arr,k)=>{
-      if(arr.length<k)return null;
-      let e=arr.slice(0,k).reduce((s,v)=>s+v,0)/k,alpha=2/(k+1);
-      for(let i=k;i<arr.length;i++)e=alpha*arr[i]+(1-alpha)*e;
-      return e;
-    };
-
-    let gain=0,loss=0;
-    for(let i=n-14;i<n;i++){
-      const d=a[i]-a[i-1];
-      if(d>0)gain+=d;else loss-=d;
+// 波段信号“全部”懒加载：只在用户点“全部”时拉取未缓存的关联基金历史净值
+document.addEventListener('click', async (e)=>{
+  const btn=e.target.closest('[data-wave-scope]');
+  if(!btn) return;
+  document.querySelectorAll('.wave-tab').forEach(x=>x.classList.toggle('active',x===btn));
+  const scope=btn.dataset.waveScope;
+  if(scope==='all'){
+    const extras=SECTOR_FUNDS.filter(f=>!window._navCacheAll?.[f.code]).slice(0,12);
+    if(extras.length){
+      const body=document.getElementById('waveSignalBody');
+      if(body) body.innerHTML='<div class="loading">正在拉取全部基金历史净值…</div>';
+      await Promise.all(extras.map(async f=>{
+        try{
+          if(!window._navCacheAll) window._navCacheAll={};
+          window._navCacheAll[f.code]=await loadNavScript(f.code);
+        }catch(err){}
+      }));
     }
-    const rsi=loss===0?100:100-100/(1+gain/loss);
-    const ma5=sma(a,5),ma20=sma(a,20);
-    const tail=a.slice(-20);
-    const sd=Math.sqrt(tail.reduce((s,v)=>s+(v-ma20)**2,0)/20);
-    const bollUp=ma20+2*sd,bollLo=ma20-2*sd;
-    const bias=(last/ma20-1)*100;
-    const e12=ema(a,12),e26=ema(a,26);
-    const macd=e12-e26;
-
-    const low=rsi<30&&last<=bollLo*1.012;
-    const high=rsi>70&&last>=bollUp*0.988;
-    const strong=ma5>ma20&&macd>0;
-
-    let score=50;
-    score+=strong?22:-18;
-    if(rsi<30)score+=16;
-    if(rsi>70)score-=16;
-    score+=Math.max(-10,Math.min(10,bias*2));
-    score=Math.max(0,Math.min(100,score));
-
-    return {last,rsi,ma5,ma20,bollUp,bollLo,bias,macd,low,high,strong,score};
   }
+  renderWaveSignals();
+});
 
-  function getFunds(){
-    try{
-      const list=(typeof USER_HOLDINGS!=='undefined'?USER_HOLDINGS:
-                  (typeof FUNDS!=='undefined'?FUNDS:[]));
-      return Array.isArray(list)?list.slice(0,8):[];
-    }catch(e){return []}
-  }
-
-  function history(code){
-    return new Promise(resolve=>{
-      if(!code)return resolve(null);
-
-      const s=document.createElement('script');
-      let done=false;
-      const finish=values=>{
-        if(done)return;
-        done=true;
-        try{s.remove()}catch(e){}
-        resolve(values&&values.length>=26?values:null);
-      };
-
-      const timer=setTimeout(()=>finish(null),12000);
-      s.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js';
-
-      s.onload=()=>{
-        clearTimeout(timer);
-        let trend=null;
-        try{trend=window.Data_netWorthTrend}catch(e){}
-        const values=Array.isArray(trend)
-          ?trend.map(x=>Number(x&&x.y)).filter(Number.isFinite)
-          :[];
-        finish(values);
-      };
-
-      s.onerror=()=>{
-        clearTimeout(timer);
-        finish(null);
-      };
-
-      document.head.appendChild(s);
-    });
-  }
-
-  function paint(items){
-    const valid=items.filter(x=>x.ind);
-
-    const q=id=>document.getElementById(id);
-
-    if(!valid.length){
-      if(q('bandLow'))q('bandLow').textContent='暂无历史数据';
-      if(q('bandHigh'))q('bandHigh').textContent='暂无历史数据';
-      if(q('bandLowReason'))q('bandLowReason').textContent='历史净值暂未返回足够数据';
-      if(q('bandHighReason'))q('bandHighReason').textContent='历史净值暂未返回足够数据';
-      if(q('trendSignal'))q('trendSignal').textContent='数据获取失败';
-      if(q('trendScore'))q('trendScore').textContent='--';
-      if(q('bandMetrics'))q('bandMetrics').innerHTML='<span>RSI --</span><span>MA5 --</span><span>MA20 --</span><span>MACD --</span>';
-      if(q('bandAIPredict'))q('bandAIPredict').textContent='🤖 AI 智能预测：暂时无法读取基金历史净值，请稍后刷新；不会用虚假数据代替真实指标。';
-      if(q('bandTimestamp'))q('bandTimestamp').textContent='数据源暂不可用';
-      return;
-    }
-
-    const lows=valid.filter(x=>x.ind.low);
-    const highs=valid.filter(x=>x.ind.high);
-    const strong=valid.filter(x=>x.ind.strong);
-    const weak=valid.length-strong.length;
-
-    const lowText=lows.length
-      ?`${lows.length}只 · ${lows.slice(0,2).map(x=>x.name).join('、')}`
-      :'未进入低位';
-    const highText=highs.length
-      ?`${highs.length}只 · ${highs.slice(0,2).map(x=>x.name).join('、')}`
-      :'未进入高位';
-
-    const avgR=valid.reduce((s,x)=>s+x.ind.rsi,0)/valid.length;
-    const avgBias=valid.reduce((s,x)=>s+x.ind.bias,0)/valid.length;
-    const avgMacd=valid.reduce((s,x)=>s+x.ind.macd,0)/valid.length;
-    const avgScore=valid.reduce((s,x)=>s+x.ind.score,0)/valid.length;
-
-    const lowReasons=lows.length
-      ?lows.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
-      :`平均 RSI ${fmt(avgR,1)}，未同时满足 RSI<30 + BOLL下轨`;
-
-    const highReasons=highs.length
-      ?highs.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
-      :`平均 RSI ${fmt(avgR,1)}，未同时满足 RSI>70 + BOLL上轨`;
-
-    if(q('bandLow'))q('bandLow').textContent=lowText;
-    if(q('bandLowReason'))q('bandLowReason').title='低位条件：RSI<30 且接近BOLL下轨';
-    if(q('bandHigh'))q('bandHigh').textContent=highText;
-    if(q('bandHighReason'))q('bandHighReason').title='高位条件：RSI>70 且接近BOLL上轨';
-    if(q('bandLowReason'))q('bandLowReason').textContent=lowReasons;
-    if(q('bandHighReason'))q('bandHighReason').textContent=highReasons;
-    if(q('trendSignal'))q('trendSignal').textContent=strong.length>=weak?'走强':'走弱';
-    if(q('trendScore'))q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong.length}强/${weak}弱`;
-    if(q('bandMetrics'))q('bandMetrics').innerHTML=
-      `<span>平均RSI ${fmt(avgR,1)}</span><span>BIAS ${fmt(avgBias,2)}%</span><span>MACD ${fmt(avgMacd,4)}</span><span>样本 ${valid.length}只</span>`;
-
-    let verdict='震荡观察';
-    if(lows.length&&!highs.length)verdict='偏低位 · 关注超卖反弹';
-    else if(highs.length&&!lows.length)verdict='偏高位 · 注意回撤风险';
-    else if(lows.length&&highs.length)verdict='分化 · 个别基金处于极端区';
-    else if(strong.length>weak)verdict='趋势偏强 · 等待回踩确认';
-    else if(weak>strong)verdict='趋势偏弱 · 控制追高风险';
-
-    if(q('bandAIPredict'))q('bandAIPredict').textContent=
-      `🤖 AI 智能预测：${verdict}｜基于 ${valid.length} 只基金最近净值历史计算。`;
-
-    if(q('bandTimestamp'))q('bandTimestamp').textContent=
-      '指标更新 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-  }
-
-  window.refreshRealBandSignal=async function(){
-    if(bandState.loading)return;
-    bandState.loading=true;
-
-    try{
-      const list=getFunds();
-
-      if(!list.length){
-        if(document.getElementById('bandAIPredict'))
-          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：暂无基金可分析。';
-        return;
-      }
-
-      const results=[];
-
-      for(const f of list){
-        const values=await history(f.code);
-        const ind=calcIndicators(values||[]);
-        results.push({code:f.code,name:f.name||f.code,ind});
-
-        const ts=document.getElementById('bandTimestamp');
-        if(ts)ts.textContent=`正在读取 ${results.length}/${list.length} 只基金`;
-      }
-
-      bandState.items=results;
-      bandState.last=Date.now();
-      paint(results);
-    }catch(e){
-      paint([]);
-    }finally{
-      bandState.loading=false;
-    }
-  };
-
-  // 首屏完成后再读取历史净值，避免影响主页加载。
-  window.addEventListener('load',()=>setTimeout(()=>window.refreshRealBandSignal(),6000));
-  setInterval(()=>window.refreshRealBandSignal(),10*60*1000);
-})();
 </script>
 </body>
 </html>
