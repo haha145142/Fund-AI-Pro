@@ -2413,6 +2413,7 @@ document.addEventListener('click', (e)=>{
     return await new Promise(resolve=>{
       const s=document.createElement('script');
       const timer=setTimeout(()=>{try{s.remove()}catch(e){};resolve(null)},9000);
+      try{ delete window.Data_netWorthTrend; }catch(e){}
       s.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js';
       s.onload=()=>{
         clearTimeout(timer);
@@ -2428,7 +2429,13 @@ document.addEventListener('click', (e)=>{
 
   function paint(items){
     const valid=items.filter(x=>x.ind);
-    if(!valid.length) return;
+    if(!valid.length){
+      const q0=document.getElementById('bandAIPredict');
+      if(q0) q0.textContent='🤖 AI 智能预测：暂时无法读取基金历史净值，请稍后刷新；不会用虚假数据代替真实指标。';
+      const ts=document.getElementById('bandTimestamp');
+      if(ts) ts.textContent='数据源暂不可用';
+      return;
+    }
     const lows=valid.filter(x=>x.ind.low);
     const highs=valid.filter(x=>x.ind.high);
     const strong=valid.filter(x=>x.ind.strong);
@@ -2481,10 +2488,10 @@ document.addEventListener('click', (e)=>{
     if(bandState.loading) return;
     bandState.loading=true;
     try{
-      const list=(window.USER_HOLDINGS||[]).slice(0,8);
+      const list=(typeof USER_HOLDINGS!=='undefined' ? USER_HOLDINGS : (typeof FUNDS!=='undefined' ? FUNDS : [])).slice(0,8);
       if(!list.length){
         if(document.getElementById('bandAIPredict'))
-          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：请先添加基金持仓';
+          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：正在读取持仓基金历史净值…';
         return;
       }
       const results=[];
