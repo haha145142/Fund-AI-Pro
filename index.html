@@ -119,6 +119,7 @@ td{padding:9px 5px;border-bottom:1px solid var(--divider);vertical-align:top}
 .fgrp{font-size:14px;font-weight:700;color:var(--text);margin:10px 0 4px;display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid var(--divider)}
 .fgrp:first-of-type{border-top:none;padding-top:0}
 .fgrp small{font-size:11px;color:var(--text3);font-weight:normal}
+.smart-rank-note{font-size:11px;line-height:1.55;color:#4d7398;background:#f0f7ff;border:1px solid #d8eafb;border-radius:9px;padding:7px 9px;margin:5px 0 8px}
 .fundrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:.5px solid var(--divider);font-size:13px}
 .fundrow:last-child{border-bottom:none}
 .fundrow .rank{width:22px;height:22px;background:var(--primary-bg);color:var(--primary-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
@@ -295,8 +296,8 @@ details th,details td{font-size:11px}
 </div>
 
 <div class="card" data-tab="board">
- <h2>💰 板块关联基金排行 <small>每天动态选每板块涨幅/跌幅 TOP3·今日盘中估值</small></h2>
- <div class="warnbox" id="rankwarn">每天从每板块基金池中动态选出<b>涨幅 TOP3 + 跌幅 TOP3</b>：<b>指数型</b>直接采用板块涨跌，<b>主动型</b>用重仓股穿透反推（同样三路估值逻辑）。</div>
+ <h2>💰 板块关联基金排行 <small>每天自动找最强/最弱板块·匹配代表基金</small></h2>
+ <div class="warnbox" id="rankwarn">每天先扫描<b>全市场板块涨跌</b>，自动选出今日最强/最弱板块，再从东方财富基金库匹配<b>代表基金 TOP3</b>；全程不使用 DeepSeek。</div>
  <div id="fundRanking"><div class="loading">加载中…</div></div>
  <div class="src" id="ranksrc"></div>
  <div id="rankAI" class="muted" style="font-size:12px;padding:8px 10px;background:#f8f9fc;border-radius:8px;line-height:1.6;color:#444;margin-top:8px"></div>
@@ -693,6 +694,126 @@ async function emPct(secid){
    const r=await fetchT(EM+'/api/qt/stock/get?secid='+secid+'&fields=f43,f57,f58,f170');
    const d=(await r.json()).data||{}; return {name:d.f58,pct:(d.f170||0)/100};
   }catch(e){ return null; }
+}
+
+
+// ============ 智能板块→基金发现（不调用 AI） ============
+// 每天从全市场板块涨跌中选强弱板块，再用东方财富基金搜索找代表基金。
+// 基金搜索结果缓存 6 小时；盘中估值缓存 2 分钟，避免频繁请求。
+function smartCacheGet(key, ttl){
+  try{
+    const x=JSON.parse(localStorage.getItem(key)||'null');
+    return x && Date.now()-x.ts<ttl ? x.data : null;
+  }catch(e){ return null; }
+}
+function smartCacheSet(key,data){
+  try{ localStorage.setItem(key,JSON.stringify({ts:Date.now(),data})); }catch(e){}
+}
+function fundSearchJSONP(keyword){
+  return new Promise(resolve=>{
+    const cb='__fundSearch_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    let done=false;
+    const finish=(v)=>{ if(done)return; done=true; try{delete window[cb]}catch(e){}; try{s.remove()}catch(e){}; resolve(v||[]); };
+    window[cb]=(v)=>finish(Array.isArray(v)?v:((v&&v.Datas)||[]));
+    s.onerror=()=>finish([]);
+    s.src='https://fundsuggest.eastmoney.com/FundSearch/api/FundSearchAPI.ashx?m=1&key='+encodeURIComponent(keyword)+'&callback='+cb+'&_='+Date.now();
+    document.head.appendChild(s);
+    setTimeout(()=>finish([]),7000);
+  });
+}
+async function searchFundsForBoard(boardName){
+  const key='smartFundSearch_v1_'+boardName;
+  const cached=smartCacheGet(key,6*60*60*1000);
+  if(cached) return cached;
+  const aliases={
+    '锂矿':'锂电池','锂电':'锂电池','稀土永磁':'稀土','黄金股':'黄金','有色金属':'有色金属',
+    '电网设备':'电力设备','电力设备':'电力设备','固态电池':'固态电池','新能源':'新能源','储能':'储能',
+    '机器人':'机器人','人工智能':'人工智能','国产算力':'算力','消费电子':'消费电子','通信':'通信','半导体':'半导体',
+    '光伏设备':'光伏','光伏':'光伏','军工':'军工','证券':'证券','银行':'银行','保险':'保险','煤炭':'煤炭',
+    '石油':'石油','有色':'有色','化工':'化工','医药':'医药','医疗':'医疗','白酒':'白酒','食品饮料':'食品饮料'
+  };
+  const kw=aliases[boardName]||boardName;
+  const arr=await fundSearchJSONP(kw);
+  const out=arr.filter(x=>{
+    const b=x.FundBaseInfo||{};
+    const t=String(b.FTYPE||'');
+    const n=String(x.NAME||'');
+    return x.CATEGORYDESC==='基金' && !/货币|债券|短债|中短债|纯债|理财|现金|同业存单|REIT/i.test(t+n)
+      && !/货币|债券|短债|中短债|纯债|理财|现金|同业存单/i.test(n);
+  }).slice(0,20).map(x=>({code:x.CODE||x._id,name:x.NAME||x.FundBaseInfo?.SHORTNAME||'',type:x.FundBaseInfo?.FTYPE||''})).filter(x=>x.code&&x.name);
+  if(out.length) smartCacheSet(key,out);
+  return out;
+}
+function fundEstimateJSONP(code){
+  return new Promise(resolve=>{
+    const cb='__fundGz_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script'); let done=false;
+    const finish=(v)=>{if(done)return;done=true;try{delete window[cb]}catch(e){};try{s.remove()}catch(e){};resolve(v)};
+    // 天天基金接口通常固定调用 jsonpgz；通过临时替换函数实现无需 AI。
+    const old=window.jsonpgz;
+    window.jsonpgz=(v)=>finish(v||null);
+    s.onerror=()=>finish(null);
+    s.src='https://fundgz.1234567.com.cn/js/'+encodeURIComponent(code)+'.js?rt='+Date.now();
+    document.head.appendChild(s);
+    setTimeout(()=>finish(null),5000);
+    // 恢复全局函数不会影响已完成的回调
+    setTimeout(()=>{ if(window.jsonpgz!==old) window.jsonpgz=old; },5200);
+  });
+}
+async function getFundEstimateCached(code){
+  const key='smartFundEst_v1_'+code;
+  const cached=smartCacheGet(key,2*60*1000);
+  if(cached) return cached;
+  const v=await fundEstimateJSONP(code);
+  if(v){
+    const est=parseFloat(v.gszzl);
+    const out={pct:Number.isFinite(est)?est:null,name:v.name||'',time:v.gztime||''};
+    smartCacheSet(key,out); return out;
+  }
+  return null;
+}
+async function buildSmartSectorFundRanking(boards){
+  if(!Array.isArray(boards)||!boards.length) return {html:'',count:0,source:''};
+  // 只探测市场最强/最弱的一小撮板块，避免把几百个板块全部请求一遍。
+  const sorted=[...boards].filter(b=>b && b.f14 && Number.isFinite(Number(b.f3))).sort((a,b)=>b.f3-a.f3);
+  const candidates=[]; const seen=new Set();
+  [...sorted.slice(0,12),...sorted.slice(-12).reverse()].forEach(b=>{
+    const name=String(b.f14); if(seen.has(name))return; seen.add(name); candidates.push(b);
+  });
+  const found=[];
+  // 搜索基金映射，基金搜索结果 6 小时缓存，所以不是每次刷新都打接口。
+  for(const b of candidates){
+    const funds=await searchFundsForBoard(b.f14);
+    if(funds.length) found.push({board:b,funds});
+    if(found.length>=8) break;
+  }
+  if(!found.length) return {html:'<div class="muted" style="padding:8px 0">暂时没有找到可匹配的代表基金，稍后自动重试。</div>',count:0,source:'全市场板块动态筛选'};
+  const strong=found.filter(x=>x.board.f3>=0).sort((a,b)=>b.board.f3-a.board.f3).slice(0,4);
+  const weak=found.filter(x=>x.board.f3<0).sort((a,b)=>a.board.f3-b.board.f3).slice(0,3);
+  const selected=[...strong,...weak];
+  let html=''; let fundCount=0;
+  html+=`<div class="smart-rank-note">每天先扫描全市场板块涨跌，再从最强/最弱板块中自动找代表基金；不使用 DeepSeek。</div>`;
+  if(strong.length){
+    html+=`<div style="font-size:12px;color:#138a4b;font-weight:800;margin:8px 0 4px">🔥 今日最强板块 TOP${strong.length}</div>`;
+    for(const x of strong){
+      const fundRows=[];
+      const candidates2=[];
+      for(const f of x.funds.slice(0,10)){ const q=await getFundEstimateCached(f.code); if(q&&q.pct!=null)candidates2.push({...f,...q}); }
+      candidates2.sort((a,b)=>b.pct-a.pct).slice(0,3).forEach((f,i)=>{fundCount++;fundRows.push(`<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp up">▲${Math.abs(f.pct).toFixed(2)}%</div></div>`);});
+      html+=`<div class="fgrp">${esc(x.board.f14)}<small>板块 +${Number(x.board.f3).toFixed(2)}% 🔥</small></div>${fundRows.join('')||'<div class="muted" style="padding:6px">基金估值暂未返回</div>'}`;
+    }
+  }
+  if(weak.length){
+    html+=`<div style="font-size:12px;color:#c0392b;font-weight:800;margin:12px 0 4px">⚠️ 今日最弱板块 TOP${weak.length}</div>`;
+    for(const x of weak){
+      const candidates2=[];
+      for(const f of x.funds.slice(0,10)){ const q=await getFundEstimateCached(f.code); if(q&&q.pct!=null)candidates2.push({...f,...q}); }
+      candidates2.sort((a,b)=>b.pct-a.pct).slice(0,3).forEach((f,i)=>{fundCount++;html+=`<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp ${cls(f.pct)}">${pctArrow(f.pct)}</div></div>`;});
+      html+=`<div class="fgrp">${esc(x.board.f14)}<small>板块 ${Number(x.board.f3).toFixed(2)}%</small></div>`;
+    }
+  }
+  return {html,count:fundCount,source:`全市场扫描 ${boards.length} 个板块 → 动态选最强/最弱板块，再从东方财富基金库匹配代表基金；基金搜索缓存6小时、估值缓存2分钟。`};
 }
 
 function loadNavScript(code){
@@ -1827,46 +1948,11 @@ async function loadAll(){
   // 我的持仓估值
   const holdFunds=USER_HOLDINGS.map(f=>computeFund(f,fTx,fEm,bmap));
 
-  // 板块关联基金估值
-  const rankResults=SECTOR_FUNDS.map(f=>computeFund(f,fTx,fEm,bmap));
-  // 按板块分组
-  const secMap={};
-  rankResults.forEach(r=>{ const k=r.f.sec; if(!secMap[k]) secMap[k]=[]; secMap[k].push(r); });
-
-  // 渲染板块关联基金：每天动态从每板块基金池中选「涨幅 TOP3 + 跌幅 TOP3」
-  let rankHtml='', rankValidCnt=0;
-  SECTORS.forEach(s=>{
-    const list=secMap[s.name]; if(!list || !list.length) return;
-    const secData=sectors.find(x=>x.name===s.name);
-    const secPct=secData?.pct ?? 0;
-    const verified=secData?.verified;
-    // 涨幅榜：est > 0 的 top 3（按 est 降序）
-    const upList = list.filter(r=>r.est!=null && r.est>0).sort((a,b)=>b.est-a.est).slice(0,3);
-    // 跌幅榜：est < 0 的 top 3（按 est 升序，跌最多的在前）
-    const downList = list.filter(r=>r.est!=null && r.est<0).sort((a,b)=>a.est-b.est).slice(0,3);
-    rankHtml+=`<div class="fgrp">${s.name}<small>板块 ${pctStr(secPct)} ${verified?'✅':'⚠️'}</small></div>`;
-    const renderRow=(r,i)=>{
-      const f=r.f; const est=r.est;
-      const isActive=f.type==='active';
-      const cover=r.cov||0;
-      const tag = isActive ? `<span class="ftag">穿透 ${cover.toFixed(0)}%</span>` : `<span class="ftag">指数联接</span>`;
-      const divTag = r.div!=null && r.div>0.8 ? `<span class="ftag" style="background:#fdeaea;color:#c0392b;border-color:#f5b3b3">⚠已调仓</span>` : '';
-      if(r.div!=null && r.div<=0.8) rankValidCnt++;
-      return `<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${f.name}<em class="plabel">${f.label}</em></div>${tag}${divTag}<div class="fp ${cls(est)}">${pctArrow(est)}</div></div>`;
-    };
-    if(upList.length){
-      rankHtml+=`<div style="font-size:11px;color:#0b8a4b;font-weight:700;margin:4px 0 2px">🔺 涨幅榜 TOP${upList.length}</div>`;
-      upList.forEach((r,i)=>{ rankHtml+=renderRow(r,i); });
-    }
-    if(downList.length){
-      rankHtml+=`<div style="font-size:11px;color:#c0392b;font-weight:700;margin:8px 0 2px">🔻 跌幅榜 TOP${downList.length}</div>`;
-      downList.forEach((r,i)=>{ rankHtml+=renderRow(r,i); });
-    }
-    if(!upList.length && !downList.length){
-      rankHtml+=`<div class="muted" style="padding:6px 0;font-size:11px">暂无涨跌数据（数据收集中）</div>`;
-    }
-  });
-  const ranksrc=`板块关联基金：${rankResults.length} 只，每天动态选每板块「涨幅 TOP3 + 跌幅 TOP3」；指数型直接取板块涨跌，主动型重仓股穿透反推。`;
+  // 板块关联基金：改为全市场动态智能筛选，不再固定盯着8个科技板块。
+  // 这里完全不调用 AI：先按东财全市场板块涨跌排序，再匹配代表基金并取当日估值。
+  const smartRank=await buildSmartSectorFundRanking(boards);
+  const rankHtml=smartRank.html;
+  const ranksrc=smartRank.source;
 
   // 持仓卡片：盘中三路估值 + 盘后官方净值，都支持用户填份额/成本算盈亏
   // 先拉一次 pingzhongdata 拿到最新/昨日净值（用于盈亏计算）
