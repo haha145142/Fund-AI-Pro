@@ -154,7 +154,7 @@ html,body{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f8 100%)!important;c
 .card,.fundcard,.sc,.wc,.headline,details{background:rgba(255,255,255,.88)!important;border-color:rgba(220,227,237,.95)!important;box-shadow:0 8px 24px rgba(37,58,88,.07)!important;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
 .card h2,.fundcard .fn,.sc .nm,.assetval,.subttl{color:#172033}.card h2 small,.muted,.band-title,.assetlabel2{color:#738095!important}
 th{background:#f5f7fa!important;color:#59667a!important}td{border-color:#edf0f5!important}.note,.warnbox{background:#f5f8fc!important;color:#59667a!important;border-color:#e3eaf3!important}.tabbar{background:rgba(255,255,255,.88)!important;border-color:rgba(210,218,229,.9)!important;box-shadow:0 -6px 24px rgba(37,58,88,.08)!important}.tab.active{color:#245FC7}.tab.active::before{background:#245FC7}.tab:active{background:#edf5ff}.fundcard:active,.fundcard.selected{background:#f1f6ff!important;border-color:#8fb7ff!important}
-.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.band-panel{padding:14px;border-radius:18px;border:1px solid #e4e9f0;min-height:116px}.band-panel.low{background:linear-gradient(135deg,#fff3f4,#fff9f9)}.band-panel.high{background:linear-gradient(135deg,#f0faf4,#f9fcfa)}.band-title{font-size:12px;color:#5e6b7f}.band-main{font-size:20px;font-weight:800;margin-top:10px;color:#172033}.band-sub{font-size:11px;color:#667388;line-height:1.5;margin-top:6px}.ai-predict{margin-top:10px;padding:11px 12px;border-radius:14px;background:#eef5ff;border:1px solid #c7dcff;color:#245A9E;font-size:12px;line-height:1.6}.trend-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:14px;background:#f5f7fa;border:1px solid #e7ebf1;color:#56647a;font-size:12px}.trend-row b{font-size:15px;color:#172033}.metric-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.metric-row span{font-size:10px;color:#667388;padding:4px 7px;border-radius:8px;background:#f1f4f8;border:1px solid #e6ebf1}@media(max-width:430px){.band-grid{grid-template-columns:1fr}}
+.band-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.band-panel{padding:14px;border-radius:18px;border:1px solid #e4e9f0;min-height:116px}.band-panel.low{background:linear-gradient(135deg,#fff3f4,#fff9f9)}.band-panel.high{background:linear-gradient(135deg,#f0faf4,#f9fcfa)}.band-title{font-size:12px;color:#5e6b7f}.band-main{font-size:20px;font-weight:800;margin-top:10px;color:#172033}.band-sub{font-size:11px;color:#667388;line-height:1.5;margin-top:6px}.ai-predict{margin-top:10px;padding:11px 12px;border-radius:14px;background:#eef5ff;border:1px solid #d8e7ff;color:#245A9E;font-size:12px;line-height:1.6}.trend-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:14px;background:#f5f7fa;border:1px solid #e7ebf1;color:#56647a;font-size:12px}.trend-row b{font-size:15px;color:#172033}.metric-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.metric-row span{font-size:10px;color:#667388;padding:4px 7px;border-radius:8px;background:#f1f4f8;border:1px solid #e6ebf1}@media(max-width:430px){.band-grid{grid-template-columns:1fr}}
 /* 可读性兜底：避免任何组件出现浅底白字/深底黑字 */
 .headline,.card,.fundcard,.sc,.wc,details,details summary{color:#172033}.headline *,.card *,.fundcard *,.sc *,.wc *{text-shadow:none}.src{color:#7a8595!important}
 
@@ -2267,60 +2267,197 @@ document.addEventListener('click', (e)=>{
 </script>
 
 <script>
+/* ===== V5：真实基金历史净值 → RSI / BOLL / BIAS / MACD / MA → 波段信号 ===== */
 (function(){
-  function sma(a,n){if(!Array.isArray(a)||a.length<n)return null;return a.slice(-n).reduce((x,y)=>x+y,0)/n}
-  function rsi(a,n=14){
-    if(!Array.isArray(a)||a.length<n+1)return null;
-    let g=0,l=0;
-    for(let i=a.length-n;i<a.length;i++){const d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}
-    if(l===0)return 100;
-    return 100-100/(1+g/l);
-  }
-  function ema(a,n){if(!Array.isArray(a)||!a.length)return null;const k=2/(n+1);let e=a[0];for(let i=1;i<a.length;i++)e=e+(a[i]-e)*k;return e}
-  function macd(a){const e12=ema(a,12),e26=ema(a,26);return e12==null||e26==null?null:e12-e26}
-  function boll(a,n=20){
-    if(!Array.isArray(a)||a.length<n)return null;
-    const x=a.slice(-n),m=x.reduce((s,v)=>s+v,0)/x.length;
-    const sd=Math.sqrt(x.reduce((s,v)=>s+(v-m)**2,0)/x.length);
-    return {m,up:m+2*sd,lo:m-2*sd};
-  }
-  function analyze(a){
+  const bandState={items:[],loading:false,last:0};
+
+  function fmt(v,n=2){return Number.isFinite(v)?v.toFixed(n):'--';}
+
+  function calcIndicators(a){
     if(!Array.isArray(a)||a.length<26)return null;
-    const last=a[a.length-1],R=rsi(a),m5=sma(a,5),m20=sma(a,20),b=boll(a),M=macd(a);
-    if([last,R,m5,m20,b?.up,b?.lo,M].some(v=>v==null||!Number.isFinite(v)))return null;
-    const bias=(last/m20-1)*100;
-    const low=R<30&&last<=b.lo*1.012;
-    const high=R>70&&last>=b.up*0.988;
-    const strong=m5>m20&&M>0;
-    let score=50+(strong?22:-18);
-    if(R<30)score+=16;
-    if(R>70)score-=16;
+    const n=a.length,last=a[n-1];
+    const sma=(arr,k)=>arr.length<k?null:arr.slice(-k).reduce((s,v)=>s+v,0)/k;
+    const ema=(arr,k)=>{
+      if(arr.length<k)return null;
+      let e=arr.slice(0,k).reduce((s,v)=>s+v,0)/k,alpha=2/(k+1);
+      for(let i=k;i<arr.length;i++)e=alpha*arr[i]+(1-alpha)*e;
+      return e;
+    };
+
+    let gain=0,loss=0;
+    for(let i=n-14;i<n;i++){
+      const d=a[i]-a[i-1];
+      if(d>0)gain+=d;else loss-=d;
+    }
+    const rsi=loss===0?100:100-100/(1+gain/loss);
+    const ma5=sma(a,5),ma20=sma(a,20);
+    const tail=a.slice(-20);
+    const sd=Math.sqrt(tail.reduce((s,v)=>s+(v-ma20)**2,0)/20);
+    const bollUp=ma20+2*sd,bollLo=ma20-2*sd;
+    const bias=(last/ma20-1)*100;
+    const e12=ema(a,12),e26=ema(a,26);
+    const macd=e12-e26;
+
+    const low=rsi<30&&last<=bollLo*1.012;
+    const high=rsi>70&&last>=bollUp*0.988;
+    const strong=ma5>ma20&&macd>0;
+
+    let score=50;
+    score+=strong?22:-18;
+    if(rsi<30)score+=16;
+    if(rsi>70)score-=16;
     score+=Math.max(-10,Math.min(10,bias*2));
     score=Math.max(0,Math.min(100,score));
-    return {R,m5,m20,b,M,bias,low,high,strong,score};
+
+    return {last,rsi,ma5,ma20,bollUp,bollLo,bias,macd,low,high,strong,score};
   }
-  function render(values){
-    const x=analyze(values);
+
+  function getFunds(){
+    try{
+      const list=(typeof USER_HOLDINGS!=='undefined'?USER_HOLDINGS:
+                  (typeof FUNDS!=='undefined'?FUNDS:[]));
+      return Array.isArray(list)?list.slice(0,8):[];
+    }catch(e){return []}
+  }
+
+  function history(code){
+    return new Promise(resolve=>{
+      if(!code)return resolve(null);
+
+      const s=document.createElement('script');
+      let done=false;
+      const finish=values=>{
+        if(done)return;
+        done=true;
+        try{s.remove()}catch(e){}
+        resolve(values&&values.length>=26?values:null);
+      };
+
+      const timer=setTimeout(()=>finish(null),12000);
+      s.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js';
+
+      s.onload=()=>{
+        clearTimeout(timer);
+        let trend=null;
+        try{trend=window.Data_netWorthTrend}catch(e){}
+        const values=Array.isArray(trend)
+          ?trend.map(x=>Number(x&&x.y)).filter(Number.isFinite)
+          :[];
+        finish(values);
+      };
+
+      s.onerror=()=>{
+        clearTimeout(timer);
+        finish(null);
+      };
+
+      document.head.appendChild(s);
+    });
+  }
+
+  function paint(items){
+    const valid=items.filter(x=>x.ind);
+
     const q=id=>document.getElementById(id);
-    if(!x){
-      if(q('bandLow'))q('bandLow').textContent='数据不足';
-      if(q('bandHigh'))q('bandHigh').textContent='数据不足';
-      if(q('bandLowReason'))q('bandLowReason').textContent='需要至少 26 个历史净值点';
-      if(q('bandHighReason'))q('bandHighReason').textContent='需要至少 26 个历史净值点';
-      if(q('trendSignal'))q('trendSignal').textContent='等待数据';
+
+    if(!valid.length){
+      if(q('bandLow'))q('bandLow').textContent='暂无历史数据';
+      if(q('bandHigh'))q('bandHigh').textContent='暂无历史数据';
+      if(q('bandLowReason'))q('bandLowReason').textContent='历史净值暂未返回足够数据';
+      if(q('bandHighReason'))q('bandHighReason').textContent='历史净值暂未返回足够数据';
+      if(q('trendSignal'))q('trendSignal').textContent='数据获取失败';
       if(q('trendScore'))q('trendScore').textContent='--';
+      if(q('bandMetrics'))q('bandMetrics').innerHTML='<span>RSI --</span><span>MA5 --</span><span>MA20 --</span><span>MACD --</span>';
+      if(q('bandAIPredict'))q('bandAIPredict').textContent='🤖 AI 智能预测：暂时无法读取基金历史净值，请稍后刷新；不会用虚假数据代替真实指标。';
+      if(q('bandTimestamp'))q('bandTimestamp').textContent='数据源暂不可用';
       return;
     }
-    q('bandLow').textContent=x.low?'低位区 · 关注':'未进入低位';
-    q('bandHigh').textContent=x.high?'高位区 · 谨慎':'未进入高位';
-    q('bandLowReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL下轨 ${x.b.lo.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;
-    q('bandHighReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL上轨 ${x.b.up.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;
-    q('trendSignal').textContent=x.strong?'趋势偏强':'趋势偏弱';
-    q('trendScore').textContent=`势值 ${x.score.toFixed(0)}`;
-    q('bandMetrics').innerHTML=`<span>RSI ${x.R.toFixed(1)}</span><span>MA5 ${x.m5.toFixed(4)}</span><span>MA20 ${x.m20.toFixed(4)}</span><span>MACD ${x.M.toFixed(4)}</span>`;
-    q('bandAIPredict').textContent='🤖 AI 智能预测：'+(x.low?'偏低位：关注超卖后的止跌确认':x.high?'偏高位：注意超买后的回撤风险':x.strong?'趋势偏强：等待回踩确认':'震荡区：继续观察');
+
+    const lows=valid.filter(x=>x.ind.low);
+    const highs=valid.filter(x=>x.ind.high);
+    const strong=valid.filter(x=>x.ind.strong);
+    const weak=valid.length-strong.length;
+
+    const lowText=lows.length
+      ?`${lows.length}只 · ${lows.slice(0,2).map(x=>x.name).join('、')}`
+      :'未进入低位';
+    const highText=highs.length
+      ?`${highs.length}只 · ${highs.slice(0,2).map(x=>x.name).join('、')}`
+      :'未进入高位';
+
+    const avgR=valid.reduce((s,x)=>s+x.ind.rsi,0)/valid.length;
+    const avgBias=valid.reduce((s,x)=>s+x.ind.bias,0)/valid.length;
+    const avgMacd=valid.reduce((s,x)=>s+x.ind.macd,0)/valid.length;
+    const avgScore=valid.reduce((s,x)=>s+x.ind.score,0)/valid.length;
+
+    const lowReasons=lows.length
+      ?lows.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
+      :`平均 RSI ${fmt(avgR,1)}，未同时满足 RSI<30 + BOLL下轨`;
+
+    const highReasons=highs.length
+      ?highs.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
+      :`平均 RSI ${fmt(avgR,1)}，未同时满足 RSI>70 + BOLL上轨`;
+
+    if(q('bandLow'))q('bandLow').textContent=lowText;
+    if(q('bandHigh'))q('bandHigh').textContent=highText;
+    if(q('bandLowReason'))q('bandLowReason').textContent=lowReasons;
+    if(q('bandHighReason'))q('bandHighReason').textContent=highReasons;
+    if(q('trendSignal'))q('trendSignal').textContent=strong.length>=weak?'走强':'走弱';
+    if(q('trendScore'))q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong}强/${weak}弱`;
+    if(q('bandMetrics'))q('bandMetrics').innerHTML=
+      `<span>平均RSI ${fmt(avgR,1)}</span><span>BIAS ${fmt(avgBias,2)}%</span><span>MACD ${fmt(avgMacd,4)}</span><span>样本 ${valid.length}只</span>`;
+
+    let verdict='震荡观察';
+    if(lows.length&&!highs.length)verdict='偏低位 · 关注超卖反弹';
+    else if(highs.length&&!lows.length)verdict='偏高位 · 注意回撤风险';
+    else if(lows.length&&highs.length)verdict='分化 · 个别基金处于极端区';
+    else if(strong.length>weak)verdict='趋势偏强 · 等待回踩确认';
+    else if(weak>strong)verdict='趋势偏弱 · 控制追高风险';
+
+    if(q('bandAIPredict'))q('bandAIPredict').textContent=
+      `🤖 AI 智能预测：${verdict}｜基于 ${valid.length} 只基金最近净值历史计算。`;
+
+    if(q('bandTimestamp'))q('bandTimestamp').textContent=
+      '指标更新 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
   }
-  window.renderBandSignal=render;
+
+  window.refreshRealBandSignal=async function(){
+    if(bandState.loading)return;
+    bandState.loading=true;
+
+    try{
+      const list=getFunds();
+
+      if(!list.length){
+        if(document.getElementById('bandAIPredict'))
+          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：暂无基金可分析。';
+        return;
+      }
+
+      const results=[];
+
+      for(const f of list){
+        const values=await history(f.code);
+        const ind=calcIndicators(values||[]);
+        results.push({code:f.code,name:f.name||f.code,ind});
+
+        const ts=document.getElementById('bandTimestamp');
+        if(ts)ts.textContent=`正在读取 ${results.length}/${list.length} 只基金`;
+      }
+
+      bandState.items=results;
+      bandState.last=Date.now();
+      paint(results);
+    }catch(e){
+      paint([]);
+    }finally{
+      bandState.loading=false;
+    }
+  };
+
+  // 首屏完成后再读取历史净值，避免影响主页加载。
+  window.addEventListener('load',()=>setTimeout(()=>window.refreshRealBandSignal(),6000));
+  setInterval(()=>window.refreshRealBandSignal(),10*60*1000);
 })();
 </script>
 </body>
