@@ -218,18 +218,8 @@ details th,details td{font-size:11px}
 .wave-method{margin-top:9px;font-size:10.5px;color:#6d7880;line-height:1.65;background:#F7FAFC;padding:8px 10px;border-radius:10px}
 .wave-note{font-size:10px;color:#8a949b;margin-top:7px}
 .wave-score{margin-top:9px;padding:10px 11px;border-radius:12px;background:linear-gradient(145deg,#f7fbff,#eef6fd);border:1px solid #dbeaf5;display:flex;align-items:center;gap:10px}
-.wave-ai{margin-top:9px;padding:11px 12px;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#eef6fd);border:1px solid #cfe3f2;color:#31485a}
-.wave-ai-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:750}
-.wave-ai-head b{font-size:13px}
-.wave-ai-score{margin-top:5px;font-size:10.5px;color:#536575;line-height:1.55}
-.wave-ai-action{margin-top:6px;font-size:11px;font-weight:650;color:#2f536f}
-.wave-ai-note{margin-top:5px;font-size:9.5px;color:#71808c;line-height:1.45}
-.wave-ai.strong .wave-ai-head b{color:#b65a70}
-.wave-ai.weak .wave-ai-head b{color:#4f7fa2}
-.wave-ai.high .wave-ai-head b{color:#c27b45}
-
-.wave-score .num{font-size:24px;font-weight:850;min-width:48px;text-align:center;color:#245f91}
-.wave-score .body{flex:1;min-width:0}.wave-score .title{font-size:12px;font-weight:750;color:#263746}.wave-score .desc{font-size:10.5px;color:#536575;line-height:1.55;margin-top:2px}
+.wave-score .num{font-size:24px;font-weight:850;min-width:48px;text-align:center;color:#3e7fae}
+.wave-score .body{flex:1;min-width:0}.wave-score .title{font-size:12px;font-weight:750;color:#263746}.wave-score .desc{font-size:10.5px;color:#6d7880;line-height:1.55;margin-top:2px}
 .wave-detail{margin-top:7px;border-top:1px dashed #e5edf3;padding-top:7px}.wave-detail summary{font-size:10.5px;color:#4b6f8a;font-weight:600}.wave-detail table{font-size:10px;margin-top:5px}.wave-detail th,.wave-detail td{padding:5px 4px;background:transparent}.wave-detail th{background:#f7fafc;color:#71808c}
 
 
@@ -1482,32 +1472,6 @@ function waveSignalHtml(scope='hold'){
   const [scoreNum,scoreLabel]=bandScoreLabel(Math.round(avgScore));
   const scoreDesc=`平均 RSI ${avgRsi.toFixed(1)} · ${strongs.length} 只走强 / ${weaks.length} 只走弱；评分综合 RSI、MA5/MA20、MACD、BOLL 位置，仅用于辅助观察。`;
   html+=`<div class="wave-score"><div class="num">${scoreNum}</div><div class="body"><div class="title">〽️ 波段综合评分 · ${scoreLabel}</div><div class="desc">${scoreDesc}</div></div></div>`;
-  // ===== AI 智能预测：透明规则版，基于当前技术指标，不冒充大模型 =====
-  const avgBias = rows.reduce((s,x)=>s + ((x.a.current/x.a.bb.mid-1)*100),0) / rows.length;
-  const avgMacd = rows.reduce((s,x)=>s + x.a.macd.dif,0) / rows.length;
-  let aiTitle='震荡观察', aiCls='flat', aiAction='暂不追高，等待更明确的信号';
-  if(scoreNum>=70 && avgRsi<68 && strongs.length>=weaks.length){
-    aiTitle='震荡偏强'; aiCls='strong';
-    aiAction='已有仓位可继续观察；新仓等回调，不建议盲目追涨';
-  }else if(scoreNum<=30 || weaks.length>strongs.length*1.5){
-    aiTitle='偏弱观察'; aiCls='weak';
-    aiAction='控制仓位，优先等待趋势和资金面改善';
-  }else if(avgRsi>=70){
-    aiTitle='偏热防追高'; aiCls='high';
-    aiAction='短线偏热，已有仓位注意冲高回落，不宜追涨';
-  }
-  const reasons=[];
-  reasons.push(`平均 RSI ${avgRsi.toFixed(1)}`);
-  reasons.push(`${strongs.length} 只走强 / ${weaks.length} 只走弱`);
-  reasons.push(`平均 BIAS ${avgBias.toFixed(2)}%`);
-  reasons.push(`MACD ${avgMacd>=0?'偏多':'偏弱'}`);
-  html+=`<div class="wave-ai ${aiCls}">
-    <div class="wave-ai-head"><span>🤖 AI 智能预测</span><b>${aiTitle}</b></div>
-    <div class="wave-ai-score">综合 ${scoreNum} 分 · ${reasons.join(' · ')}</div>
-    <div class="wave-ai-action">💡 ${aiAction}</div>
-    <div class="wave-ai-note">基于当前持仓/自选基金的 RSI、BOLL、MA5/MA20、MACD 规则计算；仅作辅助观察，不代表实际收益预测。</div>
-  </div>`;
-
   html+=`<details class="wave-detail"><summary>查看 ${rows.length} 只基金的 RSI / BOLL / MA / MACD 明细</summary><table><tr><th>基金</th><th>RSI</th><th>MA趋势</th><th>MACD</th><th>评分</th></tr>`;
   rows.slice(0,12).forEach(({f,a})=>{ html+=`<tr><td>${esc(f.name)}</td><td>${a.rsi.toFixed(1)}</td><td>${a.ma5>a.ma20?'多头':'空头'}</td><td>${a.macd.dif>=0?'上':'下'}</td><td><b>${a.score}</b></td></tr>`; });
   html+=`</table></details>`;
@@ -2462,5 +2426,112 @@ document.addEventListener('click', async (e)=>{
 });
 
 </script>
+
+<script>
+/* ===== 持仓本地保存：刷新/关闭页面后自动恢复 ===== */
+(function(){
+  const KEY = 'fund_ai_pro_holdings_v1';
+
+  function readStore(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+    catch(e){ return {}; }
+  }
+
+  function writeStore(data){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+  }
+
+  function keyFor(el){
+    const code =
+      el.dataset.fundCode ||
+      el.dataset.code ||
+      el.getAttribute('data-code') ||
+      el.closest('[data-code]')?.getAttribute('data-code') ||
+      el.closest('[data-fund-code]')?.getAttribute('data-fund-code');
+
+    const name =
+      el.dataset.fundName ||
+      el.getAttribute('data-fund-name') ||
+      el.closest('[data-fund-name]')?.getAttribute('data-fund-name') ||
+      el.closest('.fund-card,.fundcard,.holding-card')?.querySelector('.fund-name,.name,.fund-title')?.textContent;
+
+    return String(code || name || '').trim();
+  }
+
+  function fieldType(el){
+    const s = ((el.name||'')+' '+(el.id||'')+' '+(el.placeholder||'')+' '+(el.getAttribute('aria-label')||'')).toLowerCase();
+    if(/成本|cost|avg|average|price/.test(s)) return 'cost';
+    if(/份额|share|shares|quantity|amount/.test(s)) return 'shares';
+    if(/代码|code/.test(s)) return 'code';
+    return null;
+  }
+
+  function collect(){
+    const data = readStore();
+    document.querySelectorAll('input,textarea,select').forEach(el=>{
+      const type=fieldType(el);
+      if(!type) return;
+      const k=keyFor(el);
+      if(!k) return;
+      if(!data[k]) data[k]={};
+      data[k][type]=el.value;
+    });
+    writeStore(data);
+  }
+
+  function restore(){
+    const data=readStore();
+    document.querySelectorAll('input,textarea,select').forEach(el=>{
+      const type=fieldType(el);
+      if(!type) return;
+      const k=keyFor(el);
+      if(!k || !data[k] || data[k][type] == null) return;
+      if(document.activeElement !== el && !el.value) el.value=data[k][type];
+    });
+
+    // 触发现有页面的 input/change 监听，让恢复的数据重新参与计算。
+    document.querySelectorAll('input,textarea,select').forEach(el=>{
+      if(el.value){
+        try{ el.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){}
+        try{ el.dispatchEvent(new Event('change',{bubbles:true})); }catch(e){}
+      }
+    });
+  }
+
+  // 输入后立即保存，避免刷新丢失。
+  document.addEventListener('input', e=>{
+    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
+      const type=fieldType(e.target);
+      if(type) collect();
+    }
+  }, true);
+
+  document.addEventListener('change', e=>{
+    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
+      const type=fieldType(e.target);
+      if(type) collect();
+    }
+  }, true);
+
+  window.addEventListener('beforeunload', collect);
+  window.addEventListener('pagehide', collect);
+
+  // 页面动态生成基金卡片/输入框时，延迟多次恢复。
+  function boot(){
+    restore();
+    [500,1200,2500,5000].forEach(ms=>setTimeout(restore,ms));
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
+  else boot();
+
+  window.fundAIHoldingsSave=collect;
+  window.fundAIHoldingsRestore=restore;
+  window.fundAIHoldingsClear=function(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+  };
+})();
+</script>
+
 </body>
 </html>
