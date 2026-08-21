@@ -430,12 +430,27 @@ const SECTOR_FUNDS = [{"name":"天弘中证芯片产业指数发起A","sec":"存
 
 // 运行时持仓数组：用户可加/减基金，并填 shares(份)/cost(元/份) 算实际盈亏金额
 let USER_HOLDINGS = FUNDS.map(f=>({...f, shares:0, cost:0}));
+/* 持仓本地持久化：按基金代码保存份额/成本 */
+(function restoreSavedHoldings(){
+  try{
+    const saved = JSON.parse(localStorage.getItem('aapp_holdings_v2')||'{}');
+    USER_HOLDINGS.forEach(f=>{
+      const s=saved[f.code];
+      if(s){
+        if(Number.isFinite(Number(s.shares))) f.shares=Number(s.shares);
+        if(Number.isFinite(Number(s.cost))) f.cost=Number(s.cost);
+      }
+    });
+  }catch(e){}
+})();
 // 用户自定义新增的基金（无重仓股数据，走指数/主题拟合兜底）
 let USER_EXTRA_FUNDS = []; // [{code,name,shares,cost,sector,sectorName,isQDII,market,type,theme,_aiSource}]
 // v3：从 localStorage 恢复用户自加的基金
 try{
   const saved=localStorage.getItem('aapp_user_funds');
-  if(saved){ USER_EXTRA_FUNDS = JSON.parse(saved)||[]; }
+  if(saved){
+    USER_EXTRA_FUNDS = (JSON.parse(saved)||[]).filter(x=>x && x.code);
+  }
 }catch(e){}
 
 const SECTORS = [
@@ -503,47 +518,17 @@ function guessSectorByKW(name){
 
 // AI 智能识别基金板块归属（v3：QDII 单独走美股/港股/海外市场）
 async function guessFundSectorAI(code, name){
-  // 1) 先按名称检测 QDII
+  // 这里不调用大模型：基金板块/QDII 市场可先用本地规则判断，
+  // 避免用户每添加一只基金就消耗 DeepSeek。
   const qdiiMkt = detectQDII(name);
-  // 2) 关键词匹配板块（兜底）
   const kwSec = guessSectorByKW(name);
-  // 3) 调 LLM（如果有 Key）
-  const cfg = getLLMConfig();
-  let llmResult = null;
-  if(cfg.key){
-    try{
-      const SECTOR_NAMES = SECTORS.map(s=>s.name).join('、');
-      const prompt = `你是基金经理助理。用户新加了一只基金，请判断：
-1) 它最接近下列哪个 A 股板块（只能选一个，或"其他"）：${SECTOR_NAMES}
-2) 它是否是 QDII（投资海外市场的基金），如果是，是哪个市场（us=美股 / hk=港股 / other=其他海外）
-3) 给出置信度 0-1
-
-基金信息：
-- 名称：${name}
-- 代码：${code}
-
-严格只输出 JSON，不要任何其它文字：
-{"sector":"存储芯片","isQDII":false,"market":"a","confidence":0.85}`;
-      const txt = await callLLM(prompt);
-      if(txt){
-        const m = txt.match(/\{[\s\S]*?\}/);
-        if(m){
-          try{ llmResult = JSON.parse(m[0]); }catch(e){}
-        }
-      }
-    }catch(e){ /* 静默 */ }
-  }
-  // 4) 综合：QDII 优先 / LLM 板块 > 关键词板块
-  const finalIsQDII = llmResult ? !!llmResult.isQDII : !!qdiiMkt;
-  const finalMarket = finalIsQDII ? (llmResult?.market || qdiiMkt || 'other') : 'a';
-  let finalSectorName = null;
+  const finalIsQDII = !!qdiiMkt;
+  const finalMarket = finalIsQDII ? qdiiMkt : 'a';
+  let finalSectorName;
   if(finalIsQDII){
-    // QDII 不归到 A 股板块，返回市场名
     finalSectorName = ({us:'美股',hk:'港股',other:'海外'})[finalMarket] || '海外';
   }else{
-    finalSectorName = (llmResult && llmResult.sector && SECTORS.find(s=>s.name===llmResult.sector)) ? llmResult.sector
-                    : kwSec
-                    || SECTORS[0].name; // 实在识别不出，默认第一个板块
+    finalSectorName = kwSec || SECTORS[0].name;
   }
   const secDef = SECTORS.find(s=>s.name===finalSectorName) || SECTORS[0];
   return {
@@ -551,8 +536,8 @@ async function guessFundSectorAI(code, name){
     sectorName: finalSectorName,
     isQDII: finalIsQDII,
     market: finalMarket,
-    source: llmResult ? 'llm' : 'kw',
-    confidence: llmResult?.confidence ?? (kwSec?0.7:0.4)
+    source: 'kw',
+    confidence: kwSec||finalIsQDII ? 0.7 : 0.4
   };
 }
 
@@ -958,10 +943,14 @@ async function aiPerNews(list){
     // 无 Key：保持规则版不动
     return;
   }
-  // 按索引缓存（同一日复用）：arr[idx] = ai 解读文本
-  const dayKey='perNewsAI_'+new Date().toDateString();
-  if(_aiCache[dayKey] && Date.now()-_aiCache[dayKey].ts<15*60*1000){
-    const arr=_aiCache[dayKey].arr;
+  // 按新闻标题生成稳定缓存键；跨刷新复用，默认 6 小时。
+  const newsSig = list.map(x=>(x.title||'').trim()).join('|');
+  const dayKey='perNewsAI_v2_'+new Date().toDateString()+'_'+
+    btoa(unescape(encodeURIComponent(newsSig.slice(0,4000)))).slice(0,80);
+  let savedNewsAI=null;
+  try{ savedNewsAI=JSON.parse(localStorage.getItem(dayKey)||'null'); }catch(e){}
+  if(savedNewsAI && savedNewsAI.arr && Date.now()-savedNewsAI.ts<6*60*60*1000){
+    const arr=savedNewsAI.arr;
     if(arr && arr.length){
       for(let idx=0; idx<list.length; idx++){
         const e=document.getElementById('newsAI_'+idx);
@@ -1016,6 +1005,7 @@ ${lines}`;
     }
     if(out.filter(Boolean).length < Math.ceil(list.length*0.6)) throw new Error('mostly-empty');
     _aiCache[dayKey]={ts:Date.now(), arr:out};
+    try{ localStorage.setItem(dayKey, JSON.stringify({ts:Date.now(),arr:out})); }catch(e){}
     ok=true;
   }catch(e2){
     _aiCache[dayKey]=null;
@@ -1103,7 +1093,7 @@ async function aiComment(prompt, elId){
     return;
   }
   const cacheKey = elId;
-  if(_aiCache[cacheKey] && Date.now()-_aiCache[cacheKey].ts<5*60*1000){
+  if(_aiCache[cacheKey] && Date.now()-_aiCache[cacheKey].ts<60*60*1000){
     el.innerHTML = _aiCache[cacheKey].html;
     return;
   }
@@ -1216,7 +1206,7 @@ function buildNewsAnalysis(sectors, indices, who, news){
    if(!judgeEl) return;
    let llmCacheTs=0, llmCacheTxt='';
    try{ const c=JSON.parse(localStorage.getItem('aapp_llm_cache')||'null'); if(c){ llmCacheTs=c.ts; llmCacheTxt=c.txt; } }catch(e){}
-   if(llmCacheTxt && Date.now()-llmCacheTs<10*60*1000){
+   if(llmCacheTxt && Date.now()-llmCacheTs<60*60*1000){
      judgeEl.innerHTML='<b>🤖 大模型深度解读</b>（'+(cfg.provider==='qwen'?'通义千问':'DeepSeek')+'）：<br>'+llmCacheTxt.replace(/\n/g,'<br>');
      return;
    }
@@ -1606,6 +1596,21 @@ function render(data){
  if(!window._bindHoldings){
   window._bindHoldings=true;
   // 份额/成本输入 → 更新 USER_HOLDINGS
+  document.addEventListener('input', e=>{
+    const inp=e.target;
+    if(!inp || !inp.dataset || !inp.dataset.fcode) return;
+    const field=inp.dataset.field;
+    if(field!=='shares' && field!=='cost') return;
+    const code=inp.dataset.fcode;
+    const v=parseFloat(inp.value);
+    try{
+      const saved=JSON.parse(localStorage.getItem('aapp_holdings_v2')||'{}');
+      if(!saved[code]) saved[code]={};
+      saved[code][field]=isNaN(v)?0:v;
+      saved[code].updatedAt=Date.now();
+      localStorage.setItem('aapp_holdings_v2',JSON.stringify(saved));
+    }catch(e){}
+  });
   document.addEventListener('change', e=>{
     const inp=e.target;
     if(!inp || !inp.dataset || !inp.dataset.fcode) return;
@@ -1614,11 +1619,20 @@ function render(data){
     if(!f) return;
     const v=parseFloat(inp.value);
     f[field]=isNaN(v)?0:v;
+
+    // 立即按基金代码保存到手机本地，刷新/关闭页面都不会丢。
+    try{
+      const saved=JSON.parse(localStorage.getItem('aapp_holdings_v2')||'{}');
+      if(!saved[code]) saved[code]={};
+      saved[code][field]=isNaN(v)?0:v;
+      saved[code].updatedAt=Date.now();
+      localStorage.setItem('aapp_holdings_v2',JSON.stringify(saved));
+    }catch(e){}
+
     // 标记需要重新拉净值（如果之前没拉过）
     if(!window._navCacheAll[code]) window._navCacheAll[code]=null;
-    // 触发重渲染（保留焦点：延迟到下个事件循环）
     clearTimeout(window._holdTO);
-    window._holdTO=setTimeout(()=>{ loadAll(); }, 200);
+    window._holdTO=setTimeout(()=>{ loadAll(); }, 300);
   });
   // 删除基金
   document.addEventListener('click', e=>{
@@ -1629,6 +1643,12 @@ function render(data){
     if(idx>=0){
       USER_HOLDINGS.splice(idx,1);
       USER_EXTRA_FUNDS=USER_EXTRA_FUNDS.filter(x=>x.code!==code);
+      try{
+        const saved=JSON.parse(localStorage.getItem('aapp_holdings_v2')||'{}');
+        delete saved[code];
+        localStorage.setItem('aapp_holdings_v2',JSON.stringify(saved));
+        localStorage.setItem('aapp_user_funds',JSON.stringify(USER_EXTRA_FUNDS));
+      }catch(e){}
       loadAll();
     }
   });
@@ -2337,7 +2357,7 @@ function manualRefresh(){ loadAll(); }
       if(k){ localStorage.setItem('aapp_llm_provider',p); localStorage.setItem('aapp_llm_key',k); }
       else { localStorage.removeItem('aapp_llm_provider'); localStorage.removeItem('aapp_llm_key'); localStorage.removeItem('aapp_llm_cache'); }
     }catch(e){}
-    status.textContent = k ? '✅ 已保存 '+(p==='qwen'?'通义千问':'DeepSeek')+' Key，刷新页面后生效（10分钟内缓存）' : '已清除，回到规则引擎版';
+    status.textContent = k ? '✅ 已保存 '+(p==='qwen'?'通义千问':'DeepSeek')+' Key，刷新页面后生效（AI结果默认缓存60分钟）' : '已清除，回到规则引擎版';
     // 清 LLM 缓存，让下次刷新重新生成
     try{ localStorage.removeItem('aapp_llm_cache'); }catch(e){}
   });
@@ -2345,16 +2365,16 @@ function manualRefresh(){ loadAll(); }
 
 loadAll();
 setInterval(async ()=>{
-  // 盘中：30秒一刷；盘后/非交易：2分钟一刷（盯净值发布）
+  // 省算力：盘中 60 秒刷新；盘后/非交易日 5 分钟探测一次。
+  // 普通行情刷新不等于 AI 调用；AI 结果另有跨刷新缓存。
   const phase = getPhase();
   if(phase==='live') loadAll();
   else {
-    // 盘后/非交易日：每 2 分钟探测一次净值是否发布
     const probe=await loadNavScript(FUNDS[0].code);
     const today=new Date().toISOString().slice(0,10).replace(/-/g,'');
     if(probe && probe.date && probe.date.replace(/-/g,'')>=today) loadAll();
   }
-}, 30000);
+}, 60000);
 
 // ============ 底部 Tab 切换 ============
 function switchTab(name){
@@ -2426,112 +2446,5 @@ document.addEventListener('click', async (e)=>{
 });
 
 </script>
-
-<script>
-/* ===== 持仓本地保存：刷新/关闭页面后自动恢复 ===== */
-(function(){
-  const KEY = 'fund_ai_pro_holdings_v1';
-
-  function readStore(){
-    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
-    catch(e){ return {}; }
-  }
-
-  function writeStore(data){
-    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
-  }
-
-  function keyFor(el){
-    const code =
-      el.dataset.fundCode ||
-      el.dataset.code ||
-      el.getAttribute('data-code') ||
-      el.closest('[data-code]')?.getAttribute('data-code') ||
-      el.closest('[data-fund-code]')?.getAttribute('data-fund-code');
-
-    const name =
-      el.dataset.fundName ||
-      el.getAttribute('data-fund-name') ||
-      el.closest('[data-fund-name]')?.getAttribute('data-fund-name') ||
-      el.closest('.fund-card,.fundcard,.holding-card')?.querySelector('.fund-name,.name,.fund-title')?.textContent;
-
-    return String(code || name || '').trim();
-  }
-
-  function fieldType(el){
-    const s = ((el.name||'')+' '+(el.id||'')+' '+(el.placeholder||'')+' '+(el.getAttribute('aria-label')||'')).toLowerCase();
-    if(/成本|cost|avg|average|price/.test(s)) return 'cost';
-    if(/份额|share|shares|quantity|amount/.test(s)) return 'shares';
-    if(/代码|code/.test(s)) return 'code';
-    return null;
-  }
-
-  function collect(){
-    const data = readStore();
-    document.querySelectorAll('input,textarea,select').forEach(el=>{
-      const type=fieldType(el);
-      if(!type) return;
-      const k=keyFor(el);
-      if(!k) return;
-      if(!data[k]) data[k]={};
-      data[k][type]=el.value;
-    });
-    writeStore(data);
-  }
-
-  function restore(){
-    const data=readStore();
-    document.querySelectorAll('input,textarea,select').forEach(el=>{
-      const type=fieldType(el);
-      if(!type) return;
-      const k=keyFor(el);
-      if(!k || !data[k] || data[k][type] == null) return;
-      if(document.activeElement !== el && !el.value) el.value=data[k][type];
-    });
-
-    // 触发现有页面的 input/change 监听，让恢复的数据重新参与计算。
-    document.querySelectorAll('input,textarea,select').forEach(el=>{
-      if(el.value){
-        try{ el.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){}
-        try{ el.dispatchEvent(new Event('change',{bubbles:true})); }catch(e){}
-      }
-    });
-  }
-
-  // 输入后立即保存，避免刷新丢失。
-  document.addEventListener('input', e=>{
-    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
-      const type=fieldType(e.target);
-      if(type) collect();
-    }
-  }, true);
-
-  document.addEventListener('change', e=>{
-    if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)){
-      const type=fieldType(e.target);
-      if(type) collect();
-    }
-  }, true);
-
-  window.addEventListener('beforeunload', collect);
-  window.addEventListener('pagehide', collect);
-
-  // 页面动态生成基金卡片/输入框时，延迟多次恢复。
-  function boot(){
-    restore();
-    [500,1200,2500,5000].forEach(ms=>setTimeout(restore,ms));
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot);
-  else boot();
-
-  window.fundAIHoldingsSave=collect;
-  window.fundAIHoldingsRestore=restore;
-  window.fundAIHoldingsClear=function(){
-    try{ localStorage.removeItem(KEY); }catch(e){}
-  };
-})();
-</script>
-
 </body>
 </html>
