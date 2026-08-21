@@ -461,6 +461,88 @@ body{padding-bottom:94px!important}
 body{padding-bottom:0!important}
 /* “今日一句话”改成更像产品语言的标题 */
 
+
+/* ===== FINAL MOBILE NAV FIX · 2026-08-22 =====
+   原问题：前面的 iOS26 悬浮导航留下了 transform:translateX(-50%)，
+   后面虽然改成 position:static，却没有清除 transform，导致整个导航被向左
+   偏移、按钮视觉位置与实际点击区域错位。这里一次性重置所有定位属性。
+*/
+.tabbar{
+  position:static!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:72px!important;
+  margin:14px 0 0!important;
+  padding:6px 6px max(6px, env(safe-area-inset-bottom))!important;
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  gap:4px!important;
+  border-radius:22px 22px 0 0!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+  z-index:2!important;
+  pointer-events:auto!important;
+}
+.tabbar::before{display:none!important;pointer-events:none!important}
+.tab{
+  flex:1 1 0!important;
+  width:20%!important;
+  min-width:0!important;
+  height:58px!important;
+  min-height:58px!important;
+  margin:0!important;
+  padding:6px 2px 5px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-direction:column!important;
+  gap:3px!important;
+  position:relative!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+  cursor:pointer!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+}
+.tab .ico{
+  width:24px!important;height:24px!important;
+  flex:0 0 24px!important;
+}
+.tab .ico svg{
+  width:21px!important;height:21px!important;
+  display:block!important;
+}
+.tab .lb{
+  display:block!important;
+  font-size:11px!important;
+  line-height:15px!important;
+  height:15px!important;
+  margin:0!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+}
+.tab.active{
+  transform:none!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(226,239,255,.76))!important;
+  box-shadow:0 3px 12px rgba(56,111,190,.10),inset 0 1px 0 rgba(255,255,255,.98)!important;
+}
+.tab.active .ico svg{transform:none!important}
+.tab:active{transform:scale(.97)!important}
+body{padding-bottom:0!important}
+@media(max-width:380px){
+  .tabbar{min-height:70px!important;padding-left:4px!important;padding-right:4px!important}
+  .tab{height:56px!important;min-height:56px!important}
+  .tab .lb{font-size:10px!important}
+}
 </style>
 </head>
 <body>
