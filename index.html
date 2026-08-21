@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Fund AI Pro Ultimate</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:#050505;
+font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+color:white;
+padding:18px;
+}
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:10px 0 20px;
+}
+.logo{
+font-size:28px;
+font-weight:800;
+}
+.time{
+color:#8e8e93;
+font-size:13px;
+}
+.card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(30px);
+-webkit-backdrop-filter:blur(30px);
+border-radius:24px;
+padding:18px;
+margin-bottom:16px;
+border:1px solid rgba(255,255,255,.06);
+}
+.score{
+font-size:42px;
+font-weight:900;
+margin-top:8px;
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:14px;
+}
+.small{
+padding:14px;
+border-radius:18px;
+background:rgba(255,255,255,.05);
+}
+.badge{
+display:inline-block;
+padding:4px 10px;
+border-radius:999px;
+background:#4da3ff;
+font-size:12px;
+margin-top:8px;
+}
+.bottom{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+padding:14px;
+background:rgba(10,10,10,.9);
+backdrop-filter:blur(25px);
+display:flex;
+justify-content:space-around;
+border-top:1px solid rgba(255,255,255,.08);
+}
+.tab{
+text-align:center;
+color:#8e8e93;
+font-size:12px;
+}
+.tab.active{
+color:white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<div class="logo">Fund AI</div>
+<div class="time" id="time"></div>
+</div>
+
+<div class="card">
+<div style="font-size:14px;color:#aaa;">AI 市场总览</div>
+<div class="score">A+</div>
+<div style="margin-top:8px;">AI 热度仍强，半导体维持主升，建议保持中等偏高仓位。</div>
+<div class="badge">DeepSeek + 通义双AI</div>
+</div>
+
+<div class="grid">
+
+<div class="small">
+<div style="color:#aaa;">AI 仓位</div>
+<div style="font-size:28px;font-weight:800;margin-top:6px;">68%</div>
+</div>
+
+<div class="small">
+<div style="color:#aaa;">市场情绪</div>
+<div style="font-size:28px;font-weight:800;margin-top:6px;">72</div>
+</div>
+
+<div class="small">
+<div style="color:#aaa;">风险指数</div>
+<div style="font-size:22px;font-weight:800;margin-top:6px;">中</div>
+</div>
+
+<div class="small">
+<div style="color:#aaa;">今日收益</div>
+<div style="font-size:22px;font-weight:800;margin-top:6px;color:#4cd964;">+1.82%</div>
+</div>
+
+</div>
+
+<div class="card">
+<div style="font-size:18px;font-weight:700;">波段中心</div>
+
+<div style="margin-top:14px;padding:14px;border-radius:16px;background:rgba(255,80,80,.08);">
+<div style="font-size:14px;">今日 · 低位区</div>
+<div style="font-size:24px;font-weight:800;margin-top:4px;">AI 判断：关注机会</div>
+<div style="margin-top:6px;color:#bbb;">RSI＜30、MACD 底背离、触及布林下轨时会在这里显示。</div>
+</div>
+
+<div style="margin-top:12px;padding:14px;border-radius:16px;background:rgba(80,170,255,.08);">
+<div style="font-size:14px;">今日 · 高位区</div>
+<div style="font-size:24px;font-weight:800;margin-top:4px;">AI 判断：暂无</div>
+<div style="margin-top:6px;color:#bbb;">RSI＞70、布林上轨时会在这里提醒。</div>
+</div>
+
+</div>
+
+<div style="height:90px"></div>
+
+<div class="bottom">
+<div class="tab active">基金</div>
+<div class="tab">板块</div>
+<div class="tab">AI</div>
+<div class="tab">资讯</div>
+<div class="tab">我的</div>
+</div>
+
+<script>
+function updateTime(){
+const d=new Date();
+document.getElementById("time").innerText=
+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+" "+
+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+}
+updateTime();
+setInterval(updateTime,60000);
+</script>
+
+</body>
+</html>
