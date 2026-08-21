@@ -2399,11 +2399,13 @@ document.addEventListener('click', (e)=>{
       :`平均 RSI ${fmt(avgR,1)}，未同时满足 RSI>70 + BOLL上轨`;
 
     if(q('bandLow'))q('bandLow').textContent=lowText;
+    if(q('bandLowReason'))q('bandLowReason').title='低位条件：RSI<30 且接近BOLL下轨';
     if(q('bandHigh'))q('bandHigh').textContent=highText;
+    if(q('bandHighReason'))q('bandHighReason').title='高位条件：RSI>70 且接近BOLL上轨';
     if(q('bandLowReason'))q('bandLowReason').textContent=lowReasons;
     if(q('bandHighReason'))q('bandHighReason').textContent=highReasons;
     if(q('trendSignal'))q('trendSignal').textContent=strong.length>=weak?'走强':'走弱';
-    if(q('trendScore'))q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong}强/${weak}弱`;
+    if(q('trendScore'))q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong.length}强/${weak}弱`;
     if(q('bandMetrics'))q('bandMetrics').innerHTML=
       `<span>平均RSI ${fmt(avgR,1)}</span><span>BIAS ${fmt(avgBias,2)}%</span><span>MACD ${fmt(avgMacd,4)}</span><span>样本 ${valid.length}只</span>`;
 
