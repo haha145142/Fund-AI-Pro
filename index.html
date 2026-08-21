@@ -2366,5 +2366,145 @@ document.addEventListener('click', (e)=>{
   }
 });
 </script>
-\n<script>\n(function(){\n  function sma(a,n){if(a.length<n)return null;return a.slice(-n).reduce((x,y)=>x+y,0)/n}\n  function rsi(a,n=14){if(a.length<n+1)return null;let g=0,l=0;for(let i=a.length-n;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}if(l===0)return 100;return 100-100/(1+g/l)}\n  function ema(a,n){if(!a.length)return null;let k=2/(n+1),e=a[0];for(let i=1;i<a.length;i++)e=e+(a[i]-e)*k;return e}\n  function macd(a){let e12=ema(a,12),e26=ema(a,26);return e12-e26}\n  function boll(a,n=20){let x=a.slice(-n),m=x.reduce((s,v)=>s+v,0)/x.length,sd=Math.sqrt(x.reduce((s,v)=>s+(v-m)**2,0)/x.length);return {m,up:m+2*sd,lo:m-2*sd}}\n  function analyze(a){if(!Array.isArray(a)||a.length<20)return null;let last=a.at(-1),R=rsi(a),m5=sma(a,5),m20=sma(a,20),b=boll(a),M=macd(a),bias=(last/m20-1)*100;let low=R<30&&last<=b.lo*1.01,high=R>70&&last>=b.up*.99,strong=m5>m20&&M>0;let score=Math.max(0,Math.min(100,50+(strong?20:-15)+(R<30?18:R>70?-18:0)+(bias>0?Math.min(10,bias*2):Math.max(-10,bias*2))));return {R,m5,m20,b,M,bias,low,high,strong,score}}\n  window.renderBandSignal=function(values){let x=analyze(values);if(!x)return;const q=id=>document.getElementById(id);q('bandLow').textContent=x.low?'低位区 · 关注':'未进入低位';q('bandHigh').textContent=x.high?'高位区 · 谨慎':'未进入高位';q('bandLowReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL下轨 ${x.b.lo.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('bandHighReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL上轨 ${x.b.up.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('trendSignal').textContent=x.strong?'走强':'走弱';q('trendScore').textContent=`势值 ${x.score.toFixed(0)}`;q('bandMetrics').innerHTML=`<span>RSI ${x.R.toFixed(1)}</span><span>MA5 ${x.m5.toFixed(4)}</span><span>MA20 ${x.m20.toFixed(4)}</span><span>MACD ${x.M.toFixed(4)}</span>`;q('bandAIPredict').textContent='🤖 AI 智能预测：'+(x.low?'偏低位，关注超卖反弹机会':x.high?'偏高位，注意回撤风险':x.strong?'趋势偏强，等待回踩确认':'震荡区，建议继续观察');q('bandTimestamp').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};\n})();\n</script>\n</body>
+\n<script>\n(function(){\n  function sma(a,n){if(a.length<n)return null;return a.slice(-n).reduce((x,y)=>x+y,0)/n}\n  function rsi(a,n=14){if(a.length<n+1)return null;let g=0,l=0;for(let i=a.length-n;i<a.length;i++){let d=a[i]-a[i-1];if(d>0)g+=d;else l-=d}if(l===0)return 100;return 100-100/(1+g/l)}\n  function ema(a,n){if(!a.length)return null;let k=2/(n+1),e=a[0];for(let i=1;i<a.length;i++)e=e+(a[i]-e)*k;return e}\n  function macd(a){let e12=ema(a,12),e26=ema(a,26);return e12-e26}\n  function boll(a,n=20){let x=a.slice(-n),m=x.reduce((s,v)=>s+v,0)/x.length,sd=Math.sqrt(x.reduce((s,v)=>s+(v-m)**2,0)/x.length);return {m,up:m+2*sd,lo:m-2*sd}}\n  function analyze(a){if(!Array.isArray(a)||a.length<20)return null;let last=a.at(-1),R=rsi(a),m5=sma(a,5),m20=sma(a,20),b=boll(a),M=macd(a),bias=(last/m20-1)*100;let low=R<30&&last<=b.lo*1.01,high=R>70&&last>=b.up*.99,strong=m5>m20&&M>0;let score=Math.max(0,Math.min(100,50+(strong?20:-15)+(R<30?18:R>70?-18:0)+(bias>0?Math.min(10,bias*2):Math.max(-10,bias*2))));return {R,m5,m20,b,M,bias,low,high,strong,score}}\n  window.renderBandSignal=function(values){let x=analyze(values);if(!x)return;const q=id=>document.getElementById(id);q('bandLow').textContent=x.low?'低位区 · 关注':'未进入低位';q('bandHigh').textContent=x.high?'高位区 · 谨慎':'未进入高位';q('bandLowReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL下轨 ${x.b.lo.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('bandHighReason').textContent=`RSI ${x.R.toFixed(1)} · BOLL上轨 ${x.b.up.toFixed(4)} · BIAS ${x.bias.toFixed(2)}%`;q('trendSignal').textContent=x.strong?'走强':'走弱';q('trendScore').textContent=`势值 ${x.score.toFixed(0)}`;q('bandMetrics').innerHTML=`<span>RSI ${x.R.toFixed(1)}</span><span>MA5 ${x.m5.toFixed(4)}</span><span>MA20 ${x.m20.toFixed(4)}</span><span>MACD ${x.M.toFixed(4)}</span>`;q('bandAIPredict').textContent='🤖 AI 智能预测：'+(x.low?'偏低位，关注超卖反弹机会':x.high?'偏高位，注意回撤风险':x.strong?'趋势偏强，等待回踩确认':'震荡区，建议继续观察');q('bandTimestamp').textContent=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})};\n})();\n</script>\n
+/* ===== V5：真实基金历史净值 → RSI/BOLL/BIAS/MACD/MA → 波段信号 ===== */
+(function(){
+  const bandState = {items:[], loading:false, last:0};
+
+  function fmt(v,n=2){ return Number.isFinite(v) ? v.toFixed(n) : '--'; }
+
+  function calcIndicators(a){
+    if(!Array.isArray(a) || a.length < 26) return null;
+    const n=a.length, last=a[n-1];
+    const sma=(arr,k)=>arr.length<k?null:arr.slice(-k).reduce((s,v)=>s+v,0)/k;
+    const ema=(arr,k)=>{
+      if(arr.length<k) return null;
+      let e=arr.slice(0,k).reduce((s,v)=>s+v,0)/k, alpha=2/(k+1);
+      for(let i=k;i<arr.length;i++) e=alpha*arr[i]+(1-alpha)*e;
+      return e;
+    };
+    let gain=0,loss=0;
+    for(let i=n-14;i<n;i++){
+      const d=a[i]-a[i-1];
+      if(d>0) gain+=d; else loss-=d;
+    }
+    const rsi=loss===0?100:100-100/(1+gain/loss);
+    const ma5=sma(a,5), ma20=sma(a,20);
+    const mean=ma20;
+    const tail=a.slice(-20);
+    const sd=Math.sqrt(tail.reduce((s,v)=>s+(v-mean)**2,0)/20);
+    const bollUp=mean+2*sd, bollLo=mean-2*sd;
+    const bias=(last/mean-1)*100;
+    const e12=ema(a,12), e26=ema(a,26);
+    const macd=e12-e26;
+    const low=rsi<30 && last<=bollLo*1.012;
+    const high=rsi>70 && last>=bollUp*0.988;
+    const strong=ma5>ma20 && macd>0;
+    let score=50;
+    score += strong?22:-18;
+    if(rsi<30) score+=16;
+    if(rsi>70) score-=16;
+    score += Math.max(-10,Math.min(10,bias*2));
+    score=Math.max(0,Math.min(100,score));
+    return {last,rsi,ma5,ma20,bollUp,bollLo,bias,macd,low,high,strong,score};
+  }
+
+  async function history(code){
+    return await new Promise(resolve=>{
+      const s=document.createElement('script');
+      const timer=setTimeout(()=>{try{s.remove()}catch(e){};resolve(null)},9000);
+      s.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js';
+      s.onload=()=>{
+        clearTimeout(timer);
+        const trend=window.Data_netWorthTrend;
+        const values=Array.isArray(trend)?trend.map(x=>Number(x.y)).filter(Number.isFinite):[];
+        try{s.remove()}catch(e){}
+        resolve(values.length>=26?values:null);
+      };
+      s.onerror=()=>{clearTimeout(timer);try{s.remove()}catch(e){};resolve(null)};
+      document.head.appendChild(s);
+    });
+  }
+
+  function paint(items){
+    const valid=items.filter(x=>x.ind);
+    if(!valid.length) return;
+    const lows=valid.filter(x=>x.ind.low);
+    const highs=valid.filter(x=>x.ind.high);
+    const strong=valid.filter(x=>x.ind.strong);
+    const weak=valid.length-strong.length;
+
+    // 低位/高位显示“持仓中满足条件的基金”，避免伪造单只基金结论
+    const lowText=lows.length
+      ? `${lows.length}只 · ${lows.slice(0,2).map(x=>x.name).join('、')}`
+      : '未进入低位';
+    const highText=highs.length
+      ? `${highs.length}只 · ${highs.slice(0,2).map(x=>x.name).join('、')}`
+      : '未进入高位';
+
+    const avgR=valid.reduce((s,x)=>s+x.ind.rsi,0)/valid.length;
+    const avgBias=valid.reduce((s,x)=>s+x.ind.bias,0)/valid.length;
+    const avgMacd=valid.reduce((s,x)=>s+x.ind.macd,0)/valid.length;
+    const avgScore=valid.reduce((s,x)=>s+x.ind.score,0)/valid.length;
+
+    const lowReasons=lows.length
+      ? lows.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
+      : `平均 RSI ${fmt(avgR,1)}，未同时满足 RSI<30 + BOLL下轨`;
+    const highReasons=highs.length
+      ? highs.slice(0,2).map(x=>`${x.name} RSI ${fmt(x.ind.rsi,1)}`).join('；')
+      : `平均 RSI ${fmt(avgR,1)}，未同时满足 RSI>70 + BOLL上轨`;
+
+    const q=id=>document.getElementById(id);
+    if(q('bandLow')) q('bandLow').textContent=lowText;
+    if(q('bandHigh')) q('bandHigh').textContent=highText;
+    if(q('bandLowReason')) q('bandLowReason').textContent=lowReasons;
+    if(q('bandHighReason')) q('bandHighReason').textContent=highReasons;
+    if(q('trendSignal')) q('trendSignal').textContent=strong.length>=weak?'走强':'走弱';
+    if(q('trendScore')) q('trendScore').textContent=`势值 ${fmt(avgScore,0)} · ${strong}强/${weak}弱`;
+    if(q('bandMetrics')) q('bandMetrics').innerHTML=
+      `<span>平均RSI ${fmt(avgR,1)}</span><span>BIAS ${fmt(avgBias,2)}%</span><span>MACD ${fmt(avgMacd,4)}</span><span>样本 ${valid.length}只</span>`;
+
+    let verdict='震荡观察';
+    if(lows.length && !highs.length) verdict='偏低位 · 关注超卖反弹';
+    else if(highs.length && !lows.length) verdict='偏高位 · 注意回撤风险';
+    else if(lows.length && highs.length) verdict='分化 · 个别基金处于极端区';
+    else if(strong.length>weak) verdict='趋势偏强 · 等待回踩确认';
+    else if(weak>strong) verdict='趋势偏弱 · 控制追高风险';
+
+    if(q('bandAIPredict')) q('bandAIPredict').textContent=
+      `🤖 AI 智能预测：${verdict}｜基于 ${valid.length} 只持仓基金最近净值历史计算；正式大模型解读将在双 AI 网关接通后加入。`;
+    if(q('bandTimestamp')) q('bandTimestamp').textContent=
+      '指标更新 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  }
+
+  window.refreshRealBandSignal=async function(){
+    if(bandState.loading) return;
+    bandState.loading=true;
+    try{
+      const list=(window.USER_HOLDINGS||[]).slice(0,8);
+      if(!list.length){
+        if(document.getElementById('bandAIPredict'))
+          document.getElementById('bandAIPredict').textContent='🤖 AI 智能预测：请先添加基金持仓';
+        return;
+      }
+      const results=[];
+      for(const f of list){
+        const values=await history(f.code);
+        const ind=calcIndicators(values||[]);
+        results.push({code:f.code,name:f.name||f.code,ind});
+      }
+      bandState.items=results;
+      bandState.last=Date.now();
+      paint(results);
+    }finally{
+      bandState.loading=false;
+    }
+  };
+
+  // 等主程序完成首屏数据加载后再取历史净值，避免阻塞首页。
+  window.addEventListener('load',()=>setTimeout(()=>window.refreshRealBandSignal(),1200));
+  setInterval(()=>window.refreshRealBandSignal(),10*60*1000);
+})();
+
+</body>
 </html>
