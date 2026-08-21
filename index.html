@@ -677,16 +677,29 @@ async function emUlist(secids){
 }
 
 async function emBoards(){
-  const all=[]; let pn=1;
-  while(true){
-    try{
-     const r=await fetchT(EM+'/api/qt/clist/get?pn='+pn+'&pz=100&po=1&np=1&fltt=2&invt=2&fid=f62&fs=m:90+t:2&fields=f12,f14,f3,f62,f66,f72,f78,f84');
-     const j=await r.json(); const d=j.data||{}; const diff=d.diff||[];
-     if(!diff.length) break; all.push(...diff);
-     if(all.length>=(d.total||0)) break; pn++;
-    }catch(e){ break; }
+  // 极速版：先取第一页拿到总数，再并行抓取其余页。
+  // 原版逐页串行请求，会让“板块关联基金排行”长时间停在加载中。
+  const base='https://push2.eastmoney.com/api/qt/clist/get?po=1&np=1&fltt=2&invt=2&fid=f62&fs=m:90+t:2&fields=f12,f14,f3,f62,f66,f72,f78,f84';
+  try{
+    const first=await fetchT(base+'&pn=1&pz=100',5000);
+    const fj=await first.json();
+    const fd=fj.data||{};
+    const firstRows=fd.diff||[];
+    const total=Number(fd.total)||firstRows.length;
+    const pages=Math.min(10,Math.max(1,Math.ceil(total/100)));
+    if(pages===1) return firstRows;
+    const jobs=[];
+    for(let pn=2;pn<=pages;pn++){
+      jobs.push(fetchT(base+'&pn='+pn+'&pz=100',5000)
+        .then(r=>r.json())
+        .then(j=>(j.data&&j.data.diff)||[])
+        .catch(()=>[]));
+    }
+    const rest=await Promise.all(jobs);
+    return firstRows.concat(...rest).slice(0,total);
+  }catch(e){
+    return [];
   }
-  return all;
 }
 
 async function emPct(secid){
@@ -774,46 +787,91 @@ async function getFundEstimateCached(code){
   return null;
 }
 async function buildSmartSectorFundRanking(boards){
-  if(!Array.isArray(boards)||!boards.length) return {html:'',count:0,source:''};
-  // 只探测市场最强/最弱的一小撮板块，避免把几百个板块全部请求一遍。
-  const sorted=[...boards].filter(b=>b && b.f14 && Number.isFinite(Number(b.f3))).sort((a,b)=>b.f3-a.f3);
-  const candidates=[]; const seen=new Set();
-  [...sorted.slice(0,12),...sorted.slice(-12).reverse()].forEach(b=>{
-    const name=String(b.f14); if(seen.has(name))return; seen.add(name); candidates.push(b);
+  if(!Array.isArray(boards)||!boards.length)
+    return {html:'',count:0,source:''};
+
+  // 极速筛选：只看最强6个 + 最弱6个候选板块，且基金搜索并行。
+  const sorted=[...boards]
+    .filter(b=>b && b.f14 && Number.isFinite(Number(b.f3)))
+    .sort((a,b)=>Number(b.f3)-Number(a.f3));
+
+  const candidates=[];
+  const seen=new Set();
+  [...sorted.slice(0,6),...sorted.slice(-6).reverse()].forEach(b=>{
+    const name=String(b.f14);
+    if(seen.has(name)) return;
+    seen.add(name);
+    candidates.push(b);
   });
-  const found=[];
-  // 搜索基金映射，基金搜索结果 6 小时缓存，所以不是每次刷新都打接口。
-  for(const b of candidates){
-    const funds=await searchFundsForBoard(b.f14);
-    if(funds.length) found.push({board:b,funds});
-    if(found.length>=8) break;
+
+  const searchResults=await Promise.all(
+    candidates.map(async b=>{
+      try{
+        const funds=await searchFundsForBoard(b.f14);
+        return funds.length ? {board:b,funds} : null;
+      }catch(e){ return null; }
+    })
+  );
+
+  const found=searchResults.filter(Boolean);
+  if(!found.length)
+    return {
+      html:'<div class="muted" style="padding:8px 0">暂时没有找到可匹配的代表基金，稍后自动重试。</div>',
+      count:0,
+      source:'全市场板块动态筛选'
+    };
+
+  const strong=found.filter(x=>Number(x.board.f3)>=0)
+    .sort((a,b)=>Number(b.board.f3)-Number(a.board.f3)).slice(0,4);
+  const weak=found.filter(x=>Number(x.board.f3)<0)
+    .sort((a,b)=>Number(a.board.f3)-Number(b.board.f3)).slice(0,3);
+
+  let html='';
+  let fundCount=0;
+  html+=`<div class="smart-rank-note">今日先扫描全市场板块涨跌，再自动选出最强/最弱板块；基金估值不使用 DeepSeek。</div>`;
+
+  // 并行获取每个板块前6只候选基金估值，避免逐只等待。
+  async function getTopFunds(x){
+    const fs=x.funds.slice(0,6);
+    const qs=await Promise.all(fs.map(async f=>{
+      try{
+        const q=await getFundEstimateCached(f.code);
+        return q&&q.pct!=null ? {...f,...q} : null;
+      }catch(e){ return null; }
+    }));
+    return qs.filter(Boolean).sort((a,b)=>b.pct-a.pct).slice(0,3);
   }
-  if(!found.length) return {html:'<div class="muted" style="padding:8px 0">暂时没有找到可匹配的代表基金，稍后自动重试。</div>',count:0,source:'全市场板块动态筛选'};
-  const strong=found.filter(x=>x.board.f3>=0).sort((a,b)=>b.board.f3-a.board.f3).slice(0,4);
-  const weak=found.filter(x=>x.board.f3<0).sort((a,b)=>a.board.f3-b.board.f3).slice(0,3);
-  const selected=[...strong,...weak];
-  let html=''; let fundCount=0;
-  html+=`<div class="smart-rank-note">每天先扫描全市场板块涨跌，再从最强/最弱板块中自动找代表基金；不使用 DeepSeek。</div>`;
-  if(strong.length){
-    html+=`<div style="font-size:12px;color:#138a4b;font-weight:800;margin:8px 0 4px">🔥 今日最强板块 TOP${strong.length}</div>`;
-    for(const x of strong){
-      const fundRows=[];
-      const candidates2=[];
-      for(const f of x.funds.slice(0,10)){ const q=await getFundEstimateCached(f.code); if(q&&q.pct!=null)candidates2.push({...f,...q}); }
-      candidates2.sort((a,b)=>b.pct-a.pct).slice(0,3).forEach((f,i)=>{fundCount++;fundRows.push(`<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp up">▲${Math.abs(f.pct).toFixed(2)}%</div></div>`);});
-      html+=`<div class="fgrp">${esc(x.board.f14)}<small>板块 +${Number(x.board.f3).toFixed(2)}% 🔥</small></div>${fundRows.join('')||'<div class="muted" style="padding:6px">基金估值暂未返回</div>'}`;
-    }
+
+  const strongRows=await Promise.all(strong.map(async x=>({x,rows:await getTopFunds(x)})));
+  const weakRows=await Promise.all(weak.map(async x=>({x,rows:await getTopFunds(x)})));
+
+  if(strongRows.length){
+    html+=`<div style="font-size:12px;color:#138a4b;font-weight:800;margin:8px 0 4px">🔥 今日最强板块 TOP${strongRows.length}</div>`;
+    strongRows.forEach(({x,rows})=>{
+      fundCount+=rows.length;
+      const fundRows=rows.map((f,i)=>
+        `<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp ${cls(f.pct)}">${pctArrow(f.pct)}</div></div>`
+      ).join('');
+      html+=`<div class="fgrp">${esc(x.board.f14)}<small>板块 +${Number(x.board.f3).toFixed(2)}% 🔥</small></div>${fundRows||'<div class="muted" style="padding:6px">基金估值暂未返回</div>'}`;
+    });
   }
-  if(weak.length){
-    html+=`<div style="font-size:12px;color:#c0392b;font-weight:800;margin:12px 0 4px">⚠️ 今日最弱板块 TOP${weak.length}</div>`;
-    for(const x of weak){
-      const candidates2=[];
-      for(const f of x.funds.slice(0,10)){ const q=await getFundEstimateCached(f.code); if(q&&q.pct!=null)candidates2.push({...f,...q}); }
-      candidates2.sort((a,b)=>b.pct-a.pct).slice(0,3).forEach((f,i)=>{fundCount++;html+=`<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp ${cls(f.pct)}">${pctArrow(f.pct)}</div></div>`;});
-      html+=`<div class="fgrp">${esc(x.board.f14)}<small>板块 ${Number(x.board.f3).toFixed(2)}%</small></div>`;
-    }
+
+  if(weakRows.length){
+    html+=`<div style="font-size:12px;color:#c0392b;font-weight:800;margin:12px 0 4px">⚠️ 今日最弱板块 TOP${weakRows.length}</div>`;
+    weakRows.forEach(({x,rows})=>{
+      fundCount+=rows.length;
+      const fundRows=rows.map((f,i)=>
+        `<div class="fundrow"><div class="rank">${i+1}</div><div class="fn">${esc(f.name)}<em class="plabel">${esc(f.type||'基金')}</em></div><span class="ftag">代表基金</span><div class="fp ${cls(f.pct)}">${pctArrow(f.pct)}</div></div>`
+      ).join('');
+      html+=`${fundRows}<div class="fgrp">${esc(x.board.f14)}<small>板块 ${Number(x.board.f3).toFixed(2)}%</small></div>`;
+    });
   }
-  return {html,count:fundCount,source:`全市场扫描 ${boards.length} 个板块 → 动态选最强/最弱板块，再从东方财富基金库匹配代表基金；基金搜索缓存6小时、估值缓存2分钟。`};
+
+  return {
+    html,
+    count:fundCount,
+    source:`全市场扫描 ${boards.length} 个板块 → 并行动态选最强/最弱板块 → 并行匹配代表基金；基金搜索缓存6小时、估值缓存2分钟。`
+  };
 }
 
 function loadNavScript(code){
