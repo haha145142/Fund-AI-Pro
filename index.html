@@ -769,9 +769,9 @@ async function getFundEstimateCached(code){
 async function buildSmartSectorFundRanking(boards){
   /*
    * 动态板块排行·稳定极速版
-   * 关键原则：这个模块绝不再发“每个板块搜索基金 + 每只基金再请求估值”的网络请求。
-   * loadAll 前面已经一次性拿到了 SECTOR_FUNDS 的行情，因此这里直接本地筛选。
-   * 结果会随着当天全市场板块涨跌自动变化，不再固定显示那几个科技板块。
+   * 关键原则：这个模块不等待基金逐只行情接口。
+   * 先用全市场板块行情即时选出当天最强/最弱板块，再用本地基金池做主题/行业拟合。
+   * 结果会随当天板块涨跌自动变化；页面不会因为基金排行卡住。
    */
   if(!Array.isArray(boards)||!boards.length)
     return {html:'<div class="muted" style="padding:8px 0">板块行情暂时不可用。</div>',count:0,source:'板块行情暂时不可用'};
@@ -831,7 +831,9 @@ async function buildSmartSectorFundRanking(boards){
       return kws.some(k=>text.includes(k));
     }).map(f=>{
       try{
-        const r=computeFund(f,window.__fTx||{},window.__fEm||{},window.__bmap||{});
+        // 动态排行只使用板块/行业/主题拟合，不请求基金实时估值。
+        // 这样选板块和展示代表基金可以瞬间完成。
+        const r=computeFund(f,{}, {},window.__bmap||{});
         return {f,r,pct:r&&Number.isFinite(Number(r.est))?Number(r.est):null};
       }catch(e){ return {f,r:null,pct:null}; }
     }).filter(x=>x.pct!=null).sort((a,b)=>b.pct-a.pct).slice(0,3);
@@ -840,7 +842,7 @@ async function buildSmartSectorFundRanking(boards){
   const strong=candidates.filter(b=>Number(b.f3)>=0).sort((a,b)=>b.f3-a.f3).slice(0,5);
   const weak=candidates.filter(b=>Number(b.f3)<0).sort((a,b)=>a.f3-b.f3).slice(0,3);
 
-  let html=`<div class="smart-rank-note">每天先看全市场板块涨跌，再自动挑选当天最强/最弱板块；代表基金直接使用本地基金池和已取得行情，不调用 DeepSeek，也不新增网络请求。</div>`;
+  let html=`<div class="smart-rank-note">每天先看全市场板块涨跌，再自动挑选当天最强/最弱板块；代表基金直接使用本地基金池按板块/行业/主题拟合排序；不调用 DeepSeek，不等待逐只基金行情。</div>`;
   let count=0;
 
   function renderGroup(b, color){
@@ -867,7 +869,7 @@ async function buildSmartSectorFundRanking(boards){
   return {
     html,
     count,
-    source:`全市场 ${boards.length} 个板块动态排序；今日自动选最强${strong.length}个/最弱${weak.length}个，代表基金本地匹配。`
+    source:`全市场 ${boards.length} 个板块动态排序；今日自动选最强${strong.length}个/最弱${weak.length}个，代表基金按板块/行业/主题快速拟合。`
   };
 }
 
@@ -1961,8 +1963,10 @@ async function loadAll(){
       const [tm,emk]=mktOf(f.etf); txS.add(tm+f.etf); emS.add(emk+'.'+f.etf);
     }else if(f.type==='active' && f.stocks) f.stocks.forEach(st=>{ const [tm,emk]=mktOf(st.code); txS.add(tm+st.code); emS.add(emk+'.'+st.code); });
   };
+  // 关键优化：动态板块排行不再提前抓取 SECTOR_FUNDS 的全部重仓股。
+  // 这些基金有几十/上百只成分股，全部拉行情会拖慢整个页面；
+  // 动态排行只需要板块行情即可先完成筛选，代表基金涨幅采用板块/行业/主题拟合。
   USER_HOLDINGS.forEach(collectCodes);
-  SECTOR_FUNDS.forEach(collectCodes);
   const fTx=await txQuotes([...txS]);
   const fEm=await emUlist([...emS]);
   // 给动态板块排行使用：不再额外请求基金行情。
