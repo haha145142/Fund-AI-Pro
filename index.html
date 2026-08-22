@@ -152,6 +152,60 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .sc-liquid .flow-line .amt.down{color:var(--down)}
 .sc-liquid-empty{display:flex;align-items:center;gap:8px;padding:16px;border-radius:20px;background:rgba(255,255,255,.6);border:1px dashed rgba(120,170,220,.25);color:var(--text-sec);font-size:13px}
 
+/* ===== 高级液态毛玻璃板块卡片（增强版） ===== */
+.sect-pro{display:flex;flex-direction:column;gap:14px;padding:2px}
+.sc-pro{position:relative;border-radius:26px;padding:20px 18px;background:linear-gradient(145deg,rgba(255,255,255,.88) 0%,rgba(247,252,255,.72) 40%,rgba(255,255,255,.82) 100%);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1.2px solid rgba(140,185,230,.28);box-shadow:0 16px 48px rgba(20,60,110,.10),0 2px 8px rgba(20,60,110,.04),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5);overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
+.sc-pro::before{content:'';position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.08) 100%);pointer-events:none;border-radius:26px 26px 0 0;z-index:1}
+.sc-pro::after{content:'';position:absolute;top:8px;left:16px;right:45%;height:12px;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.3));filter:blur(8px);pointer-events:none;border-radius:999px;z-index:1}
+/* 流光边框效果 */
+.sc-pro .border-glow{position:absolute;inset:-1.2px;border-radius:27px;pointer-events:none;z-index:0;overflow:hidden;opacity:.6}
+.sc-pro .border-glow::before{content:'';position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(120,180,255,.35) 60deg,transparent 120deg,rgba(255,180,180,.25) 200deg,transparent 260deg,rgba(180,220,255,.3) 320deg,transparent 360deg);animation:borderRotate 6s linear infinite}
+@keyframes borderRotate{to{transform:rotate(360deg)}}
+.sc-pro .border-glow::after{content:'';position:absolute;inset:1.2px;border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.88) 0%,rgba(247,252,255,.72) 40%,rgba(255,255,255,.82) 100%);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)}
+.sc-pro:hover{transform:translateY(-2px);box-shadow:0 22px 56px rgba(20,60,110,.13),0 4px 12px rgba(20,60,110,.06),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5)}
+.sc-pro:hover .border-glow{opacity:.9}
+.sc-pro:active{transform:scale(.985)}
+.sc-pro .sc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:relative;z-index:2}
+.sc-pro .sc-head .names{flex:1;min-width:0}
+.sc-pro .sc-head .names .cn{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
+.sc-pro .sc-head .names .cn svg{flex-shrink:0;opacity:.85}
+.sc-pro .sc-head .names .an{font-size:11.5px;color:var(--text-sec);margin-top:5px;padding-left:26px;font-weight:500}
+.sc-pro .sc-head .pct{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px;line-height:1;flex-shrink:0}
+.sc-pro .sc-head .pct.up{color:var(--up);text-shadow:0 2px 20px rgba(217,74,74,.22)}
+.sc-pro .sc-head .pct.down{color:var(--down);text-shadow:0 2px 20px rgba(26,155,106,.22)}
+.sc-pro .sc-head .pct.flat{color:var(--text-sec)}
+.sc-pro .flow-bar{display:flex;align-items:center;gap:12px;margin-top:16px;position:relative;z-index:2}
+.sc-pro .flow-bar .bar{flex:1;height:6px;border-radius:999px;background:rgba(0,0,0,.05);overflow:hidden;position:relative}
+.sc-pro .flow-bar .bar i{display:block;height:100%;border-radius:999px;background-size:200% 100%;animation:flowShinePro 2.5s linear infinite;position:relative}
+@keyframes flowShinePro{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sc-pro .flow-bar .bar i.in{background:linear-gradient(90deg,rgba(217,74,74,.5),rgba(217,74,74,.95),rgba(217,74,74,.5));box-shadow:0 0 12px rgba(217,74,74,.35)}
+.sc-pro .flow-bar .bar i.out{background:linear-gradient(90deg,rgba(26,155,106,.5),rgba(26,155,106,.95),rgba(26,155,106,.5));box-shadow:0 0 12px rgba(26,155,106,.35)}
+.sc-pro .flow-bar .amt{font-size:13px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sc-pro .flow-bar .amt.up{color:var(--up)}
+.sc-pro .flow-bar .amt.down{color:var(--down)}
+/* 资金明细四宫格 */
+.sc-pro .flow-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(120,160,210,.18);position:relative;z-index:2}
+.sc-pro .flow-detail .fd-item{display:flex;flex-direction:column;gap:3px;text-align:center}
+.sc-pro .flow-detail .fd-label{font-size:10.5px;color:var(--text-sec);font-weight:500}
+.sc-pro .flow-detail .fd-value{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.sc-pro .flow-detail .fd-value.up{color:var(--up)}
+.sc-pro .flow-detail .fd-value.down{color:var(--down)}
+.sc-pro .flow-detail .fd-value.flat{color:var(--text-sec)}
+/* 装饰性微光 */
+.sc-pro .glow{position:absolute;width:180px;height:180px;border-radius:50%;filter:blur(60px);opacity:.35;pointer-events:none;z-index:0;transition:opacity .3s}
+.sc-pro .glow.up-glow{background:radial-gradient(circle,rgba(217,74,74,.25),transparent 70%);top:-60px;right:-40px}
+.sc-pro .glow.down-glow{background:radial-gradient(circle,rgba(26,155,106,.25),transparent 70%);top:-60px;right:-40px}
+.sc-pro:hover .glow{opacity:.5}
+@media(max-width:420px){
+  .sc-pro{padding:16px 14px;border-radius:22px}
+  .sc-pro .sc-head .pct{font-size:26px}
+  .sc-pro .sc-head .names .cn{font-size:15px}
+  .sc-pro .flow-detail{grid-template-columns:repeat(2,1fr);gap:10px 8px}
+  .sc-pro .flow-detail .fd-item{text-align:left;flex-direction:row;justify-content:space-between;align-items:center}
+  .sc-pro .flow-detail .fd-label{font-size:11px}
+  .sc-pro .flow-detail .fd-value{font-size:12.5px}
+}
+
 /* ===== duo (flow) ===== */
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:480px){.duo{grid-template-columns:1fr}}
@@ -454,7 +508,7 @@ table td b{font-weight:700}
  <!-- 科技板块 -->
  <div class="glass fade-in" id="sectorCard">
   <div class="glass-title">📈 科技板块今日行情 <small>红涨绿跌</small><span class="badge" id="sectorUpdateTime">—</span></div>
-  <div class="sect" id="sectorGrid"><div class="empty-state"><div class="icon">📈</div>正在读取真实板块行情…</div></div>
+  <div class="sect-pro" id="sectorGrid"><div class="empty-state"><div class="icon">📈</div>正在读取真实板块行情…</div></div>
   <div class="ds-tag" id="sectorDS"></div>
  </div>
 
@@ -582,7 +636,7 @@ table td b{font-weight:700}
 <div class="page" id="page-market">
  <div class="glass fade-in">
   <div class="glass-title">📈 科技板块行情 <small>8大板块·实时</small></div>
-  <div class="sect" id="sectorGrid2"></div>
+  <div class="sect-pro" id="sectorGrid2"></div>
   <div class="ds-tag" id="sectorDS2"></div>
  </div>
  <div class="glass fade-in">
@@ -738,21 +792,21 @@ const SECTOR_RULES=[
  {id:'mlcc',name:'MLCC',keys:['MLCC','元件','电子元件']}
 ];
 
-/* ===== 板块 SVG 图标 ===== */
+/* ===== 板块 SVG 图标（锤子风格·粗线条圆润） ===== */
 const SEC_ICONS={
- '存储芯片':'<rect x="3" y="7" width="18" height="10" rx="1"/><path d="M3 7l3 3h12l3-3"/><path d="M7 17v3M17 17v3"/><circle cx="12" cy="12" r="2"/>',
- '国产算力':'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M2 9h2M2 15h2M20 9h2M20 15h2M9 2v2M15 2v2M9 20v2M15 20v2"/>',
- '半导体':'<path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M10 10h4v4h-4z"/>',
- '半导体设备材料':'<path d="M3 6h18M3 12h18M3 18h18"/><path d="M7 6v12M12 6v12M17 6v12"/>',
- 'PCB':'<rect x="3" y="6" width="18" height="12" rx="1"/><path d="M3 10h18M3 14h18M7 6v12M11 6v12M15 6v12"/>',
- 'CPO光模块':'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3"/>',
- '通信技术':'<path d="M3 11l18-8-2 18-6-6-3 4-2-7z"/>',
- 'MLCC':'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>',
+ '存储芯片':'<rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 9l4 4h8l4-4"/><rect x="9" y="11" width="6" height="4" rx="1"/><path d="M7 18v2M17 18v2"/>',
+ '国产算力':'<rect x="5" y="4" width="14" height="16" rx="2.5"/><rect x="8" y="7" width="8" height="10" rx="1.5"/><path d="M5 10h2M17 10h2M5 14h2M17 14h2M10 4v2M14 4v2M10 18v2M14 18v2"/>',
+ '半导体':'<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>',
+ '半导体设备材料':'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16M4 15h16M8 5v14M12 5v14M16 5v14"/>',
+ 'PCB':'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 9h16M4 14h16M7 5v14M11 5v14M15 5v14"/>',
+ 'CPO光模块':'<circle cx="12" cy="12" r="4"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.5 5.5l2.5 2.5M16 16l2.5 2.5M5.5 18.5l2.5-2.5M16 8l2.5-2.5"/>',
+ '通信技术':'<path d="M4 10l16-7-2 17-6-6-3 4-2-8z"/>',
+ 'MLCC':'<rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 9h16M4 15h16M9 4v16M15 4v16"/>',
  'default':'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
 };
 function secIcon(name,size=14){
  const path=SEC_ICONS[name]||SEC_ICONS.default;
- return `<svg class="secicon" viewBox="0 0 24 24" style="width:${size}px;height:${size}px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0">${path}</svg>`;
+ return `<svg class="secicon" viewBox="0 0 24 24" style="width:${size}px;height:${size}px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.08))">${path}</svg>`;
 }
 
 function isWeekend(){
@@ -2078,7 +2132,7 @@ function renderBand(){
   $('bandTime')&&($('bandTime').textContent=dateTimeStr());
 }
 /* ============================================================
- * 渲染：板块
+ * 渲染：板块（高级液态毛玻璃 + 详细资金明细）
  * ============================================================ */
 function renderSectors(){
   const renderInto=(el,dsEl)=>{
@@ -2089,25 +2143,52 @@ function renderSectors(){
     }
     // 最大资金流，用来做进度条比例
     const maxFlow=Math.max(...state.sectors.filter(x=>x.available).map(x=>Math.abs(x.flow)||0),1);
+    el.className='sect-pro';
     el.innerHTML=state.sectors.map(s=>{
       if(!s.available){
-        return `<div class="sc-liquid sc-liquid-empty">${secIcon(s.name,16)} ${safe(s.name)} <span>暂无实时板块</span></div>`;
+        return `<div class="sc-pro sc-liquid-empty">${secIcon(s.name,16)} ${safe(s.name)} <span>暂无实时板块</span></div>`;
       }
       const cls=s.change>=0?'up':'down';
       const flowDir=s.flow>=0?'in':'out';
       const pct=s.flow?(Math.min(Math.abs(s.flow)/maxFlow,1)*100):0;
       const flowLabel=s.flow>=0?'主力流入':'主力流出';
-      return `<div class="sc-liquid">
-        <div class="row-top">
+      // 资金明细
+      const mainFlow=s.flow||0;
+      const superV=s.super!=null?s.super:0;
+      const largeV=s.large!=null?s.large:0;
+      const midSmallV=(s.mid!=null?s.mid:0)+(s.small!=null?s.small:0);
+      const fdCls=v=>v>0?'up':(v<0?'down':'flat');
+      return `<div class="sc-pro">
+        <div class="border-glow"></div>
+        <div class="glow ${cls}-glow"></div>
+        <div class="sc-head">
           <div class="names">
-            <div class="cn">${secIcon(s.name,18)} ${safe(s.name)}</div>
+            <div class="cn">${secIcon(s.name,20)} ${safe(s.name)}</div>
             <div class="an">${safe(s.actualName)}</div>
           </div>
           <div class="pct ${cls}">${fmtPctAbs(s.change)}</div>
         </div>
-        <div class="flow-line">
+        <div class="flow-bar">
           <div class="bar"><i class="${flowDir}" style="width:${pct.toFixed(1)}%"></i></div>
           <div class="amt ${flowDir==='in'?'up':'down'}">${flowLabel} ${fmtYi(s.flow)}</div>
+        </div>
+        <div class="flow-detail">
+          <div class="fd-item">
+            <span class="fd-label">主力净流入</span>
+            <span class="fd-value ${fdCls(mainFlow)}">${fmtYi(mainFlow)}</span>
+          </div>
+          <div class="fd-item">
+            <span class="fd-label">超大单</span>
+            <span class="fd-value ${fdCls(superV)}">${fmtYi(superV)}</span>
+          </div>
+          <div class="fd-item">
+            <span class="fd-label">大单</span>
+            <span class="fd-value ${fdCls(largeV)}">${fmtYi(largeV)}</span>
+          </div>
+          <div class="fd-item">
+            <span class="fd-label">中小单</span>
+            <span class="fd-value ${fdCls(midSmallV)}">${fmtYi(midSmallV)}</span>
+          </div>
         </div>
       </div>`;
     }).join('');
