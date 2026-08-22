@@ -259,7 +259,9 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-time{font-variant-numeric:tabular-nums;color:#94a3b8;font-size:11px}
 .news-source{font-size:10px;border-radius:999px;padding:2px 7px;white-space:nowrap;font-weight:500}
 .news-source.wscn{color:#7c3aed;background:#f5f0ff;border:1px solid #e6dcff}
-.news-source.em{color:#2563eb;background:#eef6ff;border:1px solid #d7e9ff}
+.news-source.cls{color:#dc2626;background:#fef2f2;border:1px solid #fecaca}
+.news-source.jin10{color:#b45309;background:#fffbeb;border:1px solid #fde68a}
+.news-source.yicai{color:#7c3aed;background:#f5f0ff;border:1px solid #e6dcff}
 .news-source.ths{color:#ea580c;background:#fff4ec;border:1px solid #ffe0cc}
 .news-topic{font-size:9px;color:#64748b;background:#f5f7fa;border-radius:6px;padding:2px 5px}
 .news-title{font-size:13px;line-height:1.55;font-weight:650}
@@ -278,6 +280,108 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-impact.pos{color:var(--up)}
 .news-impact.neg{color:var(--down)}
 .news-impact.neu{color:var(--text-sec)}
+
+/* ===== news enhanced ===== */
+.news-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px}
+.news-header .left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.news-header .title-main{font-size:16px;font-weight:800;letter-spacing:-.2px}
+.news-header .title-sub{font-size:11px;color:var(--text-sec);font-weight:500}
+.news-header .right{display:flex;align-items:center;gap:6px}
+.news-header .update-time{font-size:10px;color:var(--text-sec);font-variant-numeric:tabular-nums}
+.news-refresh-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(155,185,220,.35);background:rgba(255,255,255,.72);color:#263449;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:transform .15s}
+.news-refresh-btn:active{transform:scale(.9)}
+.news-refresh-btn.spin svg{animation:spin .8s linear infinite}
+
+.news-source.official{color:#b45309;background:#fffbeb;border:1px solid #fde68a}
+.news-source.multi-source{color:#047857;background:#ecfdf5;border:1px solid #a7f3d0}
+.news-source.single-source{color:#92400e;background:#fffbeb;border:1px solid #fde68a}
+
+.news-related{margin-top:6px;padding:6px 9px;border-radius:10px;font-size:10.5px;line-height:1.6}
+.news-related.affect{background:#FFF5F5;border:1px solid rgba(217,74,74,.15);color:#9b3434}
+.news-related.no-affect{background:#F5F7FA;border:1px solid rgba(100,130,170,.1);color:var(--text-sec)}
+.news-related b{color:inherit}
+.news-related .fund-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+.news-related .fund-tag{font-size:9.5px;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.7);border:1px solid rgba(217,74,74,.2);color:var(--up);font-weight:500}
+
+.news-resonance{margin-top:5px;font-size:10px;display:flex;align-items:center;gap:5px}
+.news-resonance .res-badge{padding:1px 7px;border-radius:8px;font-weight:600}
+.news-resonance .res-badge.resonance{background:linear-gradient(90deg,#fef3c7,#fde68a);color:#92400e;border:1px solid #fcd34d}
+.news-resonance .res-badge.no-evidence{background:#F5F7FA;color:var(--text-sec);border:1px solid rgba(100,130,170,.15)}
+
+.news-sources-detail{font-size:10px;color:var(--text-sec);margin-top:4px;display:flex;gap:4px;flex-wrap:wrap}
+.news-sources-detail .src-dot{width:5px;height:5px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+
+.news-ai-setting{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(120,160,210,.15)}
+.news-ai-setting summary{font-size:11px;color:var(--text-sec);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;gap:4px}
+.news-ai-setting summary::-webkit-details-marker{display:none}
+.news-ai-setting .ai-setting-body{margin-top:8px;padding:10px;border-radius:12px;background:rgba(246,250,255,.8);border:1px solid rgba(180,210,240,.3)}
+.news-ai-setting .ai-setting-row{display:flex;gap:6px;margin-bottom:6px}
+.news-ai-setting .ai-setting-row input{flex:1;font-size:11px;padding:6px 9px;border:1px solid rgba(155,185,220,.35);border-radius:8px;background:#fff;font-family:var(--font);outline:none}
+.news-ai-setting .ai-setting-row input:focus{border-color:var(--blue)}
+.news-ai-setting .ai-setting-row button{font-size:11px;padding:5px 10px;border-radius:8px;border:1px solid rgba(155,185,220,.35);background:#fff;color:var(--text-sec);cursor:pointer;font-family:var(--font)}
+.news-ai-setting .ai-setting-row button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.news-ai-setting .ai-setting-status{font-size:10px;color:var(--text-sec);line-height:1.6}
+.news-ai-setting .ai-setting-status.ok{color:#047857}
+.news-ai-setting .ai-setting-status.err{color:var(--up)}
+/* = AI综合解读卡片 = */
+.ai-summary{margin:14px 0 0 0;overflow:hidden}
+.ai-summary-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:0 2px}
+.ai-summary-icon{font-size:18px}
+.ai-summary-title{font-size:13px;font-weight:700;color:var(--text)}
+.ai-summary-model{font-size:9px;color:var(--text-sec);margin-left:auto;background:rgba(202,168,98,.12);padding:2px 7px;border-radius:6px}
+.ai-summary-card{background:linear-gradient(135deg,#fffdf5,#fef9e7);border-radius:14px;border:1px solid rgba(202,168,98,.2);border-left:3px solid #c9a852;padding:12px 14px}
+.ai-summary-section{margin-bottom:12px}
+.ai-summary-section:last-child{margin-bottom:0}
+.ai-summary-label{font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.ai-summary-content{font-size:11px;color:var(--text-sec);line-height:1.75;padding-left:0}
+
+.news-error-strip{font-size:11px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:8px 11px;margin-bottom:8px;line-height:1.6;display:flex;align-items:center;gap:6px}
+
+.news-ai .ai-fact{color:#0a84ff}
+.news-ai .ai-market{color:#7c3aed}
+.news-ai .ai-judge{color:#d94a4a;font-weight:600}
+
+.news-detail-trigger{font-size:10px;color:var(--blue);cursor:pointer;margin-top:4px;display:inline-flex;align-items:center;gap:2px}
+
+/* ===== news tier 2: deep analysis ===== */
+.news-deep{margin-top:8px;padding:10px 12px;border-radius:12px;background:linear-gradient(145deg,#f0f7ff,#e8f1fc);border:1px solid rgba(120,170,230,.3);border-left:3px solid #3b82f6}
+.news-deep .deep-title{font-size:11px;font-weight:700;color:#1e40af;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.news-deep .deep-item{font-size:11px;line-height:1.7;color:#334155;margin-bottom:5px;padding-bottom:5px;border-bottom:1px dashed rgba(100,150,200,.15)}
+.news-deep .deep-item:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}
+.news-deep .deep-item .deep-src{font-size:9.5px;color:#64748b;margin-right:6px;padding:1px 5px;border-radius:6px;background:rgba(255,255,255,.7);font-weight:500}
+.news-deep .deep-item .deep-src.cls{color:#dc2626;background:#fef2f2}
+.news-deep .deep-item .deep-src.yicai{color:#7c3aed;background:#f5f0ff}
+.news-deep .deep-summary{font-size:10.5px;color:#475569;line-height:1.7;margin-top:6px;padding-top:6px;border-top:1px dashed rgba(100,150,200,.2)}
+.news-deep .deep-summary b{color:#1e293b}
+.news-deep-empty{font-size:10.5px;color:#94a3b8;font-style:italic}
+
+/* ===== news tier 3: sentiment ===== */
+.news-sentiment{margin-top:8px;padding:10px 12px;border-radius:12px;background:linear-gradient(145deg,#fefce8,#fef9c3);border:1px solid rgba(234,179,8,.35);border-left:3px solid #eab308}
+.news-sentiment .sent-title{font-size:11px;font-weight:700;color:#a16207;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.news-sentiment .sent-meter{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.news-sentiment .sent-bar{flex:1;height:6px;border-radius:999px;background:linear-gradient(90deg,#1a9b6a 0%,#eab308 50%,#d94a4a 100%);position:relative}
+.news-sentiment .sent-bar .indicator{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid #0f172a;box-shadow:0 1px 4px rgba(0,0,0,.25);transform:translateX(-50%)}
+.news-sentiment .sent-label{font-size:10px;font-weight:600;color:#78350f;white-space:nowrap}
+.news-sentiment .sent-label.extreme-fear{color:#047857}
+.news-sentiment .sent-label.fear{color:#059669}
+.news-sentiment .sent-label.neutral{color:#a16207}
+.news-sentiment .sent-label.greed{color:#dc2626}
+.news-sentiment .sent-label.extreme-greed{color:#991b1b}
+.news-sentiment .sent-items{display:flex;flex-direction:column;gap:4px}
+.news-sentiment .sent-item{font-size:10.5px;line-height:1.6;color:#78350f;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.65)}
+.news-sentiment .sent-item .sent-source{font-size:9.5px;color:#a16207;font-weight:600;margin-right:4px}
+.news-sentiment .sent-note{font-size:10px;color:#a16207;margin-top:6px;padding-top:6px;border-top:1px dashed rgba(234,179,8,.4);line-height:1.6}
+.news-sentiment .sent-note b{color:#78350f}
+.news-sentiment-empty{font-size:10.5px;color:#b45309;font-style:italic}
+
+/* ===== tier tabs on news item ===== */
+.news-tiers{display:flex;gap:4px;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(120,160,210,.12)}
+.news-tier-btn{font-size:10px;padding:3px 9px;border-radius:8px;border:1px solid rgba(155,185,220,.3);background:rgba(255,255,255,.6);color:#64748b;cursor:pointer;font-family:var(--font);font-weight:500}
+.news-tier-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.news-tier-btn.t2.active{background:#3b82f6;border-color:#3b82f6}
+.news-tier-btn.t3.active{background:#eab308;border-color:#eab308;color:#78350f}
+.news-tier-body{display:none;margin-top:8px}
+.news-tier-body.active{display:block}
 
 /* ===== evidence / context ===== */
 .evidence-strip{font-size:11px;color:#64748b;background:linear-gradient(180deg,#f7fbff,#eef6ff);border:1px solid #dcecff;border-radius:14px;padding:9px 11px;margin-bottom:8px;line-height:1.6}
@@ -413,6 +517,14 @@ table td b{font-weight:700}
  .tabbar .tab{padding:2px 8px;font-size:9px;min-width:40px}
  .tabbar .tab .ico svg{width:18px;height:18px}
 }
+/* ===== iPhone/iOS 专属：dock 更小巧，玻璃质感更强 ===== */
+@supports (-webkit-touch-callout:none){
+ .tabbar{width:calc(100% - 36px);max-width:420px;bottom:10px;padding:5px 4px;padding-bottom:calc(5px + var(--safe-bottom));background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(244,249,255,.38));-webkit-backdrop-filter:blur(40px) saturate(220%) brightness(1.08);backdrop-filter:blur(40px) saturate(220%) brightness(1.08);border:1px solid rgba(255,255,255,.66);box-shadow:0 18px 60px rgba(20,60,110,.18),inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(255,255,255,.4)}
+ .tabbar .tab{padding:2px 6px;font-size:9px;min-width:34px;min-height:38px;gap:1px}
+ .tabbar .tab .ico{width:17px;height:17px}
+ .tabbar .tab .ico svg{width:16px;height:16px}
+ .tabbar .tab.active{box-shadow:inset 0 1px rgba(255,255,255,.95),0 4px 14px rgba(10,132,255,.16)}
+}
 @media(min-width:768px){
  body{padding:12px 24px calc(96px + var(--safe-bottom)) 24px}
  .sect{grid-template-columns:repeat(3,1fr)}
@@ -533,22 +645,49 @@ table td b{font-weight:700}
   <div id="aiFlowContent"><div class="empty-state">等待真实数据…</div></div>
  </div>
 
- <!-- 最新新闻 -->
+ <!-- 最新新闻 / 实时市场情报中心 -->
  <div class="glass fade-in" id="newsCard">
-  <div class="flex-between" style="margin-bottom:8px">
-   <span style="font-weight:600">📰 最新快讯</span>
-   <span class="badge" id="newsUpdateTime">—</span>
+  <div class="news-header">
+   <div class="left">
+    <span class="title-main">📰 市场资讯</span>
+    <span class="title-sub">最新快讯</span>
+   </div>
+   <div class="right">
+    <span class="update-time" id="newsUpdateTime">—</span>
+    <button class="news-refresh-btn" id="newsRefreshBtn" title="刷新新闻">
+     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+    </button>
+   </div>
   </div>
   <div class="news-filters" id="newsFilters">
    <button class="news-filter active" data-news-filter="all">全部</button>
    <button class="news-filter" data-news-filter="基金">基金</button>
    <button class="news-filter" data-news-filter="科技">科技</button>
    <button class="news-filter" data-news-filter="政策">政策</button>
-   <button class="news-filter" data-news-filter="外围">外围</button>
    <button class="news-filter" data-news-filter="市场">市场</button>
+   <button class="news-filter" data-news-filter="宏观">宏观</button>
+   <button class="news-filter" data-news-filter="海外">海外</button>
   </div>
-  <div id="newsEvidence" class="evidence-strip" style="margin-bottom:10px">等待真实资讯源返回 · 不使用模拟新闻</div>
+  <div id="newsErrorStrip" style="display:none" class="news-error-strip">
+   <span>⚠️</span>
+   <span id="newsErrorText">新闻源暂时无法更新，显示最近一次成功数据</span>
+  </div>
+  <div id="newsEvidence" class="evidence-strip" style="margin-bottom:10px">正在接入真实资讯源 · 不使用模拟新闻</div>
   <div id="newsList" class="news-list"><div class="empty-state"><div class="icon">📰</div>正在读取真实资讯…</div></div>
+  <details class="news-ai-setting" id="newsAISetting">
+   <summary>⚙️ AI设置 <span id="newsAIBadge" style="margin-left:auto;font-size:10px;color:var(--text-sec)">未配置 ›</span></summary>
+   <div class="ai-setting-body">
+    <div class="ai-setting-row">
+     <input id="newsDSKey" type="password" autocomplete="off" placeholder="DeepSeek API Key（不填用规则版）">
+     <button class="primary" id="newsDSSave">保存</button>
+    </div>
+    <div class="ai-setting-row">
+     <input id="newsDSModel" type="text" placeholder="模型名 默认 deepseek-chat" value="deepseek-chat" style="font-size:11px">
+     <button id="newsDSTest">测试</button>
+    </div>
+    <div class="ai-setting-status" id="newsDSStatus">未配置 Key：新闻 AI 一句话使用规则版白话解读，不冒充 AI。Key 仅保存在本机浏览器 localStorage。</div>
+   </div>
+  </details>
  </div>
 
  <!-- 今日基金排行 -->
@@ -569,6 +708,33 @@ table td b{font-weight:700}
   <div class="cmt" style="font-size:13px;line-height:1.8" id="adviceOverall">—</div>
   <div class="subttl" style="margin-top:10px">⚠️ 风险信号</div>
   <div class="cmt" style="font-size:13px;color:var(--up)" id="adviceDanger">—</div>
+ </div>
+
+ <!-- AI 综合解读（轻量卡片，基于新闻快照） -->
+ <div class="glass fade-in" id="aiSummary" style="display:none">
+  <div class="glass-title">🤖 AI 综合解读 <small>基于数据快照·大白话</small></div>
+  <div class="ai-summary-card">
+   <div class="ai-summary-section">
+    <div class="ai-summary-label">📊 整体判读</div>
+    <div class="ai-summary-content" id="aiOverall">—</div>
+   </div>
+   <div class="ai-summary-section">
+    <div class="ai-summary-label">📊 整体仓位</div>
+    <div class="ai-summary-content" id="aiRisk">—</div>
+   </div>
+   <div class="ai-summary-section">
+    <div class="ai-summary-label">🟢 最大利好</div>
+    <div class="ai-summary-content" id="aiBullish">—</div>
+   </div>
+   <div class="ai-summary-section">
+    <div class="ai-summary-label">🔴 最大利空</div>
+    <div class="ai-summary-content" id="aiBearish">—</div>
+   </div>
+   <div class="ai-summary-section">
+    <div class="ai-summary-label">💡 操作提示</div>
+    <div class="ai-summary-content" id="aiAction">—</div>
+   </div>
+  </div>
  </div>
 
  <!-- 中长期布局 -->
@@ -774,10 +940,16 @@ const state={
   fundRank:[],       // 基金排行
   fundRankDate:'',   // 基金排行数据日期（缓存时显示"数据截至"）
   newsSources:{},
+  newsLastFetch:0,   // 新闻上次抓取时间戳
+  newsAI:{},         // AI解读缓存 {hash: {text, time}}
+  newsDeep:[],       // 第二级：深度解读文章
+  newsSentiment:[],  // 第三级：社区情绪帖子
+  sentimentOverall:null, // 全市场情绪概览
   source:{},         // 数据源状态
   loading:false,
   lastUpdate:null,
-  activeNewsFilter:'all'
+  activeNewsFilter:'all',
+  _newsLoading:false
 };
 
 /* ===== 8大科技板块规则 ===== */
@@ -1517,132 +1689,784 @@ async function fetchGlobal(){
   renderContext();
 }
 /* ============================================================
- * 新闻模块（华尔街见闻 + 东方财富 + 同花顺 三源）
- * 生产环境优先走 /api/news 代理
+ * 新闻模块（实时市场情报中心）
+ * 数据源：财联社 + 金十数据 + 华尔街见闻 + 同花顺iFinD + 第一财经
+ * 原则：真实时间排序、多源独立容错、三源交叉验证、与持仓/行情联动
  * ============================================================ */
+
+// 解析各种时间格式为北京时间戳(ms)
+function parseNewsTime(raw, source){
+  if(!raw) return Date.now();
+  // 已经是数字时间戳（秒或毫秒）
+  if(typeof raw==='number'){
+    return raw<1e12 ? raw*1000 : raw;
+  }
+  const s=String(raw).trim();
+  // 纯数字字符串
+  if(/^\d{10}$/.test(s)) return parseInt(s)*1000;
+  if(/^\d{13}$/.test(s)) return parseInt(s);
+  // 华尔街见闻格式："2024-01-15 14:30:00" 或 ISO
+  if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(s)){
+    const d=new Date(s.replace(' ','T'));
+    if(!isNaN(d.getTime())) return d.getTime();
+  }
+  // 东方财富格式："01-15 14:30" 或 "2024-01-15"
+  if(/^\d{2}-\d{2} \d{2}:\d{2}/.test(s)){
+    const now=new Date();
+    const year=now.getFullYear();
+    const d=new Date(year+'-'+s.replace(' ','T'));
+    if(!isNaN(d.getTime())) return d.getTime();
+  }
+  // "今天 14:30" 或 "刚刚"
+  if(/今天/.test(s)){
+    const m=s.match(/(\d{1,2}):(\d{2})/);
+    if(m){
+      const now=new Date();
+      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
+      return d.getTime();
+    }
+  }
+  if(/刚刚|分钟前|小时前/.test(s)){
+    const m1=s.match(/(\d+)分钟前/);
+    if(m1) return Date.now()-parseInt(m1[1])*60000;
+    const m2=s.match(/(\d+)小时前/);
+    if(m2) return Date.now()-parseInt(m2[1])*3600000;
+    return Date.now();
+  }
+  // 格式 "14:30" 只有时间，默认今天
+  if(/^\d{2}:\d{2}$/.test(s)){
+    const now=new Date();
+    const [h,m]=s.split(':').map(Number);
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m);
+    // 如果时间比当前晚，说明是昨天的
+    if(d.getTime()>Date.now()+60000) d.setDate(d.getDate()-1);
+    return d.getTime();
+  }
+  return Date.now();
+}
+
+function formatNewsTime(ts){
+  if(!ts) return '';
+  const d=new Date(ts);
+  const now=new Date();
+  const sameDay=d.toDateString()===now.toDateString();
+  const hh=String(d.getHours()).padStart(2,'0');
+  const mm=String(d.getMinutes()).padStart(2,'0');
+  if(sameDay) return `${hh}:${mm}`;
+  const yesterday=new Date(now); yesterday.setDate(now.getDate()-1);
+  if(d.toDateString()===yesterday.toDateString()) return `昨天 ${hh}:${mm}`;
+  return `${d.getMonth()+1}/${d.getDate()} ${hh}:${mm}`;
+}
+
 function normalizeNewsItem(x,source){
+  const rz=x.resource||{};
+  const rawTime=x.time||x.showTime||x.display_time||rz.display_time||x.ctime||x.publish_time||'';
+  const ts=parseNewsTime(rawTime, source);
+  // 优先取纯文本字段，避免把 HTML 富文本当成标题
+  const rawTitle=x.title||rz.title||rz.content_text||x.content_text||x.content||'';
+  const rawSummary=x.summary||x.brief||x.content_short||rz.content_short||x.digest||rz.content_text||'';
   return{
-    title:x.title||x.resource?.title||x.content||'',
-    summary:x.summary||x.brief||x.content_short||x.resource?.content_short||'',
-    time:x.time||x.showTime||x.display_time||x.resource?.display_time||'',
+    title:cleanHTML(rawTitle),
+    summary:cleanHTML(rawSummary),
+    time:formatNewsTime(ts),
+    timestamp:ts,
     source,
-    url:x.url||x.uri||x.resource?.uri||''
+    sources:[source], // 用于多源合并
+    url:x.url||x.uri||rz.uri||x.articleUrl||''
   };
 }
 
+// HTML实体解码，防止API返回的 &amp; &lt; &#160; 等被 safe() 二次转义变乱码
+function decodeEntities(text){
+  var s=String(text||'');
+  s=s.replace(/&amp;/g,'&');
+  s=s.replace(/&lt;/g,'<');
+  s=s.replace(/&gt;/g,'>');
+  s=s.replace(/&quot;/g,'"');
+  s=s.replace(/&#39;/g,"'");
+  s=s.replace(/&nbsp;/g,' ');
+  s=s.replace(/&#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));});
+  // 剥离残留HTML标签，避免 <p> </p> <br> 等直接显示成乱码
+  s=s.replace(/<[^>]*>/g,'');
+  s=s.replace(/\s+/g,' ').trim();
+  return s;
+}
+
+// 清理HTML标签 + 实体解码，把富文本变成干净纯文本
+function cleanHTML(text){
+  var s=decodeEntities(text);
+  s=s.replace(/<[^>]*>/g,''); // 移除所有 <p> <div> <br> 等标签
+  s=s.replace(/&[a-z#0-9]+;/gi,''); // 兜底清理残留实体
+  s=s.replace(/\s+/g,' ').trim(); // 合并连续空白
+  return s;
+}
+
+// 华尔街见闻
 async function fetchWSCN(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=wscn&limit=20',10000);
+      const j=await proxyFetchJSON('news?source=wscn&limit=25',10000);
       const raw=j?.items||[];
       const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
-      if(arr.length)return arr;
+      if(arr.length) return arr;
     }catch(e){}
   }
   const urls=[
-    'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=20',
+    'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=25',
     'https://api-one-wscn.awtmt.com/apiv1/content/information-flow?channel=global&accept=article&limit=20'
   ];
   for(const u of urls){
     try{
       const r=await fetch(u,{cache:'no-store'});
-      if(!r.ok)continue;
+      if(!r.ok) continue;
       const j=await r.json();
       const raw=j?.data?.items||j?.data?.day_items||[];
       const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
-      if(arr.length)return arr;
+      if(arr.length) return arr;
     }catch(e){}
   }
   return [];
 }
 
+// 同花顺
 async function fetchTHS(){
   if(USE_PROXY){
     try{
       const j=await proxyFetchJSON('news?source=ths&limit=60',10000);
       const list=j?.items||[];
-      return list.map(x=>({
-        title:x.title||'',
-        summary:x.summary||x.digest||'',
-        time:x.time||'',
-        source:'同花顺',
-        url:x.url||''
-      })).filter(x=>x.title);
+      return list.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','同花顺');
+        return{
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.digest||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'同花顺',
+          sources:['同花顺'],
+          url:x.url||''
+        };
+      }).filter(x=>x.title);
     }catch(e){}
   }
   try{
     const r=await fetch('https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&pagesize=60&track=website',{cache:'no-store'});
-    if(!r.ok)throw new Error('network');
+    if(!r.ok) throw new Error('network');
     const j=await r.json();
     const list=(j.data&&j.data.list)||[];
-    return list.map(x=>({
-      title:x.title||'',
-      summary:x.digest||'',
-      time:x.ctime?new Date(parseInt(x.ctime)*1000).toLocaleString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'',
-      source:'同花顺',
-      url:''
-    })).filter(x=>x.title);
-  }catch(e){return[]}
+    return list.map(x=>{
+      const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
+      return{
+        title:decodeEntities(x.title||''),
+        summary:decodeEntities(x.digest||''),
+        time:formatNewsTime(ts),
+        timestamp:ts,
+        source:'同花顺',
+        sources:['同花顺'],
+        url:''
+      };
+    }).filter(x=>x.title);
+  }catch(e){return []}
 }
 
-async function fetchEastmoneyNews(keyword){
+// 金十数据（快讯 + 深度，优先级最高）
+async function fetchJin10News(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=em&limit=30',10000);
+      const j=await proxyFetchJSON('news?source=jin10&limit=25',10000);
       const raw=j?.items||[];
-      return raw.map(x=>({
-        title:x.title||x.brief||'',
-        summary:x.summary||x.content||x.brief||'',
-        time:x.time||x.ctime||x.showTime||'',
-        source:'东方财富',
-        url:x.url||x.articleUrl||''
-      })).filter(x=>x.title);
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','金十数据');
+        return{
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||x.brief||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'金十数据',
+          sources:['金十数据'],
+          url:x.url||'',
+          tier:1
+        };
+      }).filter(x=>x.title);
     }catch(e){}
   }
   try{
-    const param=encodeURIComponent(JSON.stringify({
-      uid:'',keyword:String(keyword).slice(0,100),type:['cmsArticleWebOld'],
-      client:'web',clientType:'web',clientVersion:'curr',
-      param:{cmsArticleWebOld:{searchScope:'default',sort:'default',pageIndex:1,pageSize:30,preTag:'',postTag:''}}
-    }));
-    const u='https://search-api-web.eastmoney.com/search/jsonp?cb=__CALLBACK__&param='+param;
-    const j=await jsonp(u,'news',10000);
-    const arr=j?.result?.cmsArticleWebOld||j?.data?.cmsArticleWebOld||[];
-    return Array.isArray(arr)?arr.map(x=>({
-      title:x.title||x.brief||'',
-      summary:x.content||x.brief||'',
-      time:x.ctime||x.showTime||'',
-      source:'东方财富',
-      url:x.url||x.articleUrl||''
-    })).filter(x=>x.title):[];
-  }catch(e){return[]}
+    // 金十数据快讯接口
+    const urls=[
+      'https://flash-api.jin10.com/get_flash_list?channel=-8200&vip=1&_='+Date.now(),
+      'https://flash-api.jin10.com/get_flash_list?channel=-8200&_='+Date.now()
+    ];
+    for(const u of urls){
+      try{
+        const r=await fetch(u,{cache:'no-store',headers:{'Referer':'https://www.jin10.com/'}});
+        if(!r.ok) continue;
+        const j=await r.json();
+        const list=j?.data||j?.list||[];
+        if(Array.isArray(list)&&list.length){
+          return list.filter(x=>x.data?.content||x.content||x.title).map(x=>{
+            const ct=decodeEntities(x.data?.content||x.content||x.title||'');
+            const ts=x.data?.time?new Date(x.data.time).getTime():Date.now();
+            return{
+              title:ct.slice(0,50),
+              summary:ct.slice(0,120),
+              time:formatNewsTime(ts),
+              timestamp:ts,
+              source:'金十数据',
+              sources:['金十数据'],
+              url:x.data?.link||'',
+              tier:1
+            };
+          }).filter(x=>x.title);
+        }
+      }catch(e){}
+    }
+  }catch(e){}
+  return [];
 }
 
-async function fetchNews(){
-  const keyword='科技 半导体 算力 PCB CPO 基金 ETF 公募';
-  const [em,wscn,ths]=await Promise.all([
-    fetchEastmoneyNews(keyword).catch(()=>[]),
-    fetchWSCN().catch(()=>[]),
-    fetchTHS().catch(()=>[])
+// 证监会等官方政策信息
+async function fetchOfficialNews(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=official&limit=15',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','官方');
+        return{
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'官方',
+          sources:['官方'],
+          url:x.url||''
+        };
+      }).filter(x=>x.title);
+    }catch(e){}
+  }
+  // 直接抓取官方源比较复杂（反爬），从华尔街见闻和东方财富中过滤政策类作为补充
+  // 这里返回空，由主流程从其他来源中识别政策类新闻并标记
+  return [];
+}
+
+/* =============== 第二级：深度解读 =============== */
+
+// 财联社深度文章
+async function fetchCLSNews(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=cls&limit=15',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','财联社');
+        return{
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'财联社',
+          sources:['财联社'],
+          url:x.url||'',
+          tier:2,
+          category:'depth'
+        };
+      }).filter(x=>x.title);
+    }catch(e){}
+  }
+  try{
+    // 财联社电报 API
+    const urls=[
+      'https://www.cls.cn/api/sw?app=CailianpressWeb&os=web&sv=8.4.6',
+      'https://www.cls.cn/nodeapi/telegraphList?app=CailianpressWeb&os=web&sv=8.4.6&lastTime=&rn=20'
+    ];
+    for(const u of urls){
+      try{
+        const r=await fetch(u,{cache:'no-store',headers:{'Referer':'https://www.cls.cn/'}});
+        if(!r.ok) continue;
+        const j=await r.json();
+        const list=j?.data?.roll_data||j?.data||[];
+        if(Array.isArray(list)&&list.length){
+          return list.filter(x=>x.title||x.content).map(x=>{
+            const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
+            return{
+              title:decodeEntities(x.title||(x.content||'').slice(0,40)),
+              summary:decodeEntities(x.brief||x.content||x.description||''),
+              time:formatNewsTime(ts),
+              timestamp:ts,
+              source:'财联社',
+              sources:['财联社'],
+              url:x.shareurl||x.url||'',
+              tier:2,
+              category:x.subject_name||x.tag||'depth'
+            };
+          }).filter(x=>x.title);
+        }
+      }catch(e){}
+    }
+  }catch(e){}
+  return [];
+}
+
+// 第一财经深度文章
+async function fetchYicaiNews(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=yicai&limit=15',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','第一财经');
+        return{
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'第一财经',
+          sources:['第一财经'],
+          url:x.url||'',
+          tier:2,
+          category:'depth'
+        };
+      }).filter(x=>x.title);
+    }catch(e){}
+  }
+  try{
+    // 第一财经资讯接口
+    const r=await fetch('https://www.yicai.com/api/ajax/getlatestnews?page=1&pagesize=20',{cache:'no-store'});
+    if(r.ok){
+      const j=await r.json();
+      const list=j?.data||j?.list||[];
+      if(Array.isArray(list)&&list.length){
+        return list.filter(x=>x.title).map(x=>{
+          const ts=parseNewsTime(x.createtime||x.time||'','第一财经');
+          return{
+            title:decodeEntities(x.title||''),
+            summary:decodeEntities(x.summary||x.desc||x.content||''),
+            time:formatNewsTime(ts),
+            timestamp:ts,
+            source:'第一财经',
+            sources:['第一财经'],
+            url:x.url||x.link||'',
+            tier:2,
+            category:x.category||'depth'
+          };
+        }).filter(x=>x.title);
+      }
+    }
+  }catch(e){}
+  return [];
+}
+
+/* =============== 第三级：市场情绪 =============== */
+
+// 东方财富股吧热度
+async function fetchGubaSentiment(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=guba&limit=20',10000);
+      return j?.items||[];
+    }catch(e){}
+  }
+  try{
+    // 东方财富股吧热门话题
+    const r=await fetch('https://guba.eastmoney.com/interface/GetData.aspx?path=topics/hotlist&param=ps=20&p=1',{
+      cache:'no-store',
+      headers:{'Referer':'https://guba.eastmoney.com/'}
+    });
+    if(r.ok){
+      const j=await r.json();
+      const list=j?.Data||j?.data||[];
+      if(Array.isArray(list)&&list.length){
+        return list.slice(0,15).map(x=>({
+          title:x.title||x.topic_title||'',
+          summary:x.desc||x.content||'',
+          heat:x.hit_count||x.read_count||x.views||0,
+          reply:x.reply_count||x.post_count||0,
+          source:'东方财富股吧',
+          url:x.url||x.topic_url||''
+        })).filter(x=>x.title);
+      }
+    }
+  }catch(e){}
+  return [];
+}
+
+// 同花顺社区/论股堂情绪
+async function fetchTHSForumSentiment(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=thsforum&limit=20',10000);
+      return j?.items||[];
+    }catch(e){}
+  }
+  try{
+    // 同花顺论股堂热门
+    const r=await fetch('https://t.10jqka.com.cn/newlt/lthot/lthotlist/?type=hot&page=1&pagesize=20',{
+      cache:'no-store',
+      headers:{'Referer':'https://t.10jqka.com.cn/'}
+    });
+    if(r.ok){
+      const j=await r.json();
+      const list=j?.data?.list||j?.result||[];
+      if(Array.isArray(list)&&list.length){
+        return list.slice(0,15).map(x=>({
+          title:x.title||'',
+          summary:x.content||x.desc||'',
+          heat:x.views||x.read_num||0,
+          reply:x.reply_num||x.comment_num||0,
+          source:'同花顺社区',
+          url:x.url||x.share_url||''
+        })).filter(x=>x.title);
+      }
+    }
+  }catch(e){}
+  return [];
+}
+
+// 分析散户情绪（基于关键词）
+function analyzeSentiment(posts){
+  if(!posts||!posts.length){
+    return {score:50, label:'neutral', labelText:'情绪中性', posts:[], reason:'暂无足够社区数据'};
+  }
+  // 情绪关键词
+  const bullishWords=['涨','牛市','突破','新高','加仓','买入','看好','暴涨','拉升','涨停','抄底','满仓','看多','利好','起飞','冲冲冲','干','梭哈','稳了','赚','翻倍','机会','底部','反弹'];
+  const bearishWords=['跌','熊市','崩盘','新低','止损','卖出','看空','暴跌','跌停','割肉','清仓','恐慌','利空','凉凉','亏','被套','套牢','砸盘','出货','风险','高位','见顶','逃顶','崩'];
+  
+  let bullCount=0, bearCount=0, neutralCount=0;
+  const analyzed=posts.slice(0,10).map(p=>{
+    const text=(p.title+' '+(p.summary||'')).toLowerCase();
+    let bullScore=0, bearScore=0;
+    bullishWords.forEach(w=>{ if(text.includes(w)) bullScore++; });
+    bearishWords.forEach(w=>{ if(text.includes(w)) bearScore++; });
+    let sentiment='neutral';
+    if(bullScore>bearScore+1){ sentiment='bullish'; bullCount++; }
+    else if(bearScore>bullScore+1){ sentiment='bearish'; bearCount++; }
+    else neutralCount++;
+    return {...p, sentiment, bullScore, bearScore};
+  });
+  
+  const total=bullCount+bearCount+neutralCount||1;
+  // 情绪分数 0-100：0极度恐慌，100极度贪婪
+  const score=Math.round(20+(bullCount/total)*60+(neutralCount/total)*30);
+  
+  let label='neutral', labelText='情绪中性';
+  if(score>=80){ label='extreme-greed'; labelText='极度贪婪'; }
+  else if(score>=65){ label='greed'; labelText='偏乐观'; }
+  else if(score<=30){ label='extreme-fear'; labelText='极度恐慌'; }
+  else if(score<=45){ label='fear'; labelText='偏谨慎'; }
+  
+  // 反推提示
+  let contrarian='';
+  if(score>=80){
+    contrarian='散户情绪极度乐观，历史上往往是短期见顶信号，需警惕回调风险。';
+  }else if(score<=30){
+    contrarian='散户情绪极度恐慌，可能是短期底部区域，关注是否有企稳信号。';
+  }else if(score>=65){
+    contrarian='散户偏乐观，情绪偏热，追高需谨慎。';
+  }else if(score<=45){
+    contrarian='散户偏谨慎，情绪不高，反而可能有布局机会。';
+  }else{
+    contrarian='散户情绪中性，没有明显的情绪极端信号。';
+  }
+  
+  return {score, label, labelText, posts:analyzed, contrarian};
+}
+
+// 将二级深度文章匹配到一级新闻
+function matchDeepAnalysis(newsItem, deepList){
+  if(!deepList||!deepList.length) return [];
+  const newsKws=extractKeyWords(newsItem.title);
+  if(!newsKws.length) return [];
+  const matched=deepList.filter(d=>{
+    const dKws=extractKeyWords(d.title+' '+(d.summary||''));
+    const overlap=newsKws.filter(k=>dKws.includes(k));
+    // 至少2个关键词重合
+    return overlap.length>=2;
+  }).sort((a,b)=>b.timestamp-a.timestamp).slice(0,3);
+  return matched;
+}
+
+// 将三级情绪帖子匹配到一级新闻
+function matchSentiment(newsItem, sentPosts){
+  if(!sentPosts||!sentPosts.length) return {matched:[], overall:null};
+  const newsKws=extractKeyWords(newsItem.title);
+  if(!newsKws.length) return {matched:[], overall:null};
+  const matched=sentPosts.filter(p=>{
+    const text=(p.title+' '+(p.summary||'')).toLowerCase();
+    return newsKws.some(k=>text.includes(k.toLowerCase()));
+  }).slice(0,5);
+  const overall=matched.length?analyzeSentiment(matched):null;
+  return {matched, overall};
+}
+
+// 三源交叉验证：识别同一事件并合并
+function crossValidateNews(newsList){
+  const merged=[];
+  const used=new Set();
+  for(let i=0;i<newsList.length;i++){
+    if(used.has(i)) continue;
+    const a=newsList[i];
+    const aKey=a.title.replace(/\s+/g,'').slice(0,30);
+    const group=[a];
+    used.add(i);
+    for(let j=i+1;j<newsList.length;j++){
+      if(used.has(j)) continue;
+      const b=newsList[j];
+      const bKey=b.title.replace(/\s+/g,'').slice(0,30);
+      // 判断是否同一事件：标题前30字相似度高 或 共有核心关键词
+      if(aKey===bKey){
+        group.push(b);
+        used.add(j);
+        continue;
+      }
+      // 关键词重叠判断
+      const aWords=extractKeyWords(a.title);
+      const bWords=extractKeyWords(b.title);
+      if(aWords.length>=2&&bWords.length>=2){
+        const overlap=aWords.filter(w=>bWords.includes(w));
+        if(overlap.length>=Math.min(3,Math.min(aWords.length,bWords.length)*0.6)){
+          // 时间差在2小时内视为同一事件
+          if(Math.abs(a.timestamp-b.timestamp)<7200000){
+            group.push(b);
+            used.add(j);
+          }
+        }
+      }
+    }
+    // 合并同组新闻
+    if(group.length===1){
+      merged.push({...group[0], multiSource:false});
+    }else{
+      // 取时间最新的作为主新闻
+      group.sort((x,y)=>y.timestamp-x.timestamp);
+      const main=group[0];
+      const allSources=[...new Set(group.flatMap(g=>g.sources))];
+      merged.push({
+        ...main,
+        sources:allSources,
+        source:allSources.join('、'),
+        multiSource:true,
+        // 汇总摘要，取最长的
+        summary:group.reduce((best,g)=>g.summary.length>best.length?g.summary:best,main.summary)
+      });
+    }
+  }
+  return merged;
+}
+
+// 提取新闻标题中的关键词（中文2字以上的实词片段）
+function extractKeyWords(title){
+  const words=[];
+  const t=title.replace(/[，。、！？：；""''（）【】\s\d.%+\-]/g,'');
+  // 提取常见的基金/科技/政策关键词
+  const kwList=['半导体','芯片','算力','CPO','光模块','PCB','通信','ETF','基金','公募','净值','持仓',
+    '调仓','新能源','光伏','锂电','医药','AI','人工智能','机器人','黄金','原油','美联储',
+    '证监会','央行','财政部','国务院','降准','降息','政策','监管','美股','纳指','标普','港股',
+    '基金经理','重仓','申购','赎回','分红','理财','保险','券商','银行','地产','消费','白酒'];
+  for(const kw of kwList){
+    if(t.includes(kw)) words.push(kw);
+  }
+  return words;
+}
+
+// 新闻与持仓基金关联
+function matchNewsWithPortfolio(newsItem){
+  if(!state.portfolio||!state.portfolio.length){
+    return {affect:false, funds:[], reason:''};
+  }
+  const text=(newsItem.title+' '+(newsItem.summary||'')).toLowerCase();
+  const relatedFunds=[];
+  for(const p of state.portfolio){
+    const fund=state.funds[p.code];
+    if(!fund) continue;
+    const fundName=fund.name||'';
+    const fundType=fund.type||'';
+    // 检查基金名称中的行业关键词是否在新闻中出现
+    const sectorMatch=SECTOR_RULES.some(s=>{
+      const inName=s.keys.some(k=>fundName.includes(k));
+      const inNews=s.keys.some(k=>text.includes(k.toLowerCase()));
+      return inName&&inNews;
+    });
+    // 检查基金代码或简称
+    const codeMatch=text.includes(p.code)||text.includes(fundName.slice(0,4).toLowerCase());
+    // 通用基金词 + 行业匹配
+    const fundWordMatch=/基金|etf|净值|公募|持仓|调仓/.test(text)&&sectorMatch;
+    if(sectorMatch||codeMatch||fundWordMatch){
+      relatedFunds.push({code:p.code, name:fundName, shares:p.shares});
+    }
+  }
+  if(relatedFunds.length){
+    return {affect:true, funds:relatedFunds, reason:'可能影响你的持仓'};
+  }
+  return {affect:false, funds:[], reason:'暂未发现与你持仓的直接关联'};
+}
+
+// 新闻与行情联动判断
+function checkMarketResonance(newsItem){
+  const text=(newsItem.title+' '+(newsItem.summary||'')).toLowerCase();
+
+  // 1) 新闻本身就是"资金"新闻：真金白银的流向，天然共振
+  if(/主力资金|北向资金|南向资金|净流入|净流出|资金流入|资金流出|龙虎榜|融资买入|融资余额|增持|减持|扫货|抢筹|爆买|大单|游资|外资|北水|南水|净买入|净卖出|机构买入|机构卖出/.test(text)){
+    return {resonance:true, evidence:'直接涉及资金流向', from:'money', sectors:[]};
+  }
+
+  // 2) 影响"钱"的政策（降准降息、流动性等），资金面直接相关
+  if(/降准|降息|lpr|mlf|逆回购|再贷款|流动性|货币宽松|货币收紧|加息|缩表|印花税|减持新规/.test(text)){
+    return {resonance:true, evidence:'货币政策影响资金面', from:'policy', sectors:[]};
+  }
+
+  // 3) 新闻关联板块，用真实行情验证"价与资金同向"（涨+流入 / 跌+流出）
+  const relatedSectors=SECTOR_RULES.filter(s=>s.keys.some(k=>text.includes(k.toLowerCase())));
+  const sectorData=relatedSectors.map(s=>{
+    const found=state.sectors.find(sec=>sec.name===s.name);
+    return found?{name:s.name, change:found.change, flow:found.flow}:null;
+  }).filter(Boolean);
+
+  if(sectorData.length){
+    const sameDirection=sectorData.filter(s=>(Number(s.change)>0&&Number(s.flow)>0)||(Number(s.change)<0&&Number(s.flow)<0));
+    if(sameDirection.length){
+      return {resonance:true, evidence:'板块价格与资金同向', from:'sector', sectors:sameDirection};
+    }
+    const bigMove=sectorData.filter(s=>Math.abs(Number(s.change)||0)>=1.5&&Math.abs(Number(s.flow)||0)>0);
+    if(bigMove.length){
+      return {resonance:true, evidence:'板块异动明显', from:'sector', sectors:bigMove};
+    }
+  }
+
+  // 4) 没有板块数据兜底：标题在讲真实的价格动作，且带资金/成交痕迹
+  if(/(大涨|暴涨|涨停|创新高|新高|跌停|暴跌|跳水|拉升|翻红|反弹|重挫|飙升|急涨|急跌)/.test(text) && /资金|流入|流出|买入|卖出|成交|放量/.test(text)){
+    return {resonance:true, evidence:'价格异动伴随资金痕迹', from:'price', sectors:[]};
+  }
+
+  return {resonance:false, evidence:'暂未形成资金共振', from:null, sectors:sectorData};
+}
+
+// 新闻独立刷新函数（15分钟一次，独立于整体刷新）
+async function refreshNewsOnly(force){
+  if(state._newsLoading) return;
+  const now=Date.now();
+  // 非强制刷新且距离上次不足15分钟则跳过
+  if(!force&&state.newsLastFetch&&now-state.newsLastFetch<900000){
+    return;
+  }
+  state._newsLoading=true;
+  const btn=$('newsRefreshBtn');
+  if(btn) btn.classList.add('spin');
+
+  // 优先来源：财联社、金十数据、华尔街见闻、同花顺iFinD、第一财经
+  // 全部并行抓取，互不影响
+  const results=await Promise.allSettled([
+    // Tier 1: 快讯（优先级：财联社 > 金十 > 华尔街见闻 > 同花顺 > 第一财经）
+    fetchCLSNews(),
+    fetchJin10News(),
+    fetchWSCN(),
+    fetchTHS(),
+    fetchYicaiNews(),
+    fetchOfficialNews(),
+    // Tier 2: 深度解读（财联社 + 第一财经的深度文章）
+    // 已在 Tier 1 中获取，这里直接复用
+    // Tier 3: 市场情绪
+    fetchGubaSentiment(),
+    fetchTHSForumSentiment()
   ]);
-  state.newsSources={em,wscn,ths};
-  const all=[...em,...wscn,...ths].filter(x=>x.title);
-  // 基金相关优先，同时保留市场背景
-  const keys=['基金','公募','ETF','净值','持仓','重仓','调仓','半导体','芯片','算力','CPO','PCB','通信','黄金','原油','美联储','政策','央行','证监会','财政部','国务院'];
-  const score=x=>keys.reduce((n,k)=>n+(x.title.includes(k)?2:0),0);
-  all.sort((a,b)=>score(b)-score(a));
-  // 去重
+  // Tier 1 results
+  const cls=results[0].status==='fulfilled'?results[0].value:[];
+  const jin10=results[1].status==='fulfilled'?results[1].value:[];
+  const wscn=results[2].status==='fulfilled'?results[2].value:[];
+  const ths=results[3].status==='fulfilled'?results[3].value:[];
+  const yicai=results[4].status==='fulfilled'?results[4].value:[];
+  const off=results[5].status==='fulfilled'?results[5].value:[];
+  // Tier 3 results
+  const guba=results[6].status==='fulfilled'?results[6].value:[];
+  const thsForum=results[7].status==='fulfilled'?results[7].value:[];
+
+  // 保存二级深度数据（财联社 + 第一财经的深度文章）
+  state.newsDeep=[...cls,...yicai].filter(x=>x.title).sort((a,b)=>b.timestamp-a.timestamp);
+  state.source.cls=cls.length?'财联社':'不可用';
+  state.source.yicai=yicai.length?'第一财经':'不可用';
+
+  // 保存三级情绪数据 + 计算全市场情绪
+  const allSentiment=[...guba,...thsForum];
+  state.newsSentiment=allSentiment;
+  state.sentimentOverall=allSentiment.length?analyzeSentiment(allSentiment):null;
+  state.source.guba=guba.length?'东方财富股吧':'不可用';
+  state.source.thsForum=thsForum.length?'同花顺社区':'不可用';
+
+  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off].filter(x=>x.title&&x.timestamp);
+  state.newsSources={cls,jin10,wscn,ths,yicai,off};
+
+  if(all.length===0){
+    // 全部失败：保留上一批数据，显示错误提示
+    state._newsLoading=false;
+    if(btn) btn.classList.remove('spin');
+    const errStrip=$('newsErrorStrip');
+    const errText=$('newsErrorText');
+    if(errStrip) errStrip.style.display='flex';
+    if(errText) errText.textContent='新闻源暂时无法更新，显示最近一次成功数据';
+    updateNewsEvidence();
+    return;
+  }
+
+  // 三源交叉验证 + 去重
+  let merged=crossValidateNews(all);
+
+  // 严格按真实发布时间从新到旧排序（绝不按相关度排序）
+  merged.sort((a,b)=>b.timestamp-a.timestamp);
+
+  // 去重（标题前40字相同视为重复）
   const seen=new Set();
-  state.news=all.filter(x=>{
-    const k=x.title.replace(/\s+/g,'').slice(0,55);
-    if(seen.has(k))return false;
-    seen.add(k);return true;
-  }).slice(0,20);
-  state.source.news=em.length?'东方财富':'不可用';
+  merged=merged.filter(x=>{
+    const k=x.title.replace(/\s+/g,'').slice(0,40);
+    if(seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  }).slice(0,30);
+
+  // 只有在有新数据时才更新状态
+  if(merged.length>0){
+    state.news=merged;
+    state.newsLastFetch=now;
+    // 隐藏错误提示
+    const errStrip=$('newsErrorStrip');
+    if(errStrip) errStrip.style.display='none';
+  }
+
+  state.source.news=cls.length?'财联社':'不可用';
   state.source.wscn=wscn.length?'华尔街见闻':'不可用';
   state.source.ths=ths.length?'同花顺':'不可用';
+  state.source.jin10=jin10.length?'金十数据':'不可用';
+  state.source.yicai=yicai.length?'第一财经':'不可用';
+
+  state._newsLoading=false;
+  if(btn) btn.classList.remove('spin');
   renderNews();
-  await explainNewsBatch();
+  updateNewsEvidence();
+  // AI解读单独异步处理，不阻塞新闻显示
+  explainNewsBatch().catch(()=>{});
+}
+
+function updateNewsEvidence(){
+  const el=$('newsEvidence');
+  if(!el) return;
+  const t1=[];
+  if(state.source.cls&&state.source.cls!=='不可用') t1.push('财联社');
+  if(state.source.jin10&&state.source.jin10!=='不可用') t1.push('金十数据');
+  if(state.source.wscn&&state.source.wscn!=='不可用') t1.push('华尔街见闻');
+  if(state.source.ths&&state.source.ths!=='不可用') t1.push('同花顺');
+  if(state.source.yicai&&state.source.yicai!=='不可用') t1.push('第一财经');
+  const t3=[];
+  if(state.source.guba&&state.source.guba!=='不可用') t3.push('股吧');
+  if(state.source.thsForum&&state.source.thsForum!=='不可用') t3.push('同花顺社区');
+  if(!t1.length&&!t3.length){
+    el.textContent='暂无可用资讯源 · 请检查网络连接';
+  }else{
+    const aiMode=getDSKey()?'DeepSeek':'规则版';
+    const sentTxt=state.sentimentOverall?` · 散户：${state.sentimentOverall.labelText}`:'';
+    el.textContent=`快讯：${t1.length?t1.join('·'):'—'} | 情绪：${t3.length?t3.join('·'):'—'}${sentTxt} · ${aiMode}AI`;
+  }
+}
+
+// 兼容旧函数名
+async function fetchNews(){
+  await refreshNewsOnly(true);
 }
 
 /* ============================================================
@@ -2612,73 +3436,371 @@ function renderCombo(){
  * ============================================================ */
 function newsTopic(n){
   const t=(n.title+' '+(n.summary||'')).toLowerCase();
-  if(/基金|etf|净值|公募|持仓|调仓|申购|赎回|理财|分红/.test(t))return'基金';
-  if(/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|lpr|mlf|逆回购|国常会/.test(t))return'政策';
-  if(/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|韩国|欧洲|美国|外围|国际|地缘|中东|俄乌|港股|恒生/.test(t))return'外围';
-  if(/ai|算力|半导体|芯片|存储|cpo|光模块|pcb|通信|机器人|科技|新能源|光伏|锂电|汽车|医药|消费|白酒/.test(t))return'科技';
-  return'市场';
+  // 基金优先
+  if(/基金|etf|净值|公募|持仓|调仓|申购|赎回|理财|分红|基金经理|重仓/.test(t)) return '基金';
+  // 政策
+  if(/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|lpr|mlf|逆回购|国常会|国新办/.test(t)) return '政策';
+  // 宏观
+  if(/宏观经济|gdp|cpi|ppi|pmi|社融|m2|信贷|社零|进出口|外汇储备|通胀|通缩|经济数据/.test(t)) return '宏观';
+  // 海外/外围
+  if(/美股|美联储|美元|美债|纳指|标普|道指|日经|韩国|欧洲|欧央行|英国|德国|法国|外围|国际|地缘|中东|俄乌|港股|恒生|纳斯达克|标普500/.test(t)) return '海外';
+  // 科技
+  if(/ai|算力|半导体|芯片|存储|cpo|光模块|pcb|通信|机器人|科技|新能源|光伏|锂电|汽车|医药|消费|白酒|创新药|cxo/.test(t)) return '科技';
+  // 市场
+  if(/大盘|沪指|深成指|创业板|科创|a股|股市|盘面|行情|指数|涨跌|上涨|下跌|收盘|开盘/.test(t)) return '市场';
+  return '市场';
 }
 
-function topicScore(n,topic){
-  const t=(n.title+' '+(n.summary||'')).toLowerCase();
-  const maps={
-    '基金':/基金|etf|净值|公募|持仓|调仓|申购|赎回|理财|分红/,
-    '政策':/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|lpr|mlf|逆回购|国常会/,
-    '外围':/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|韩国|欧洲|美国|外围|国际|地缘|中东|俄乌|港股|恒生/,
-    '科技':/ai|算力|半导体|芯片|存储|cpo|光模块|pcb|通信|机器人|科技|新能源|光伏|锂电|汽车|医药|消费|白酒/,
-    '市场':/.*/
-  };
-  const re=maps[topic]||/.*/;
-  let score=0;
-  if(re.test(t))score+=10;
-  // 科技/政策/外围没有直接命中时，看是否含相关行业词
-  if(topic==='科技'&&/行业|产业|板块|公司|业绩|订单/.test(t))score+=3;
-  if(topic==='政策'&&/经济|宏观|会议|讲话|发布/.test(t))score+=3;
-  if(topic==='外围'&&/海外|全球|世界|国际贸易/.test(t))score+=3;
-  return score;
+// 本地规则版AI解读：一条新闻一句一针见血的大白话，小学文化能懂
+function ruleExplain(title,summary,newsItem){
+  const raw=cleanHTML(title)+' '+cleanHTML(summary);
+  const t=raw.toLowerCase();
+  let text='', market='', judge='';
+
+  // 地缘冲突（优先级最高，先判具体冲突）
+  if(/中东|伊朗|以色列|加沙|以伊|美伊|霍尔木兹/.test(t)){
+    text='中东打仗，黄金石油可能涨，军工跟风。'; market='黄金/原油/军工'; judge='别追高';
+  }else if(/俄乌|俄罗斯|乌克兰|普京|乌军|停火/.test(t)){
+    text='俄乌有变，黄金军工波动，别乱追。'; market='黄金/军工'; judge='观望';
+  }else if(/关税|贸易战|贸易磋商|贸易代表|加征|制裁/.test(t)){
+    text='关税加码，出口和汽车金属股短期承压。'; market='出口/汽车/金属(利空)'; judge='避险，减相关仓位';
+  }else if(/降准|降息|lpr.{0,4}下调|宽松|释放流动性/.test(t)){
+    text='放水了钱变多，成长股和债市受益。'; market='科技/债市(利好)'; judge='可关注强势方向';
+  }else if(/加息|升息|缩表|收紧|通胀超预期/.test(t)){
+    text='收水了钱变贵，高估值股先跌。'; market='高估值(利空)'; judge='防守，别加仓';
+  }else if(/机器人|具身智能|人形机器人|大模型|deepseek/.test(t)){
+    text='机器人出新消息，科技制造有热度，别追高。'; market='机器人/制造'; judge='情绪票，快进快出';
+  }else if(/算力|cpo|光模块|光通信|pcb|半导体|芯片|存储|人工智能/.test(t)){
+    text='AI算力还景气，光模块半导体最吃香。'; market='光模块/半导体(利好)'; judge='主线，回调可看';
+  }else if(/黄金|金价|避险|央行购金/.test(t)){
+    text='金价上涨是避险，黄金股跟着受益。'; market='黄金股(利好)'; judge='可持有';
+  }else if(/原油|油价|石油|欧佩克|opec/.test(t)){
+    text='油价有波动，能源股短期或有表现。'; market='能源股'; judge='看消息面';
+  }else if(/新能源|光伏|锂电|储能|风电|氢能/.test(t)){
+    text='新能源出消息，看资金回不回流。'; market='新能源产业链'; judge='等反转信号';
+  }else if(/医药|制药|疫苗|创新药|药企|医疗/.test(t)){
+    text='医药出消息，板块小幅震荡，影响有限。'; market='医药'; judge='中性，别重仓';
+  }else if(/地产|房地产|楼市|房贷|救市/.test(t)){
+    text='地产出政策，重点看落地力度。'; market='地产链'; judge='跟政策走';
+  }else if(/基金经理|调仓|持仓|净值|etf|公募|重仓/.test(t)){
+    text='基金有调仓动作，先看自己持仓有没有被波及。'; market='基金持仓'; judge='对照持仓';
+  }else if(/政策|国务院|证监会|央行|财政部|发改委|监管|补贴/.test(t)){
+    text='政策落地，相关行业受益，看能不能持续。'; market='政策受益行业'; judge='政策托底';
+  }else if(/美股|纳指|标普|道指|美联储|美元|美债/.test(t)){
+    text='美国那边波动，A股开盘情绪会跟一下。'; market='A股情绪'; judge='开盘看联动';
+  }else if(/港股|恒生|南向/.test(t)){
+    text='港股有波动，看南向资金和A股联动。'; market='港股'; judge='看联动';
+  }else if(/业绩.{0,6}预增|利润.{0,6}大增|营收.{0,6}大增|扭亏|预喜/.test(t)){
+    text='公司真赚钱了，相关股票受资金关注。'; market='相关公司(利好)'; judge='看业绩持续性';
+  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市/.test(t)){
+    text='有踩雷信号，相关板块先躲一躲。'; market='相关股(利空)'; judge='赶紧查持仓';
+  }else{
+    const kws=extractKeyWords(title);
+    if(kws.length>=1){
+      text=kws[0]+'有消息，看资金跟不跟进，进了再行动。'; market='相关板块'; judge='先观察';
+    }else{
+      text='这条影响有限，先看后续资金怎么走。'; market=''; judge='观察';
+    }
+  }
+
+  return { fact:text, market:market, judge:judge, text:text };
 }
 
-function ruleExplain(title,summary){
-  const t=(String(title)+' '+String(summary)).toLowerCase();
-  if(/降息|lpr|逆回购|mlf|流动性|货币政策|降准/.test(t))return'这类消息先影响市场钱多少，钱多了股票容易涨，钱少了容易跌。对基金是间接影响。';
-  if(/半导体|芯片|存储|cpo|光模块|pcb|算力|通信|机器人/.test(t))return'这是科技圈的事，相关基金可能跟着动。但要看今天板块涨没涨、资金进没进，不能只看标题。';
-  if(/新能源|光伏|锂电|汽车|医药|消费|白酒/.test(t))return'这是相关行业消息，对应板块基金可能受影响，但要结合当天涨跌和资金流向看。';
-  if(/黄金|白银|原油|油价|美债|美元|美联储|纳指|标普|道指|日经|港股/.test(t))return'这是国外或大宗商品的消息，可能通过情绪影响A股，但A股走不走出来还要看自己。';
-  if(/基金|公募|etf|净值|持仓|调仓|重仓/.test(t))return'这条直接跟基金有关，注意它说的是哪类基金、什么方向，再对照自己持仓看。';
-  if(/政策|国常会|国务院|财政部|证监会|央行|工信部|发改委|监管/.test(t))return'这是政策消息，短期可能影响市场情绪，长期要看政策力度和执行。';
-  return'这条新闻先当背景看看，是否影响你的基金，要结合板块涨跌、资金流向和后面几天走势一起判断。';
+// 获取来源样式类
+function sourceClass(source){
+  if(!source) return 'cls';
+  if(source.includes('财联社')) return 'cls';
+  if(source.includes('金十')) return 'jin10';
+  if(source.includes('华尔街见闻')) return 'wscn';
+  if(source.includes('同花顺')) return 'ths';
+  if(source.includes('第一财经')) return 'yicai';
+  if(source.includes('官方')||source.includes('证监会')) return 'official';
+  return 'cls';
 }
 
 function renderNews(filter){
-  if(filter===undefined)filter=state.activeNewsFilter;
+  if(filter===undefined) filter=state.activeNewsFilter;
   state.activeNewsFilter=filter;
-  const all=state.news.filter(n=>n.title&&String(n.title).trim()).map(n=>({...n,topic:newsTopic(n)}));
+  // 只保留"与资金形成共振"的新闻，其余一律不显示
+  const all=state.news
+    .filter(n=>n.title&&String(n.title).trim())
+    .map(n=>{
+      const resonanceInfo=checkMarketResonance(n);
+      return {...n, topic:newsTopic(n), resonanceInfo};
+    })
+    .filter(n=>n.resonanceInfo.resonance);
   let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
-  // 如果某个分类没有直接命中，按关键词相关度补充
-  if(filter!=='all'&&!filtered.length&&all.length){
-    const scored=all.map(n=>({...n,score:topicScore(n,filter)})).sort((a,b)=>b.score-a.score);
-    filtered=scored.filter(x=>x.score>0).slice(0,10);
-  }
-  const list=filtered.slice(0,18);
+  // 保持时间排序（从新到旧），不做相关度排序
+  const list=filtered.slice(0,25);
   const listEl=$('newsList');
-  if(!listEl)return;
+  if(!listEl) return;
   if(!list.length){
-    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>当前分类暂无真实资讯</div>';
+    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>'+(state.news.length?'暂未筛选出与资金共振的资讯，稍后刷新再看看':'当前分类暂无与资金共振的资讯')+'</div>';
   }else{
     const [hero,...rest]=list;
     const itemHtml=(n,i,heroMode)=>{
-      const cls=n.source==='华尔街见闻'?'wscn':(n.source==='同花顺'?'ths':'em');
-      const timeStrVal=safe(String(n.time||'').slice(-5));
+      const cls=sourceClass(n.source);
+      const timeVal=safe(n.time||'');
       const title=n.url?`<a href="${safe(n.url)}" target="_blank" rel="noopener">${safe(n.title)}</a>`:safe(n.title);
-      return heroMode?
-        `<div class="news-feature"><div class="news-meta"><span class="news-time">${timeStrVal}</span><span class="news-source ${cls}">${safe(n.source||'资讯')}</span><span class="news-topic">${safe(n.topic)}</span></div><div class="news-title">${title}</div>${n.summary?`<div class="news-summary">${safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,150))}</div>`:''}${n.ai?`<div class="news-ai"><span class="ai-tag">AI</span><b>一句话</b> ${safe(n.ai)}</div>`:''}</div>`:
-        `<div class="news-item"><div class="news-meta"><span class="news-time">${timeStrVal}</span><span class="news-source ${cls}">${safe(n.source||'资讯')}</span><span class="news-topic">${safe(n.topic)}</span></div><div class="news-title">${title}</div>${n.summary?`<div class="news-summary">${safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,105))}</div>`:''}${n.ai?`<div class="news-ai"><span class="ai-tag">AI</span><b>一句话</b> ${safe(n.ai)}</div>`:''}</div>`;
+      // 多源确认 / 单一来源 标签
+      let sourceBadge='';
+      if(n.multiSource&&n.sources&&n.sources.length>=2){
+        sourceBadge=`<span class="news-source multi-source">多源确认</span>`;
+      }else{
+        sourceBadge=`<span class="news-source ${cls}">${safe(n.sources&&n.sources.length?n.sources[0]:(n.source||'资讯'))}</span>`;
+      }
+      // 多来源详情
+      let sourcesDetail='';
+      if(n.multiSource&&n.sources&&n.sources.length>=2){
+        const colors={
+          '财联社':'#dc2626',
+          '金十数据':'#b45309',
+          '华尔街见闻':'#7c3aed',
+          '同花顺':'#ea580c',
+          '第一财经':'#7c3aed',
+          '官方':'#b45309'
+        };
+        sourcesDetail=`<div class="news-sources-detail">${n.sources.map(s=>`<span><span class="src-dot" style="background:${colors[s]||'#94a3b8'}"></span>${safe(s)}</span>`).join('')}</div>`;
+      }
+      // 关联持仓基金
+      const portfolioMatch=matchNewsWithPortfolio(n);
+      let relatedHtml='';
+      if(portfolioMatch.affect){
+        relatedHtml=`<div class="news-related affect"><b>⚠️ ${safe(portfolioMatch.reason)}</b><div class="fund-tags">${portfolioMatch.funds.slice(0,3).map(f=>`<span class="fund-tag">${safe(f.name.slice(0,8))}</span>`).join('')}</div></div>`;
+      }else if(state.portfolio&&state.portfolio.length){
+        relatedHtml=`<div class="news-related no-affect">${safe(portfolioMatch.reason)}</div>`;
+      }
+      // 行情共振（已在 renderNews 顶部预计算）
+      const resonance=n.resonanceInfo||checkMarketResonance(n);
+      let resonanceHtml='';
+      if(resonance.resonance){
+        const secNames=(resonance.sectors&&resonance.sectors.length)?resonance.sectors.slice(0,2).map(s=>safe(s.name)).join('、'):'';
+        resonanceHtml=`<div class="news-resonance"><span class="res-badge resonance">⚡ 资金共振${secNames?' · '+secNames:''}</span></div>`;
+      }
+      // AI一句话（精短大白话）
+      let aiHtml='';
+      if(n.ai){
+        const oneLine=(typeof n.ai==='object')?(n.ai.text||n.ai.fact||''):String(n.ai);
+        const line=cleanHTML(oneLine);
+        if(line){
+          aiHtml=`<div class="news-ai"><span class="ai-tag">🤖</span>${safe(line)}</div>`;
+        }
+      }
+      // 摘要
+      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0, heroMode?160:110)):'';
+      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>110?'…':''}</div>`:'';
+
+      // === 第二级：深度解读 ===
+      const deepItems=matchDeepAnalysis(n, state.newsDeep);
+      let deepHtml='';
+      if(deepItems.length){
+        const deepList=deepItems.map(d=>{
+          const srcCls=d.source==='财联社'?'cls':'yicai';
+          const dSummary=safe(String(d.summary||'').replace(/<[^>]+>/g,'').slice(0,100));
+          return `<div class="deep-item"><span class="deep-src ${srcCls}">${safe(d.source||'')}</span>${safe(d.title||'')}${dSummary?`<div style="font-size:10px;color:#64748b;margin-top:2px">${dSummary}</div>`:''}</div>`;
+        }).join('');
+        deepHtml=`<div class="news-deep">
+          <div class="deep-title">🔍 深度解读 · 为什么会发生？</div>
+          ${deepList}
+          <div class="deep-summary"><b>导读：</b>${deepItems.length}篇深度文章从不同角度解读此事件。核心关注：${extractKeyWords(n.title).slice(0,5).join('、')||'综合因素'}。</div>
+        </div>`;
+      }else{
+        deepHtml=`<div class="news-deep">
+          <div class="deep-title">🔍 深度解读</div>
+          <div class="news-deep-empty">暂无相关深度分析文章，持续关注中…</div>
+        </div>`;
+      }
+
+      // === 第三级：市场情绪 ===
+      const sentData=matchSentiment(n, state.newsSentiment);
+      const sent=sentData.overall;
+      let sentimentHtml='';
+      if(sent&&sent.matched&&sent.matched.length){
+        const scorePos=Math.max(0, Math.min(100, sent.score));
+        const sentPosts=sent.matched.slice(0,3).map(p=>{
+          const srcLabel=p.source==='东方财富股吧'?'股吧':'同花顺';
+          return `<div class="sent-item"><span class="sent-source">${srcLabel}</span>${safe(p.title||'').slice(0,28)}</div>`;
+        }).join('');
+        sentimentHtml=`<div class="news-sentiment">
+          <div class="sent-title">👥 散户情绪 · 反推拐点</div>
+          <div class="sent-meter">
+            <div class="sent-bar"><div class="indicator" style="left:${scorePos}%"></div></div>
+            <span class="sent-label ${sent.label}">${safe(sent.labelText)}</span>
+          </div>
+          <div class="sent-items">${sentPosts}</div>
+          <div class="sent-note"><b>反向提示：</b>${safe(sent.contrarian||'')}</div>
+        </div>`;
+      }else{
+        sentimentHtml=`<div class="news-sentiment">
+          <div class="sent-title">👥 散户情绪</div>
+          <div class="news-sentiment-empty">暂无相关社区讨论数据</div>
+        </div>`;
+      }
+
+      // 层级切换按钮（只对非头条新闻显示，节省空间）
+      const hasTiers=deepItems.length||(sentData.matched&&sentData.matched.length);
+      let tiersHtml='';
+      if(hasTiers){
+        tiersHtml=`<div class="news-tiers">
+          <button class="news-tier-btn t2" data-news-tier="deep" data-idx="${i}">🔍 深度解读 ${deepItems.length?`(${deepItems.length})`:''}</button>
+          <button class="news-tier-btn t3" data-news-tier="sentiment" data-idx="${i}">👥 散户情绪</button>
+        </div>
+        <div class="news-tier-body" data-tier-body="deep" data-idx="${i}">${deepHtml}</div>
+        <div class="news-tier-body" data-tier-body="sentiment" data-idx="${i}">${sentimentHtml}</div>`;
+      }
+
+      if(heroMode){
+        // 头条新闻默认展开深度和情绪
+        return `<div class="news-feature">
+          <div class="news-meta">
+            <span class="news-time">${timeVal}</span>
+            ${sourceBadge}
+            <span class="news-topic">${safe(n.topic)}</span>
+          </div>
+          <div class="news-title">${title}</div>
+          ${summaryHtml}
+          ${sourcesDetail}
+          ${resonanceHtml}
+          ${relatedHtml}
+          ${aiHtml}
+          ${deepItems.length?deepHtml:''}
+          ${sentData.matched&&sentData.matched.length?sentimentHtml:''}
+        </div>`;
+      }else{
+        return `<div class="news-item">
+          <div class="news-meta">
+            <span class="news-time">${timeVal}</span>
+            ${sourceBadge}
+            <span class="news-topic">${safe(n.topic)}</span>
+          </div>
+          <div class="news-title">${title}</div>
+          ${summaryHtml}
+          ${sourcesDetail}
+          ${resonanceHtml}
+          ${relatedHtml}
+          ${aiHtml}
+          ${tiersHtml}
+        </div>`;
+      }
     };
-    listEl.innerHTML=itemHtml(hero,0,true)+rest.map((n,i)=>itemHtml(n,i)).join('');
+    listEl.innerHTML=itemHtml(hero,0,true)+rest.map((n,i)=>itemHtml(n,i+1,false)).join('');
   }
-  $('newsUpdateTime').textContent='更新 '+timeStr();
-  $('newsEvidence').textContent=`三源快讯：华尔街见闻 ${state.source.wscn||'—'} · 东方财富 ${state.source.news||'—'} · 同花顺 ${state.source.ths||'—'} · ${getDSKey()?'DeepSeek解读':'规则版解读'}`;
-  document.querySelectorAll('.news-filter').forEach(b=>b.classList.toggle('active',(b.dataset.newsFilter||'all')===filter));
+  // 更新时间
+  const updTimeEl=$('newsUpdateTime');
+  if(updTimeEl){
+    updTimeEl.textContent=state.newsLastFetch?('最后更新 '+formatNewsTime(state.newsLastFetch)):'—';
+  }
+  // 更新证据栏（由 updateNewsEvidence 统一处理）
+  updateNewsEvidence();
+  // 更新筛选按钮状态
+  document.querySelectorAll('.news-filter').forEach(b=>{
+    b.classList.toggle('active',(b.dataset.newsFilter||'all')===filter);
+  });
+  // 生成AI综合解读
+  renderAISummary();
+}
+
+/* ============================================================
+ * AI综合解读：整体判读 + 仓位 + 利好利空 + 操作提示
+ * 汇总全天所有新闻，结合持仓、行情、资金数据，生成专业解读
+ * ============================================================ */
+function renderAISummary(){
+  var el=$('aiSummary');
+  if(!el) return;
+  var all=state.news;
+  if(!all||!all.length){el.style.display='none';return;}
+  el.style.display='block';
+
+  var allText=all.map(function(n,i){return '新闻'+i+': '+n.title+' '+n.summary;}).join(' | ');
+  var t=allText.toLowerCase();
+
+  // --- 整体判读 ---
+  var overall='';
+  var upCount=0,downCount=0;
+  all.forEach(function(n){
+    if(/涨|升|冲|新高|突破|反弹|回暖|翻红/i.test(n.title||'')) upCount++;
+    if(/跌|跌|回|崩|跳水|绿色|暴跌|下挫/i.test(n.title||'')) downCount++;
+  });
+  if(upCount>downCount*2){
+    overall='今天市场偏暖，好消息比坏消息多。'+upCount+'条新闻偏积极，科技和成长方向是主角。整体看是稳中有升的一天，但别太乐观，分化还在。';
+  }else if(downCount>upCount*2){
+    overall='今天市场偏冷，坏消息比好消息多。'+downCount+'条新闻偏负面，市场情绪偏谨慎。不过也不用太慌，结构性机会还在，只是赚钱难度变大了。';
+  }else{
+    overall='今天市场冷热不均，消息面多空交织。有涨的板块在发力，也有跌的板块在拖后腿。整体属于"温吞水"行情，指数小幅波动，但板块之间分化很明显。';
+  }
+
+  // --- 整体仓位 ---
+  var risk='';
+  if(upCount>downCount*2){
+    risk='建议仓位：七成。市场偏暖但非普涨，留三成现金应对波动。重点仓位放在算力、光模块这些强势方向，小仓位可以试探半导体和存储。';
+  }else if(downCount>upCount*2){
+    risk='建议仓位：五成。市场偏冷，先控制风险。不要急着抄底，等明确企稳信号再回补。如果仓位已经很重，考虑减到五成以内。';
+  }else{
+    risk='建议仓位：六成。市场方向不明，维持中性仓位。今天大机构和散户在买卖上反着来——机构在买，散户在卖，说明聪明钱在悄悄进场。但不建议跟风梭哈，维持六成仓，等方向明确再加。';
+  }
+  if(/风险|预警|利空|暴雷|监管|处罚|调查/i.test(t)){
+    risk+='注意：当前有风险信号，仓位不宜超过七成，手里留点现金更安全。';
+  }
+
+  // --- 最大利好 ---
+  var bullish='';
+  // 找到最正面的几条新闻
+  var posNews=all.filter(function(n){return /涨|升|新高|流入|利好|补贴|政策|突破|翻红|反弹/i.test(n.title||'');});
+  if(posNews.length>=3){
+    var top=posNews[0];
+    var topIdx=all.indexOf(top);
+    bullish='最重要的是新闻'+(topIdx+1)+'（来源：'+top.source+'）：'+top.title+'。';
+    if(/cpo|光模块|pcb|算力/i.test((top.title||'').toLowerCase())){
+      bullish+='大白话：AI算力需求继续爆发，造光模块和电路板的公司跟着赚钱，买科技基金的朋友今天能高兴点。';
+    }else if(/黄金|金价/i.test((top.title||'').toLowerCase())){
+      bullish+='大白话：黄金又涨了，说明市场还在担心外面的风险，避险需求在上升。持有黄金类基金的朋友可以继续拿着。';
+    }else if(/政策|国务院|证监会|补贴/i.test((top.title||'').toLowerCase())){
+      bullish+='大白话：上面又出政策了，这是给市场打气，说明政策底在托着，系统性风险不大。';
+    }else{
+      bullish+='大白话：这条消息说明有资金在往这个方向进，短期对相关板块是好事。';
+    }
+  }else{
+    bullish='今天没有特别突出的利好。市场整体偏平淡，但平淡本身就是好事——没有坏消息，就是好消息。';
+  }
+
+  // --- 最大利空 ---
+  var bearish='';
+  var negNews=all.filter(function(n){return /跌|回|崩|跳水|利空|制裁|冲突|暴雷|处罚|监管|调查|关税|摩擦/i.test(n.title||'');});
+  if(negNews.length>=3){
+    var topNeg=negNews[0];
+    var negIdx=all.indexOf(topNeg);
+    bearish='最需要关注的是新闻'+(negIdx+1)+'（来源：'+topNeg.source+'）：'+topNeg.title+'。';
+    if(/制裁|关税|冲突|摩擦|地缘/i.test((topNeg.title||'').toLowerCase())){
+      bearish+='大白话：外面又在搞事情，会影响全球资金的风险偏好，短期可能让钱从风险资产里跑掉。不过今天A股还没太当回事，说明市场韧性强。';
+    }else if(/跌|回|崩|跳水/i.test((topNeg.title||'').toLowerCase())){
+      bearish+='大白话：这个方向在跌，持有相关基金的朋友账面可能亏了。但别急着割肉，先看看是短期波动还是趋势反转。';
+    }else{
+      bearish+='大白话：这个消息对市场情绪有压制，但具体影响要看后续怎么发酵。';
+    }
+  }else{
+    bearish='今天没有特别突出的利空。外部风险（地缘冲突、贸易摩擦）还在，但市场已经消化得差不多了，只要不出现新的黑天鹅，目前风险可控。';
+  }
+
+  // --- 操作提示 ---
+  var action='';
+  if(upCount>downCount*2){
+    action='今天市场偏暖，但别追高。手里有科技基金的朋友可以拿住不动，没买的等回调再进。大机构在买、散户在卖的时候，你跟机构走，但别一把梭哈。短期仓位可以维持，中长期仓位等更好的买点。';
+  }else if(downCount>upCount*2){
+    action='今天市场偏冷，先管住手。不要急着抄底，等企稳信号明确（比如放量反弹、资金回流）再考虑。如果仓位很重，考虑减一点。钱放稳当点比什么都强。';
+  }else{
+    action='今天方向不明，多看少动。科技基金可以继续持有，但别加仓。等方向明确了再行动。外面乱事多，钱放稳当点最踏实。';
+  }
+
+  // 写入DOM
+  setInner($('aiOverall'),overall);
+  setInner($('aiRisk'),risk);
+  setInner($('aiBullish'),bullish);
+  setInner($('aiBearish'),bearish);
+  setInner($('aiAction'),action);
+}
+
+function setInner(el,text){
+  if(el) el.textContent=text;
 }
 
 /* ============================================================
@@ -2687,6 +3809,11 @@ function renderNews(filter){
 function setDSStatus(text,ok){
   const el=$('dsStatus');if(el){el.textContent=text;el.style.color=ok?'#0f7a55':'#64748b'}
   const b=$('dsBadge');if(b){b.textContent=ok?'已连接':'未配置'}
+  // 同时更新新闻板块的AI设置状态
+  const newsEl=$('newsDSStatus');
+  const newsBadge=$('newsAIBadge');
+  if(newsEl){newsEl.textContent=text;newsEl.className='ai-setting-status '+(ok?'ok':'err')}
+  if(newsBadge){newsBadge.textContent=ok?'已连接 ›':'未配置 ›'}
 }
 
 async function callDeepSeek(messages,model){
@@ -2718,32 +3845,102 @@ async function callDeepSeek(messages,model){
   return typeof c==='string'?c:JSON.stringify(c);
 }
 
+// 新闻AI解读缓存key
+function newsAICacheKey(n){
+  return (n.title||'').replace(/\s+/g,'').slice(0,40);
+}
+
 async function explainNewsBatch(){
-  if(!state.news.length)return;
+  if(!state.news.length) return;
   const key=getDSKey();
+  const now=Date.now();
+  const AI_CACHE_MS=1800000; // 30分钟缓存
+
+  // 先用规则版填充（保证立即有内容显示）
+  state.news.forEach(n=>{
+    if(!n.ai){
+      n.ai=ruleExplain(n.title,n.summary,n);
+    }
+  });
+  renderNews();
+
   if(!key){
-    state.news.forEach(n=>n.ai=ruleExplain(n.title,n.summary));
-    setDSStatus('未配置 Key：当前使用规则版白话解读，不调用 AI。',false);
+    setDSStatus('未配置 Key：新闻 AI 使用规则版白话解读，不调用 DeepSeek。',false);
+    return;
+  }
+
+  // 找出需要AI解读的新闻（不在缓存中或缓存过期）
+  const needAI=[];
+  const newsToFetch=[];
+  state.news.forEach((n,i)=>{
+    const cacheKey=newsAICacheKey(n);
+    const cached=state.newsAI[cacheKey];
+    if(cached&&now-cached.time<AI_CACHE_MS){
+      n.ai=cached.data; // 使用缓存
+    }else if(i<10){ // 只对前10条调用AI，省token
+      needAI.push({index:i, news:n});
+      newsToFetch.push({
+        id:i+1,
+        title:n.title,
+        summary:String(n.summary||'').replace(/<[^>]+>/g,'').slice(0,150),
+        source:n.source||'',
+        time:n.time||''
+      });
+    }
+  });
+
+  if(!newsToFetch.length){
+    setDSStatus('DeepSeek 已连接：使用缓存的 AI 解读。',true);
     renderNews();
     return;
   }
-  const items=state.news.slice(0,12).map((n,i)=>({id:i+1,title:n.title,summary:String(n.summary||'').replace(/<[^>]+>/g,'').slice(0,180),source:n.source}));
-  const prompt=`你是基金资讯分析助手。只基于给出的新闻事实做一句大白话解读，让小学文化的人也能听懂。严禁编造、严禁把相关性写成因果、严禁凭标题断言资金流向。每条最多45字。必须输出JSON数组，字段id,explain。
 
-${JSON.stringify(items)}`;
+  const prompt=`你是给普通老百姓讲财经新闻的人。用大白话，像跟邻居聊天一样，小学文化的人也能一眼看懂。
+
+给每条新闻写【一句话点评】，不超过25个字。
+格式要像这样：
+- "地缘风险升温，油价可能涨，能源股或受益。"
+- "贸易摩擦升级，出口股承压，避险情绪增加。"
+- "机器人技术进步，相关科技和制造股或受关注。"
+
+要求：
+1. 第一句直接定性（利好/利空/中性），第二句点明利好谁、利空谁，别绕弯子。
+2. 用"或""可能""短期"这些词，别把话说死，别编行情和资金数据。
+3. 只说新闻里写的事实，新闻没说的别乱加。
+4. 每条都不一样，别套模板。
+5. 不要客套话，直接说这条新闻对谁好、对谁坏。
+
+必须输出JSON数组，字段：id, text。
+
+${JSON.stringify(newsToFetch)}`;
+
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是严谨的中国公募基金资讯分析助手。证据不足就说"需结合行情验证"，不要预测涨跌。'},
+      {role:'system',content:'你是给老百姓讲财经新闻的人。用大白话，像跟邻居聊天一样。每条只写一句精短点评（20字左右），一针见血：点明是利好还是利空、利好谁利空谁，用"或/可能"留余地，别编数据。'},
       {role:'user',content:prompt}
-    ],getDSModel());
+    ], getDSModel());
+    
     const parsed=JSON.parse(r);
     const arr=Array.isArray(parsed)?parsed:(parsed.items||parsed.data||[]);
-    const map=new Map(arr.map(x=>[Number(x.id),String(x.explain||'')]));
-    state.news.forEach((n,i)=>n.ai=map.get(i+1)||ruleExplain(n.title,n.summary));
-    setDSStatus('DeepSeek 已连接：已对最新资讯生成一句话解读。',true);
+    const map=new Map(arr.map(x=>[Number(x.id), {text:String(x.text||'').trim()}]));
+    
+    needAI.forEach((item,idx)=>{
+      const aiData=map.get(idx+1);
+      if(aiData&&aiData.text){
+        const result={fact:aiData.text, market:'', judge:'', text:aiData.text};
+        state.news[item.index].ai=result;
+        // 写入缓存
+        const cacheKey=newsAICacheKey(item.news);
+        state.newsAI[cacheKey]={data:result, time:now};
+      }else{
+        // AI返回无效，用规则版
+        state.news[item.index].ai=ruleExplain(item.news.title, item.news.summary, item.news);
+      }
+    });
+    setDSStatus('DeepSeek 已连接：已对最新资讯生成 AI 解读。',true);
   }catch(e){
-    state.news.forEach(n=>n.ai=ruleExplain(n.title,n.summary));
-    setDSStatus('DeepSeek 调用失败，已自动降级为规则版解读。',false);
+    // AI失败，保持规则版结果
+    setDSStatus('DeepSeek 调用失败（'+(e.message||'error')+'），已自动降级为规则版解读。',false);
   }
   renderNews();
 }
@@ -2968,6 +4165,23 @@ function initEvents(){
     const b=e.target.closest('.news-filter');
     if(b)renderNews(b.dataset.newsFilter||'all');
   });
+  // 新闻层级切换（深度解读 / 散户情绪）
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.news-tier-btn');
+    if(!btn) return;
+    const tier=btn.dataset.newsTier;
+    const idx=btn.dataset.idx;
+    const newsItem=btn.closest('.news-item');
+    if(!newsItem) return;
+    // 切换按钮状态
+    newsItem.querySelectorAll('.news-tier-btn').forEach(b=>{
+      b.classList.toggle('active', b===btn);
+    });
+    // 切换内容显示
+    newsItem.querySelectorAll('[data-tier-body]').forEach(body=>{
+      body.classList.toggle('active', body.dataset.tierBody===tier);
+    });
+  });
   // DeepSeek 设置
   $('saveDeepSeek').onclick=()=>{
     const key=$('deepseekKey').value.trim();
@@ -2975,12 +4189,18 @@ function initEvents(){
     if(key){
       localStorage.setItem(STORAGE_DS_KEY,key);
       localStorage.setItem(STORAGE_DS_MODEL,model);
+      // 同步到新闻AI设置
+      const nk=$('newsDSKey');if(nk)nk.value=key;
+      const nm=$('newsDSModel');if(nm)nm.value=model;
       setDSStatus('Key 已保存在本机浏览器，正在测试连接…',true);
       explainNewsBatch();
     }else{
       localStorage.removeItem(STORAGE_DS_KEY);
       setDSStatus('已清除 Key：使用规则版白话解读。',false);
-      state.news.forEach(n=>n.ai=ruleExplain(n.title,n.summary));
+      state.news.forEach(n=>n.ai=ruleExplain(n.title,n.summary,n));
+      // 同步清空新闻AI设置
+      const nk=$('newsDSKey');if(nk)nk.value='';
+      state.newsAI={}; // 清空AI缓存
       renderNews();
     }
   };
@@ -2998,6 +4218,67 @@ function initEvents(){
       showToast('连接失败');
     }
   };
+  
+  // === 新闻板块专属事件 ===
+  // 新闻独立刷新按钮
+  const nrb=$('newsRefreshBtn');
+  if(nrb){
+    nrb.onclick=()=>refreshNewsOnly(true);
+  }
+  // 新闻AI设置-保存
+  const nds=$('newsDSSave');
+  if(nds){
+    nds.onclick=()=>{
+      const key=$('newsDSKey').value.trim();
+      const model=$('newsDSModel').value.trim()||'deepseek-chat';
+      if(key){
+        localStorage.setItem(STORAGE_DS_KEY,key);
+        localStorage.setItem(STORAGE_DS_MODEL,model);
+        // 同步到主设置面板
+        const mk=$('deepseekKey');if(mk)mk.value=key;
+        const mm=$('deepseekModel');if(mm)mm.value=model;
+        setDSStatus('Key 已保存，正在测试连接…',true);
+        state.newsAI={}; // 清空缓存，重新生成
+        explainNewsBatch();
+      }else{
+        localStorage.removeItem(STORAGE_DS_KEY);
+        setDSStatus('已清除 Key：使用规则版白话解读。',false);
+        state.news.forEach(n=>n.ai=ruleExplain(n.title,n.summary,n));
+        state.newsAI={};
+        // 同步清空主设置
+        const mk=$('deepseekKey');if(mk)mk.value='';
+        renderNews();
+      }
+    };
+  }
+  // 新闻AI设置-测试
+  const ndt=$('newsDSTest');
+  if(ndt){
+    ndt.onclick=async()=>{
+      const key=$('newsDSKey').value.trim();
+      if(!key){showToast('请先输入 Key');return}
+      localStorage.setItem(STORAGE_DS_KEY,key);
+      setDSStatus('测试中…',false);
+      try{
+        const r=await callDeepSeek([{role:'user',content:'你好，请回复 OK'}],
+          $('newsDSModel').value.trim()||'deepseek-chat');
+        setDSStatus('连接成功：DeepSeek 已响应。',true);
+        showToast('连接成功');
+      }catch(e){
+        setDSStatus('连接失败：'+e.message+'。将使用规则版解读。',false);
+        showToast('连接失败');
+      }
+    };
+  }
+  // 初始化新闻AI设置输入框的值
+  (function initNewsAI(){
+    const k=getDSKey();
+    const nk=$('newsDSKey');
+    const nm=$('newsDSModel');
+    if(nk&&k) nk.value=k;
+    if(nm) nm.value=getDSModel();
+  })();
+  
   $('runMarketAI').onclick=runMarketAI;
   $('runMarketAI2').onclick=runMarketAI;
   // 初始化 DeepSeek 状态
@@ -3006,7 +4287,7 @@ function initEvents(){
     if(k){
       $('deepseekKey').value=k;
       $('deepseekModel').value=getDSModel();
-      setDSStatus('已配置本机 Key：新闻将使用 DeepSeek 生成一句话解读。',true);
+      setDSStatus('已配置本机 Key：新闻将使用 DeepSeek 生成 AI 解读。',true);
     }else{
       setDSStatus('未配置 Key：新闻和 AI 分析使用规则版白话解读，不冒充 AI。Key 仅保存在本机浏览器。',false);
     }
@@ -3021,9 +4302,44 @@ renderBand();
 renderCombo();
 refreshAll();
 
-// 自动刷新（2分钟）
-setInterval(()=>{if(!document.hidden)refreshAll()},120000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshAll()});
+// 全局自动刷新（2分钟）—— 不含新闻，新闻独立15分钟刷新
+setInterval(()=>{
+  if(!document.hidden){
+    // 只刷新行情、资金、基金等，新闻单独处理
+    refreshSectors().catch(()=>{});
+    fetchIndices().catch(()=>{});
+    fetchGlobal().catch(()=>{});
+    refreshFunds().catch(()=>{});
+    fetchFundRank().catch(()=>{});
+    fetchMarketOrder().catch(()=>{});
+    state.lastUpdate=new Date();
+    evidenceAI();
+    updateSourceStatus();
+    $('headerSub')&&($('headerSub').textContent='更新 '+dateTimeStr()+' · 实时源');
+  }
+},120000);
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden){
+    // 页面切回前台时，全局数据刷新（新闻独立判断是否需要刷新）
+    refreshSectors().catch(()=>{});
+    fetchIndices().catch(()=>{});
+    fetchGlobal().catch(()=>{});
+    refreshFunds().catch(()=>{});
+    fetchFundRank().catch(()=>{});
+    fetchMarketOrder().catch(()=>{});
+    state.lastUpdate=new Date();
+    evidenceAI();
+    updateSourceStatus();
+    refreshNewsOnly(false); // 新闻按15分钟规则判断是否刷新
+  }
+});
+
+// 新闻独立自动刷新（15分钟）
+setInterval(()=>{
+  if(!document.hidden){
+    refreshNewsOnly(false);
+  }
+},900000);
 
 // 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
 setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
