@@ -114,21 +114,31 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .portsum .ps{font-size:12px;color:var(--text-sec)}
 .portsum .count{font-size:12px;color:var(--text-sec);margin-left:auto}
 
-/* ===== sector grid ===== */
-.sect{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.sc{border-radius:var(--radius-sm);padding:14px 12px;background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(246,251,255,.66));border:1px solid rgba(126,190,160,.32);box-shadow:inset 0 1px rgba(255,255,255,.95),0 8px 24px rgba(40,100,80,.05);transition:transform .15s,box-shadow .15s}
-.sc:active{transform:scale(.98)}
-.sc .nm{font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:4px}
-.sc .nm em{font-style:normal;font-size:10px;color:var(--text-sec);background:rgba(0,0,0,.04);border-radius:4px;padding:1px 6px}
-.sc .pz{font-size:26px;font-weight:800;margin:6px 0 8px;letter-spacing:-.5px}
-.sc .pz.up{color:var(--up)}
-.sc .pz.down{color:var(--down)}
-.sc .pz.flat{color:var(--text-sec)}
-.sc .fl{font-size:12px;line-height:1.8;border-top:1px dashed rgba(0,0,0,.06);padding-top:6px}
-.sc .fl div{display:flex;justify-content:space-between}
-.sc .fl b.up{color:var(--up)}
-.sc .fl b.down{color:var(--down)}
-.sc .fl b.flat{color:var(--text-sec)}
+/* ===== sector list (liquid glass vertical) ===== */
+.sect{display:flex;flex-direction:column;gap:12px;padding:2px}
+.sc-liquid{position:relative;border-radius:24px;padding:18px 16px;background:linear-gradient(135deg,rgba(255,255,255,.92) 0%,rgba(245,250,255,.78) 50%,rgba(255,255,255,.88) 100%);border:1px solid rgba(120,170,220,.22);box-shadow:0 12px 34px rgba(20,60,110,.07),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.4);overflow:hidden;backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);transition:transform .18s,box-shadow .18s}
+.sc-liquid::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);pointer-events:none;border-radius:24px 24px 0 0}
+.sc-liquid::after{content:'';position:absolute;top:6px;left:12px;right:40%;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.2));filter:blur(6px);pointer-events:none;border-radius:999px}
+.sc-liquid:active{transform:scale(.985)}
+.sc-liquid .row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;z-index:1}
+.sc-liquid .row-top .names{flex:1;min-width:0}
+.sc-liquid .row-top .names .cn{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:700;color:var(--text);line-height:1.25}
+.sc-liquid .row-top .names .cn svg{flex-shrink:0}
+.sc-liquid .row-top .names .an{font-size:11px;color:var(--text-sec);margin-top:4px;padding-left:23px}
+.sc-liquid .row-top .pct{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.8px;line-height:1;flex-shrink:0}
+.sc-liquid .row-top .pct.up{color:var(--up);text-shadow:0 0 18px rgba(217,74,74,.18)}
+.sc-liquid .row-top .pct.down{color:var(--down);text-shadow:0 0 18px rgba(26,155,106,.18)}
+.sc-liquid .row-top .pct.flat{color:var(--text-sec)}
+.sc-liquid .flow-line{display:flex;align-items:center;gap:10px;margin-top:14px;position:relative;z-index:1}
+.sc-liquid .flow-line .bar{flex:1;height:5px;border-radius:999px;background:rgba(0,0,0,.06);overflow:hidden;position:relative}
+.sc-liquid .flow-line .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,rgba(10,132,255,.55),rgba(10,132,255,.9),rgba(10,132,255,.55));background-size:200% 100%;animation:flowShine 2.2s linear infinite;position:relative}
+@keyframes flowShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sc-liquid .flow-line .bar i.in{background:linear-gradient(90deg,rgba(217,74,74,.55),rgba(217,74,74,.9),rgba(217,74,74,.55));background-size:200% 100%}
+.sc-liquid .flow-line .bar i.out{background:linear-gradient(90deg,rgba(26,155,106,.55),rgba(26,155,106,.9),rgba(26,155,106,.55));background-size:200% 100%}
+.sc-liquid .flow-line .amt{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sc-liquid .flow-line .amt.up{color:var(--up)}
+.sc-liquid .flow-line .amt.down{color:var(--down)}
+.sc-liquid-empty{display:flex;align-items:center;gap:8px;padding:16px;border-radius:20px;background:rgba(255,255,255,.6);border:1px dashed rgba(120,170,220,.25);color:var(--text-sec);font-size:13px}
 
 /* ===== duo (flow) ===== */
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -238,6 +248,22 @@ details .detail-body b{color:var(--text)}
 .fact-block.judge{background:#FFF5F5;border-left:3px solid var(--up)}
 .fact-block.risk{background:#F3FBF7;border-left:3px solid var(--down)}
 .fact-block b{color:var(--text)}
+
+/* ===== AI 资金博弈卡片 ===== */
+.ai-flow-card{position:relative;border-radius:18px;padding:14px 14px;margin:10px 0;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,251,255,.75));border:1px solid rgba(120,170,220,.18);box-shadow:0 10px 30px rgba(20,60,110,.06),inset 0 1px 0 rgba(255,255,255,.95);overflow:hidden}
+.ai-flow-card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:18px 18px 0 0}
+.ai-flow-card .ai-flow-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;position:relative;z-index:1;display:flex;align-items:center;gap:6px}
+.ai-flow-card .ai-flow-body{font-size:12.5px;line-height:1.8;color:var(--text-sec);position:relative;z-index:1}
+.ai-flow-card .ai-flow-body b{color:var(--text)}
+.ai-flow-card .ai-flow-item{font-size:12px;line-height:1.75;margin-top:4px;padding-top:4px;border-top:1px dashed rgba(0,0,0,.05);position:relative;z-index:1}
+.ai-flow-card .ai-flow-item.up{color:var(--up)}
+.ai-flow-card .ai-flow-item.down{color:var(--down)}
+.ai-flow-card .ai-flow-item b{color:var(--text)}
+.ai-flow-card.judge{background:linear-gradient(145deg,#FFF9F9,#FFF5F5);border-color:rgba(217,74,74,.15)}
+.ai-flow-card.concl{background:linear-gradient(145deg,#F3FBFF,#EAF6FF);border-color:rgba(10,132,255,.18)}
+.ai-flow-card.concl .ai-flow-body{color:var(--text);font-weight:500}
+.ai-flow-card.weekend{background:linear-gradient(145deg,#FFFDF5,#FFF8E8);border-color:rgba(245,166,35,.2)}
+.ai-flow-card.weekend .ai-flow-title{color:#b27500}
 
 /* ===== table ===== */
 .table-wrap{overflow-x:auto;margin:6px 0 4px}
@@ -495,7 +521,7 @@ table td b{font-weight:700}
     <div class="ai-section"><h4>💰 资金</h4><div class="body" id="aiFlow">—</div></div>
     <div class="ai-section"><h4>🏛️ 政策 / 新闻</h4><div class="body" id="aiPolicy">—</div></div>
     <div class="ai-section"><h4>🌍 外围</h4><div class="body" id="aiGlobal">—</div></div>
-    <div class="ai-section"><h4>🗣️ 一句话</h4><div class="body" id="aiConclusion">— <span class="muted">（仅供参考）</span></div></div>
+    <div class="ai-section"><h4>🤖 AI智能总结</h4><div class="body" id="aiConclusion">— <span class="muted">（仅供参考）</span></div></div>
    </div>
   </div>
  </div>
@@ -717,6 +743,31 @@ function secIcon(name,size=14){
  return `<svg class="secicon" viewBox="0 0 24 24" style="width:${size}px;height:${size}px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0">${path}</svg>`;
 }
 
+function isWeekend(){
+  const d=new Date();
+  const cn=new Date(d.getTime()+8*60*60*1000);
+  const day=cn.getUTCDay();
+  return day===0||day===6;
+}
+function isTradeTime(){
+  const d=new Date();
+  const cn=new Date(d.getTime()+8*60*60*1000);
+  const day=cn.getUTCDay();
+  if(day===0||day===6)return false;
+  const hour=cn.getUTCHours(),min=cn.getUTCMinutes();
+  return (hour===9&&min>=30)||(hour===10)||(hour===11&&min<=30)||(hour===13)||(hour===14)||(hour===15&&min<=0);
+}
+function lastTradeDateStr(d){
+  const date=new Date((d||new Date()).getTime()+8*60*60*1000);
+  let off=0;
+  const day=date.getUTCDay();
+  if(day===0)off=2;
+  if(day===6)off=1;
+  if(day===1)off=3; // 周一开盘前也算周五
+  const t=new Date(date.getTime()-off*86400000);
+  return `${t.getUTCMonth()+1}月${t.getUTCDate()}日`;
+}
+
 /* ===== 格式化工具 ===== */
 const fmtPct=v=>Number.isFinite(v)?`${v>=0?'+':''}${v.toFixed(2)}%`:'—';
 const fmtPctAbs=v=>Number.isFinite(v)?`${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%`:'—';
@@ -922,6 +973,10 @@ async function fetchFundRank(){
     }else{
       state.fundRank=[];
       state.fundRankDate='';
+      // 周末且没缓存：给出明确说明
+      if(isWeekend()){
+        state.source.fundRank='非交易日，排行暂停；开盘后会自动更新';
+      }
     }
   }
   renderRank();
@@ -1406,6 +1461,22 @@ function renderSentence(){
     $('sentenceText').textContent='正在读取真实市场数据…';
     return;
   }
+  // 周末模式：不做日内涨跌总结，改为资讯梳理
+  if(isWeekend()){
+    const techNews=news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title));
+    const policyNews=news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|监管|降准|降息|LPR|MLF|国常会/.test(n.title));
+    const globalNews=news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|外围|国际/.test(n.title));
+    let html='今天是周末，A股不开盘，先做资讯梳理。';
+    if(policyNews.length)html+='政策面有'+(policyNews.length)+'条相关消息。';
+    if(techNews.length)html+='科技圈有'+(techNews.length)+'条动态。';
+    if(globalNews.length)html+='外围市场有'+(globalNews.length)+'条消息。';
+    if(!policyNews.length&&!techNews.length&&!globalNews.length)html+='周末消息不多，等下周一开盘再看方向。';
+    else html+='周一开盘前先关注这些方向，别急着下单。';
+    $('sentenceText').innerHTML=html+'<br><span class="text-xs text-sec">（周末模式 · 基于周五收盘数据和周末资讯）</span>';
+    $('sentenceTime').textContent=dateTimeStr();
+    $('sentenceDS').innerHTML=`数据来源：${safe(state.source.news||state.source.wscn||state.source.ths||'—')} · 更新 ${timeStr()}`;
+    return;
+  }
   // 市场总盘子：增量还是存量
   let marketTone='';
   const validIdx=idx.filter(x=>x.pct!=null);
@@ -1655,24 +1726,27 @@ function renderSectors(){
       el.innerHTML='<div class="empty-state"><div class="icon">📈</div>正在读取真实板块行情…</div>';
       return;
     }
+    // 最大资金流，用来做进度条比例
+    const maxFlow=Math.max(...state.sectors.filter(x=>x.available).map(x=>Math.abs(x.flow)||0),1);
     el.innerHTML=state.sectors.map(s=>{
       if(!s.available){
-        return `<div class="sc">
-          <div class="nm"><span>${secIcon(s.name)} ${safe(s.name)}</span><em>暂无实时板块</em></div>
-          <div class="pz flat">—</div>
-          <div class="fl"><div><span>数据状态</span><b class="flat">暂无可靠数据</b></div></div>
-        </div>`;
+        return `<div class="sc-liquid sc-liquid-empty">${secIcon(s.name,16)} ${safe(s.name)} <span>暂无实时板块</span></div>`;
       }
       const cls=s.change>=0?'up':'down';
-      const flowCls=s.flow>=0?'up':'down';
-      return `<div class="sc">
-        <div class="nm"><span>${secIcon(s.name)} ${safe(s.name)}</span><em>${safe(s.actualName)}</em></div>
-        <div class="pz ${cls}">${fmtPctAbs(s.change)}</div>
-        <div class="fl">
-          <div><span>主力净流入</span><b class="${flowCls}">${fmtYi(s.flow)}</b></div>
-          <div><span>超大单</span><b class="${s.super>=0?'up':'down'}">${fmtYi(s.super)}</b></div>
-          <div><span>大单</span><b class="${s.large>=0?'up':'down'}">${fmtYi(s.large)}</b></div>
-          <div><span>中小单</span><b class="${(s.mid+s.small)>=0?'up':'down'}">${fmtYi((s.mid||0)+(s.small||0))}</b></div>
+      const flowDir=s.flow>=0?'in':'out';
+      const pct=s.flow?(Math.min(Math.abs(s.flow)/maxFlow,1)*100):0;
+      const flowLabel=s.flow>=0?'主力流入':'主力流出';
+      return `<div class="sc-liquid">
+        <div class="row-top">
+          <div class="names">
+            <div class="cn">${secIcon(s.name,18)} ${safe(s.name)}</div>
+            <div class="an">${safe(s.actualName)}</div>
+          </div>
+          <div class="pct ${cls}">${fmtPctAbs(s.change)}</div>
+        </div>
+        <div class="flow-line">
+          <div class="bar"><i class="${flowDir}" style="width:${pct.toFixed(1)}%"></i></div>
+          <div class="amt ${flowDir==='in'?'up':'down'}">${flowLabel} ${fmtYi(s.flow)}</div>
         </div>
       </div>`;
     }).join('');
@@ -1784,7 +1858,8 @@ function renderRank(){
     if(!el)return;
     const rows=state.fundRank||[];
     if(!rows.length){
-      el.innerHTML='<div class="empty-state"><div class="icon">📊</div>基金排行源暂不可用，未使用模拟基金</div>';
+      const weekendMsg=isWeekend()?'<br><small>周六日休市，周五数据会在开盘前保留；周一自动恢复实时排行</small>':'';
+      el.innerHTML=`<div class="empty-state"><div class="icon">📊</div>基金排行源暂不可用，未使用模拟基金${weekendMsg}</div>`;
       if(dsEl)dsEl.innerHTML='';
       return;
     }
@@ -1917,78 +1992,79 @@ function renderAIFlow(){
       return;
     }
 
-    // 1. 市场总盘子：增量还是存量
+    // 周末模式：不做日内择时，做资讯梳理+下周一前瞻
+    if(isWeekend()){
+      const techNews=news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title)).slice(0,3);
+      const policyNews=news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|监管|降息|降准/.test(n.title)).slice(0,3);
+      const globalNews=news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|港股|恒生|外围|国际/.test(n.title)).slice(0,3);
+      const mkNews=(title,arr)=>{
+        if(!arr.length)return '';
+        return `<div class="ai-flow-card weekend"><div class="ai-flow-title">${title}</div>${arr.map(n=>`<div class="ai-flow-item">• ${safe(n.title)}</div>`).join('')}</div>`;
+      };
+      let html=`<div class="ai-flow-card weekend"><div class="ai-flow-title">📅 周末模式 · 资讯梳理</div><div class="ai-flow-body">现在是周末，A股不开盘，不做日内择时分析。先把过去几天的消息捋一捋，为下周做准备。</div></div>`;
+      html+=mkNews('🔥 科技要闻',techNews);
+      html+=mkNews('🏛️ 政策/宏观',policyNews);
+      html+=mkNews('🌍 外围市场',globalNews);
+      // 下周一前瞻
+      const techUp=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change>0).length;
+      const techDown=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change<0).length;
+      let preview='';
+      if(techUp>=4)preview='周五科技板块偏强，下周初可以继续留意通信、AI硬件这些方向，但别急着追高。';
+      else if(techDown>=4)preview='周五科技板块偏弱，下周初先观察，等资金回流再动手。';
+      else preview='周五科技板块涨跌各半，方向还不清晰，下周开盘先看半小时资金往哪走。';
+      html+=`<div class="ai-flow-card concl"><div class="ai-flow-title">🔭 下周一前瞻</div><div class="ai-flow-body">${preview}<br><small>周末消息会改变开盘情绪，周一 9:30 后再确认。</small></div></div>`;
+      html+='<div class="text-xs text-sec" style="margin-top:6px">周末模式：基于周五收盘数据和周末资讯梳理，仅供参考，不构成投资建议。</div>';
+      el.innerHTML=html;
+      return;
+    }
+
+    // 1. 市场总盘子
     const validIdx=idx.filter(x=>x.pct!=null);
     const idxAvg=validIdx.length?validIdx.reduce((a,x)=>a+x.pct,0)/validIdx.length:0;
-    const upIdx=validIdx.filter(x=>x.pct>=0).length;
-    const downIdx=validIdx.filter(x=>x.pct<0).length;
     let marketPlate='';
     if(q){
       const totalFlow=q.main+(q.small||0);
-      const turnover=q.turnover||0;
-      if(Math.abs(totalFlow)>200e8)marketPlate='今天市场资金动静很大，属于增量博弈，钱明显进来了';
-      else if(Math.abs(totalFlow)>80e8)marketPlate='今天资金有动作，但不算特别猛，偏向存量里调结构';
-      else marketPlate='今天资金整体动静不大，属于存量博弈，钱就在几个板块里换来换去';
+      if(Math.abs(totalFlow)>200e8)marketPlate='今天市场资金动静很大，钱明显进来了，属于增量行情。';
+      else if(Math.abs(totalFlow)>80e8)marketPlate='今天资金有动作，但不算特别猛，属于存量里调结构。';
+      else marketPlate='今天资金整体动静不大，钱就在几个板块里换来换去。';
     }else{
-      marketPlate='资金数据暂不全，先看价格和板块方向';
+      marketPlate='资金数据暂不全，先看价格和板块方向。';
     }
 
-    // 2. 资金类型拆解：谁在买卖
+    // 2. 谁在买卖
     let whoPart='';
     if(q){
-      const parts=[];
-      if(q.main>0)parts.push(`大资金（超大+大单）净买入 ${fmtYi(q.main)}，机构在干活`);
-      else if(q.main<0)parts.push(`大资金（超大+大单）净卖出 ${fmtYi(Math.abs(q.main))}，机构在撤退`);
-      else parts.push('大资金没明显方向');
-      if(q.small>0)parts.push(`散户（中小单）净买入 ${fmtYi(q.small)}，散户在买`);
-      else if(q.small<0)parts.push(`散户（中小单）净卖出 ${fmtYi(Math.abs(q.small))}，散户在卖`);
-      else parts.push('散户没明显方向');
-      whoPart=parts.join('；')+'。';
+      const mainText=q.main>0?`大资金净买入 ${fmtYi(q.main)}，机构在干活`:(q.main<0?`大资金净卖出 ${fmtYi(Math.abs(q.main))}，机构在撤退`:'大资金没明显方向');
+      const smallText=q.small>0?`散户也在买 ${fmtYi(q.small)}`:(q.small<0?`散户在卖 ${fmtYi(Math.abs(q.small))}`:'散户没明显方向');
+      whoPart=`${mainText}；${smallText}。`;
     }
 
-    // 3. 钱进了哪些板块 + 是否分化
+    // 3. 钱去了哪些板块
     const inflow=vals.filter(x=>x.flow>0).sort((a,b)=>b.flow-a.flow).slice(0,5);
     const outflow=vals.filter(x=>x.flow<0).sort((a,b)=>a.flow-b.flow).slice(0,5);
-    let sectorPart='';
-    if(inflow.length){
-      sectorPart='钱流得最多的板块：'+inflow.map(x=>`${safe(x.name)}涨${fmtPct(x.change)}、流入${fmtYi(x.flow)}`).join('；')+'。';
-      // 是否分化
-      const mixed=vals.filter(x=>x.flow>0&&x.change<0).length+vals.filter(x=>x.flow<0&&x.change>0).length;
-      if(mixed>=2)sectorPart+='注意：有些板块资金和价格方向不一致，说明里面有人在分歧。';
-    }
-    if(outflow.length){
-      sectorPart+='钱跑得最多的板块：'+outflow.map(x=>`${safe(x.name)}${fmtPct(x.change)}、流出${fmtYi(Math.abs(x.flow))}`).join('；')+'。';
-    }
+    const sectorList=(title,arr,cls)=>{
+      if(!arr.length)return '';
+      return `<div class="ai-flow-item ${cls}"><b>${title}</b> ${arr.map(x=>`${safe(x.name)} ${fmtPct(x.change)} / ${fmtYi(x.flow)}`).join(' · ')}</div>`;
+    };
 
-    // 4. 风格切换
+    // 4. 风格
+    const techNames=['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'];
+    const techUp=vals.filter(x=>techNames.includes(x.name)&&x.change>0).length;
+    const techDown=vals.filter(x=>techNames.includes(x.name)&&x.change<0).length;
     let stylePart='';
-    const techUp=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change>0).length;
-    const techDown=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change<0).length;
     if(techUp>=4)stylePart='科技板块整体走强，资金偏成长风格。';
     else if(techDown>=4)stylePart='科技板块整体走弱，资金偏防御风格。';
-    else if(inflow.length&&inflow[0].name.includes('通信'))stylePart='资金偏向通信/AI硬件链，成长风格占优。';
-    else if(outflow.length&&['医药','消费','白酒'].some(k=>outflow[0].name.includes(k)))stylePart='资金从消费/医药流出，风格偏向科技或周期。';
     else stylePart='风格切换不明显，资金在板块内部轮动。';
 
-    // 5. 验真假：量价配合与节奏
-    let verifyPart='';
+    // 5. 验真假
     const realInflow=inflow.filter(x=>x.flow>0&&x.change>0);
     const fakeInflow=inflow.filter(x=>x.flow>0&&x.change<=0);
-    if(realInflow.length>=3)verifyPart='真流入信号：多个板块资金和价格一起涨，量价配合较好，持续性相对靠谱。';
-    else if(fakeInflow.length>=2)verifyPart='警惕假流入：有些板块资金流入但价格没涨，可能是主力在悄悄出货或洗盘。';
+    let verifyPart='';
+    if(realInflow.length>=3)verifyPart='真流入信号：多个板块资金和价格一起涨，量价配合较好。';
+    else if(fakeInflow.length>=2)verifyPart='警惕假流入：有些板块资金流入但价格没涨，可能是主力在悄悄出货。';
     else verifyPart='量价配合一般，需要继续观察后面几天资金是否持续。';
 
-    // 6. 类型+方向+持续性+量价+位置 五件事闭环
-    let loopPart='';
-    if(q){
-      const dir=q.main>0?'流入':'流出';
-      const sustain=Math.abs(q.main)>100e8?'资金力度大，持续性可能较好':'资金力度一般，持续性待观察';
-      const volumn=idxAvg>0.5?'大盘有成交量配合':'大盘成交量配合一般';
-      const position=idxAvg>1?'市场位置偏高，注意别追高':(idxAvg<-1?'市场位置偏低，可能有机会':'市场位置在中间');
-      loopPart=`把五件事拼起来看：①类型是大资金${dir}；②方向是${dir==='流入'?'买':'卖'}盘主导；③持续性：${sustain}；④量价：${volumn}；⑤位置：${position}。`;
-    }
-
-    // 7. 大白话结论
+    // 6. 结论
     let conclusion='';
     if(q&&q.main>0&&inflow.length>=3){
       conclusion='整体来看，大资金在买，钱进了科技/通信这些方向，量价也配合，短期可以留意这些板块的机会，但别追太高。';
@@ -2000,15 +2076,14 @@ function renderAIFlow(){
       conclusion='资金方向不算特别强，板块在分化，先看着，别急着大动作。';
     }
 
-    // 组装 HTML
-    let html='<div class="fact-block fact"><b>【一、市场总盘子】</b><br>'+marketPlate+'</div>';
-    html+='<div class="fact-block fact"><b>【二、谁在买卖】</b><br>'+(whoPart||'资金类型数据暂不全')+'</div>';
-    html+='<div class="fact-block fact"><b>【三、钱去了哪些板块】</b><br>'+(sectorPart||'板块资金数据暂不全')+'</div>';
-    html+='<div class="fact-block fact"><b>【四、风格切换】</b><br>'+stylePart+'</div>';
-    html+='<div class="fact-block judge"><b>【五、验真假（量价配合）】</b><br>'+verifyPart+'</div>';
-    html+='<div class="fact-block judge"><b>【六、五件事拼起来】</b><br>'+(loopPart||'等资金数据齐了再拼')+'</div>';
-    html+='<div class="fact-block concl"><b>【大白话结论】</b><br>'+conclusion+'</div>';
-    html+='<div class="text-xs text-sec" style="margin-top:6px">分析基于真实数据规则生成，AI 仅在证据充分时下结论。仅供参考，不构成投资建议。</div>';
+    // 组装卡片
+    let html='<div class="ai-flow-card"><div class="ai-flow-title">📊 市场总盘子</div><div class="ai-flow-body">'+marketPlate+'</div></div>';
+    html+='<div class="ai-flow-card"><div class="ai-flow-title">👥 谁在买卖</div><div class="ai-flow-body">'+(whoPart||'资金类型数据暂不全')+'</div></div>';
+    html+='<div class="ai-flow-card"><div class="ai-flow-title">💰 钱去哪了</div>'+sectorList('流入最多',inflow,'up')+sectorList('流出最多',outflow,'down')+'</div>';
+    html+='<div class="ai-flow-card"><div class="ai-flow-title">🔄 风格切换</div><div class="ai-flow-body">'+stylePart+'</div></div>';
+    html+='<div class="ai-flow-card judge"><div class="ai-flow-title">✅ 验真假（量价配合）</div><div class="ai-flow-body">'+verifyPart+'</div></div>';
+    html+='<div class="ai-flow-card concl"><div class="ai-flow-title">📝 大白话结论</div><div class="ai-flow-body">'+conclusion+'</div></div>';
+    html+='<div class="text-xs text-sec" style="margin-top:6px">分析基于真实数据规则生成，仅供参考，不构成投资建议。</div>';
     el.innerHTML=html;
   };
   renderInto($('aiFlowContent'));
@@ -2260,13 +2335,18 @@ function evidenceAI(){
   setAI('aiFlow',q?`主力净${q.main>=0?'流入':'流出'}${fmtYi(Math.abs(q.main))}，中小单净${q.small>=0?'流入':'流出'}${fmtYi(Math.abs(q.small))}`:'资金数据不足');
   setAI('aiFlow2',strong.length?'强势资金：'+strong.map(x=>safe(x.name)+' '+fmtYi(x.flow)).join('；'):'暂无明确资金共振');
 
-  // 政策/新闻
-  setAI('aiPolicy',news.length?'从实时资讯中提取政策/事件关键词后再判断影响；当前仅作为背景，不直接归因。':'政策数据缺失，不推断。');
-  setAI('aiPolicy2',news.length?`已读取${news.length}条资讯，AI只将新闻作为事件背景，不把标题直接当因果。`:'资讯源暂不可用');
+  // 政策/新闻：直接列出真实新闻标题，不 placeholder
+  const policyNews=state.news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|LPR|MLF|国常会/.test(n.title)).slice(0,3);
+  const techNews=state.news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title)).slice(0,3);
+  const mkNews=(title,arr)=>arr.length?`<b>${title}</b><br>${arr.map(n=>`• ${safe(n.title)} <span class="muted">(${safe(n.source||'资讯')})</span>`).join('<br>')}`:`暂无${title}`;
+  setAI('aiPolicy',mkNews('政策/宏观',policyNews));
+  setAI('aiPolicy2',mkNews('科技要闻',techNews));
 
-  // 外围
-  setAI('aiGlobal',state.global.length?'外围行情已纳入，但只作为风险背景，不单独决定A股方向。':'外围数据不足。');
-  setAI('aiGlobal2',state.global.length?state.global.slice(0,3).map(x=>`${safe(x.name)} ${x.pct!=null?fmtPct(x.pct):'—'}`).join('；'):'外围数据不足');
+  // 外围：指数 + 外围新闻
+  const globalNews=state.news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|港股|恒生|外围|国际|地缘/.test(n.title)).slice(0,3);
+  const globalIdx=state.global.length?state.global.slice(0,3).map(x=>`${safe(x.name)} ${x.pct!=null?fmtPct(x.pct):'—'}`).join('；')+'<br>':'';
+  setAI('aiGlobal',globalIdx+mkNews('外围新闻',globalNews));
+  setAI('aiGlobal2',state.global.length?state.global.slice(0,4).map(x=>`${safe(x.name)} ${x.pct!=null?fmtPct(x.pct):'—'}`).join(' · '):'外围数据不足');
 
   // 基金机会
   if(fund?.metrics){
@@ -2295,11 +2375,16 @@ function evidenceAI(){
   }
 
   // 一句话结论（大白话）
-  const conclusion=enough?
-    (strong.length>=2?'今天资金和板块一起往上走，市场比较热，可以关注但别追高。':
-     weak.length>=2?'今天跌的板块多，资金也在往外跑，行情偏弱，先别急着买。':
-     '今天市场涨跌各半，钱也没明显方向，信号还不清楚，先看着。'):
-    '现在数据不够全，等一会儿刷新再看，不瞎猜。';
+  let conclusion='';
+  if(isWeekend()){
+    conclusion='现在是周末，A股不开盘。先看资讯梳理和外围动向，周一开盘再确认方向。';
+  }else{
+    conclusion=enough?
+      (strong.length>=2?'今天资金和板块一起往上走，市场比较热，可以关注但别追高。':
+       weak.length>=2?'今天跌的板块多，资金也在往外跑，行情偏弱，先别急着买。':
+       '今天市场涨跌各半，钱也没明显方向，信号还不清楚，先看着。'):
+      '现在数据不够全，等一会儿刷新再看，不瞎猜。';
+  }
   setAI('aiConclusion',conclusion+' 仅供参考。');
   setAI('aiSentence',conclusion);
 

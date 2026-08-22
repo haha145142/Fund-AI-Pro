@@ -3,6 +3,19 @@
 // 作用: 代理东方财富板块/指数/订单数据，解决 CORS 问题
 // 参数: type=sectors(板块) / indices(指数) / orders(全A股订单) / rank(基金排行) / history(基金历史净值)
 
+// 服务端内存缓存：基金排行，周末/数据源异常时兜底返回最近一次有效数据
+let serverRankCache = null;
+
+function isChinaWeekend() {
+  // 按北京时间判断是否为周末（周六/周日）
+  const d = new Date();
+  const h = Number(d.toLocaleString('en-GB', { timeZone: 'Asia/Shanghai', hour12: false, hour: '2-digit' }).replace(/\D/g, '')) || 0;
+  const day = d.getDay(); // UTC day 不够准，用北京时间偏移
+  // 北京时间 = UTC+8，简单换算
+  const beijingDay = new Date(d.getTime() + 8 * 60 * 60 * 1000).getUTCDay();
+  return { beijingDay, hour: h };
+}
+
 export async function onRequestGet(context) {
   const { request } = context;
   const url = new URL(request.url);
@@ -69,18 +82,32 @@ export async function onRequestGet(context) {
     if (type === 'rank') {
       // 基金排行 JSONP
       const src = 'https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=1nzf&st=desc&pi=1&pn=200&dx=1&_=' + Date.now();
-      const resp = await fetch(src, { headers: { ...commonHeaders, Referer: 'https://fund.eastmoney.com/' } });
-      const text = await resp.text();
-      let jsonStr = '{}';
-      const idx = text.indexOf('var rankData = ');
-      if (idx !== -1) {
-        const start = text.indexOf('{', idx);
-        const end = text.lastIndexOf('};');
-        if (start !== -1 && end > start) {
-          jsonStr = text.slice(start, end + 1);
+      try {
+        const resp = await fetch(src, { headers: { ...commonHeaders, Referer: 'https://fund.eastmoney.com/' } });
+        const text = await resp.text();
+        let jsonStr = '{}';
+        const idx = text.indexOf('var rankData = ');
+        if (idx !== -1) {
+          const start = text.indexOf('{', idx);
+          const end = text.lastIndexOf('};');
+          if (start !== -1 && end > start) {
+            jsonStr = text.slice(start, end + 1);
+          }
         }
+        // 解析看是否有有效数据
+        const parsed = JSON.parse(jsonStr);
+        const datas = Array.isArray(parsed?.datas) ? parsed.datas : [];
+        if (datas.length > 0) {
+          // 有数据就更新服务端缓存
+          serverRankCache = { body: jsonStr, time: Date.now() };
+          return new Response(jsonStr, { headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' } });
+        }
+      } catch (e) {}
+      // 无数据或失败：有缓存就返回缓存
+      if (serverRankCache && serverRankCache.body) {
+        return new Response(JSON.stringify({ ...JSON.parse(serverRankCache.body), _cached: true, _cachedAt: serverRankCache.time }), { headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' } });
       }
-      return new Response(jsonStr, { headers: { ...corsHeaders, 'Content-Type': 'application/json; charset=utf-8' } });
+      return new Response('{}', { headers: corsHeaders });
     }
 
     if (type === 'history') {
