@@ -1,0 +1,25 @@
+{
+  "name": "Fund AI Pro · 基金智能决策台",
+  "short_name": "Fund AI Pro",
+  "description": "基金智能观察与决策辅助工具，真实数据多源验证",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7FAFF",
+  "theme_color": "#F7FAFF",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/assets/icon192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -370,10 +370,10 @@ table td b{font-weight:700}
 <!-- ===== PAGE: HOME ===== -->
 <div class="page active" id="page-home">
 
- <!-- 今日一句话 -->
+ <!-- 今日总结 -->
  <div class="glass fade-in" id="sentenceCard">
   <div class="flex-between">
-   <span style="font-weight:600">🗣️ 今日一句话</span>
+   <span style="font-weight:600">🗣️ 今日总结</span>
    <span class="text-xs text-sec" id="sentenceTime">—</span>
   </div>
   <div class="cmt" id="sentenceText" style="font-size:14px;line-height:1.7;margin-top:2px">正在读取真实市场数据…</div>
@@ -383,11 +383,17 @@ table td b{font-weight:700}
  <!-- 我的持仓 -->
  <div class="glass fade-in" id="portfolioCard">
   <div class="glass-title">💼 我的持仓 <small>盘中估·收盘以官方净值为准</small><span class="badge" id="portCount">0只</span></div>
-  <div class="portsum" id="portSummary">
-   <span class="text-sec">持仓整体</span>
-   <span class="main" id="portTotalReturn">—</span>
-   <span class="ps" id="portDetail">等待添加持仓</span>
-   <span class="count" id="portValue">¥0</span>
+  <div class="portsum" id="portSummary" style="flex-direction:column;align-items:flex-start;gap:6px">
+   <div class="flex" style="gap:12px">
+    <span class="text-sec">持仓整体</span>
+    <span class="main" id="portTotalReturn">—</span>
+    <span class="ps" id="portDetail">等待添加持仓</span>
+   </div>
+   <div class="flex" style="gap:16px;width:100%;justify-content:space-between">
+    <div><div class="text-xs text-sec">总账户资产</div><div class="fw-700" id="portTotalAssets">¥0</div></div>
+    <div><div class="text-xs text-sec">今日收益</div><div class="count" id="portTodayGain">—</div></div>
+    <div><div class="text-xs text-sec">持仓市值</div><div class="count" id="portValue">¥0</div></div>
+   </div>
   </div>
   <div id="portfolioList"></div>
   <div class="add-form" style="margin-top:10px;border-top:1px solid rgba(0,0,0,.04);padding-top:12px">
@@ -465,7 +471,7 @@ table td b{font-weight:700}
   <div class="glass-title">🎯 操作建议 <small>数据规则生成·仅供参考</small></div>
   <div class="subttl">关注板块</div>
   <div class="table-wrap" id="adviceTableWrap">
-   <table id="adviceTable"><thead><tr><th>板块</th><th>涨跌</th><th>资金</th><th>趋势</th><th>波段</th><th>建议</th><th>置信</th></tr></thead><tbody id="adviceBody"></tbody></table>
+   <table id="adviceTable"><thead><tr><th>板块</th><th>涨跌</th><th>资金</th><th>趋势</th><th>波段建议</th><th>怎么操作</th><th>置信</th></tr></thead><tbody id="adviceBody"></tbody></table>
   </div>
   <div class="subttl" style="margin-top:14px">整体仓位</div>
   <div class="cmt" style="font-size:13px;line-height:1.8" id="adviceOverall">—</div>
@@ -559,7 +565,7 @@ table td b{font-weight:700}
  <div class="glass fade-in">
   <div class="glass-title">🎯 操作建议 <small>数据规则生成</small></div>
   <div class="subttl">关注板块</div>
-  <div class="table-wrap"><table><thead><tr><th>板块</th><th>涨跌</th><th>资金</th><th>趋势</th><th>波段</th><th>建议</th><th>置信</th></tr></thead><tbody id="adviceBody2"></tbody></table></div>
+  <div class="table-wrap"><table><thead><tr><th>板块</th><th>涨跌</th><th>资金</th><th>趋势</th><th>波段建议</th><th>怎么操作</th><th>置信</th></tr></thead><tbody id="adviceBody2"></tbody></table></div>
   <div class="subttl" style="margin-top:14px">🏗️ 中长期布局</div>
   <div id="midLongContent2" class="cmt" style="font-size:13px;line-height:1.8">—</div>
  </div>
@@ -569,11 +575,17 @@ table td b{font-weight:700}
 <div class="page" id="page-funds">
  <div class="glass fade-in">
   <div class="glass-title">💼 我的基金持仓 <small>自动保存·localStorage</small><span class="badge" id="portCount2">0只</span></div>
-  <div class="portsum" id="portSummary2">
-   <span class="text-sec">持仓整体</span>
-   <span class="main" id="portTotalReturn2">—</span>
-   <span class="ps" id="portDetail2">等待添加持仓</span>
-   <span class="count" id="portValue2">¥0</span>
+  <div class="portsum" id="portSummary2" style="flex-direction:column;align-items:flex-start;gap:6px">
+   <div class="flex" style="gap:12px">
+    <span class="text-sec">持仓整体</span>
+    <span class="main" id="portTotalReturn2">—</span>
+    <span class="ps" id="portDetail2">等待添加持仓</span>
+   </div>
+   <div class="flex" style="gap:16px;width:100%;justify-content:space-between">
+    <div><div class="text-xs text-sec">总账户资产</div><div class="fw-700" id="portTotalAssets2">¥0</div></div>
+    <div><div class="text-xs text-sec">今日收益</div><div class="count" id="portTodayGain2">—</div></div>
+    <div><div class="text-xs text-sec">持仓市值</div><div class="count" id="portValue2">¥0</div></div>
+   </div>
   </div>
   <div id="portfolioList2"></div>
   <div class="add-form" style="margin-top:10px;border-top:1px solid rgba(0,0,0,.04);padding-top:12px">
@@ -609,7 +621,7 @@ table td b{font-weight:700}
   <div class="glass-title">🤖 AI 综合分析面板 <small>数据驱动·非聊天机器人</small><span class="badge" id="aiTime2">—</span></div>
   <div id="aiPanelContent">
    <div class="ai-panel">
-    <div class="ai-section"><h4>🗣️ 今日一句话</h4><div class="body" id="aiSentence">—</div></div>
+    <div class="ai-section"><h4>🗣️ 今日总结</h4><div class="body" id="aiSentence">—</div></div>
     <div class="ai-section"><h4>📈 市场综合判断</h4><div class="body" id="aiMarket2">—</div></div>
     <div class="ai-section"><h4>💰 资金目的分析</h4><div class="body" id="aiFlow2">—</div></div>
     <div class="ai-section"><h4>📊 板块机会</h4><div class="body" id="aiSector2">—</div></div>
@@ -668,6 +680,7 @@ const state={
   context:[],        // 市场环境
   marketOrder:null,  // 全A股订单
   fundRank:[],       // 基金排行
+  fundRankDate:'',   // 基金排行数据日期（缓存时显示"数据截至"）
   newsSources:{},
   source:{},         // 数据源状态
   loading:false,
@@ -680,7 +693,7 @@ const SECTOR_RULES=[
  {id:'storage',name:'存储芯片',keys:['存储芯片','存储器','存储','数字芯片设计']},
  {id:'compute',name:'国产算力',keys:['国产算力','算力','计算机设备','东数西算','服务器']},
  {id:'semi',name:'半导体',keys:['半导体','芯片','半导体及元件']},
- {id:'semi_eq',name:'半导体设备材料',keys:['半导体设备','半导体材料','光刻机','设备材料']},
+ {id:'semi_eq',name:'半导体设备材料',keys:['半导体材料设备','半导体设备材料','半导体设备','半导体材料','电子化学品','光刻机','光刻胶','刻蚀','设备材料']},
  {id:'pcb',name:'PCB',keys:['PCB','印制电路板','覆铜板']},
  {id:'cpo',name:'CPO光模块',keys:['CPO','光模块','通信网络设备及器件']},
  {id:'comm',name:'通信技术',keys:['通信设备','通信技术','通信']},
@@ -857,32 +870,59 @@ async function fetchFundHistory(code){
   }catch(e){state.source.fundHistory='不可用';return{closes:[],dates:[],name:''}}
 }
 
-/* --- 基金排行（天天基金/东方财富） --- */
+/* --- 基金排行（天天基金/东方财富）· 含缓存：非交易日/接口失败时用最近一次数据 --- */
 async function fetchFundRank(){
+  const CACHE_KEY='fundRankCache_v1';
+  const loadCache=()=>{
+    try{
+      const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');
+      if(c&&Array.isArray(c.rows)&&c.rows.length)return c;
+    }catch(e){}
+    return null;
+  };
+  const saveCache=(rows)=>{
+    try{localStorage.setItem(CACHE_KEY,JSON.stringify({date:new Date().toISOString(),rows}))}catch(e){}
+  };
+  const parseRows=(d)=>{
+    const rows=Array.isArray(d?.datas)?d.datas:[];
+    return rows.map(x=>{
+      const a=Array.isArray(x)?x:String(x).split(',');
+      return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
+    }).filter(x=>x.code&&x.name);
+  };
+  let rows=[];
   if(USE_PROXY){
     try{
       const j=await proxyFetchJSON('market?type=rank',12000);
       const d=j?.data||j;
-      const rows=Array.isArray(d?.datas)?d.datas:[];
-      state.fundRank=rows.map(x=>{
-        const a=Array.isArray(x)?x:String(x).split(',');
-        return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
-      }).filter(x=>x.code&&x.name);
-      state.source.fundRank=state.fundRank.length?'Cloudflare代理 · 天天基金/东财基金排行':'不可用';
-    }catch(e){state.fundRank=[];state.source.fundRank='不可用'}
+      rows=parseRows(d);
+      state.source.fundRank=rows.length?'Cloudflare代理 · 天天基金/东财基金排行':'不可用';
+    }catch(e){state.source.fundRank='不可用'}
   }else{
     try{
       const old=window.rankData;
       const src='https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=1nzf&st=desc&pi=1&pn=200&dx=1&_=__TS__'.replace('__TS__',Date.now());
       await scriptLoad(src,12000);
       const d=window.rankData;window.rankData=old;
-      const rows=Array.isArray(d?.datas)?d.datas:[];
-      state.fundRank=rows.map(x=>{
-        const a=Array.isArray(x)?x:String(x).split(',');
-        return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
-      }).filter(x=>x.code&&x.name);
-      state.source.fundRank=state.fundRank.length?'天天基金/东方财富基金排行':'不可用';
-    }catch(e){state.fundRank=[];state.source.fundRank='不可用'}
+      rows=parseRows(d);
+      state.source.fundRank=rows.length?'天天基金/东方财富基金排行':'不可用';
+    }catch(e){state.source.fundRank='不可用'}
+  }
+  if(rows.length){
+    state.fundRank=rows;
+    state.fundRankDate='';        // 实时数据，无需标注日期
+    saveCache(rows);              // 成功时存缓存，供周末/失败时兜底
+  }else{
+    // 接口失败或数据为空（如周六日接口休市），读最近一次成功缓存
+    const c=loadCache();
+    if(c){
+      state.fundRank=c.rows;
+      state.fundRankDate=c.date;
+      state.source.fundRank='天天基金排行 · 最近交易日缓存';
+    }else{
+      state.fundRank=[];
+      state.fundRankDate='';
+    }
   }
   renderRank();
 }
@@ -1355,46 +1395,77 @@ function updateSourceStatus(){
 }
 
 /* ============================================================
- * 渲染：今日一句话
+ * 渲染：今日总结
  * ============================================================ */
 function renderSentence(){
   const vals=state.sectors.filter(x=>x.available);
   const idx=state.indices;
+  const news=state.news||[];
+  const q=state.marketOrder;
   if(!vals.length&&!idx.length){
     $('sentenceText').textContent='正在读取真实市场数据…';
     return;
   }
-  let parts=[];
-  // 指数
-  const upIdx=idx.filter(x=>x.pct!=null&&x.pct>=0);
-  const downIdx=idx.filter(x=>x.pct!=null&&x.pct<0);
-  if(idx.length&&idx.some(x=>x.pct!=null)){
-    parts.push(`大盘${upIdx.length>downIdx.length?'震荡偏强':(downIdx.length>upIdx.length?'偏弱':'震荡')}`);
+  // 市场总盘子：增量还是存量
+  let marketTone='';
+  const validIdx=idx.filter(x=>x.pct!=null);
+  if(validIdx.length){
+    const up=validIdx.filter(x=>x.pct>=0).length;
+    const down=validIdx.filter(x=>x.pct<0).length;
+    const avg=validIdx.reduce((a,x)=>a+x.pct,0)/validIdx.length;
+    if(avg>=0.8)marketTone='今天大盘整体上涨';
+    else if(avg>=0.2)marketTone='今天大盘小涨';
+    else if(avg>-0.2)marketTone='今天大盘涨跌不大';
+    else if(avg>-0.8)marketTone='今天大盘小跌';
+    else marketTone='今天大盘整体下跌';
   }
   // 板块
+  let sectorPart='';
   if(vals.length){
     const sorted=[...vals].sort((a,b)=>(b.change??-999)-(a.change??-999));
     const top=sorted[0],bot=sorted[sorted.length-1];
-    if(top&&Number.isFinite(top.change)){
-      parts.push(`<b class="up">${safe(top.name)}</b>最强 ${fmtPct(top.change)}`);
-    }
-    if(bot&&Number.isFinite(bot.change)&&bot!==top){
-      parts.push(`<b class="down">${safe(bot.name)}</b>最弱 ${fmtPct(bot.change)}`);
-    }
-    // 资金方向
-    const inflow=vals.filter(x=>x.flow>0).length;
-    const outflow=vals.filter(x=>x.flow<0).length;
-    if(inflow>outflow)parts.push('资金偏向流入');
-    else if(outflow>inflow)parts.push('资金偏向流出');
-    else parts.push('资金方向分歧');
+    const topFlow=[...vals].sort((a,b)=>(b.flow||0)-(a.flow||0))[0];
+    const parts=[];
+    if(top&&Number.isFinite(top.change))parts.push(`<b class="up">${safe(top.name)}</b>涨得最好，涨了${fmtPct(top.change)}`);
+    if(bot&&Number.isFinite(bot.change)&&bot!==top)parts.push(`<b class="down">${safe(bot.name)}</b>最弱，跌了${fmtPctAbs(bot.change)}`);
+    if(topFlow&&topFlow.flow>0)parts.push(`钱流向${safe(topFlow.name)}最多，流入了${fmtYi(topFlow.flow)}`);
+    sectorPart=parts.join('；');
   }
-  $('sentenceText').innerHTML=parts.join('，')+'。';
+  // 资金
+  let moneyPart='';
+  if(q){
+    if(q.main>80e8&&q.small<-20e8)moneyPart='大资金在买，散户在卖，机构干活了';
+    else if(q.main<-50e8)moneyPart='大资金在卖，市场偏谨慎';
+    else if(Math.abs(q.main)<30e8)moneyPart='大资金动静不大，市场偏存量博弈';
+    else moneyPart='大资金有流入，但还不算特别猛';
+  }
+  // 政策/新闻原因
+  let reasonPart='';
+  const policyNews=news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|监管|降息|降准|LPR|MLF/.test(n.title));
+  const techNews=news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人/.test(n.title));
+  const globalNews=news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|日经|外围|美国/.test(n.title));
+  if(policyNews.length)reasonPart='政策面有消息，市场跟着反应';
+  else if(techNews.length)reasonPart='科技板块有新闻刺激';
+  else if(globalNews.length)reasonPart='外围市场有影响';
+  else if(news.length)reasonPart='市场主要跟着消息和资金走';
+  else reasonPart='今天消息不多，主要靠资金推动';
+  // 组合成大白话
+  let html='';
+  if(marketTone)html+=marketTone+'。';
+  if(reasonPart)html+=reasonPart+'。';
+  if(sectorPart)html+=sectorPart+'。';
+  if(moneyPart)html+=moneyPart+'。';
+  if(!html)html='数据还没全，等下刷新看看。';
+  $('sentenceText').innerHTML=html+'<br><span class="text-xs text-sec">（以上用真实数据和大白话总结，仅供参考）</span>';
   $('sentenceTime').textContent=dateTimeStr();
   $('sentenceDS').innerHTML=`数据来源：${safe(state.source.industryBoard||'—')} · ${safe(state.source.indices||'—')} · 更新 ${timeStr()}`;
 }
 
 /* ============================================================
  * 渲染：持仓
+ * ============================================================ */
+/* ============================================================
+ * 渲染：持仓（含总账户资产、当日收益、昨日收益）
  * ============================================================ */
 function renderPortfolio(){
   const renderList=(listEl,sumEl)=>{
@@ -1404,21 +1475,32 @@ function renderPortfolio(){
         sumEl.querySelector('#portTotalReturn')&&($('portTotalReturn').textContent='—');
         sumEl.querySelector('#portDetail')&&($('portDetail').textContent='等待添加持仓');
         sumEl.querySelector('#portValue')&&($('portValue').textContent='¥0');
+        sumEl.querySelector('#portTodayGain')&&($('portTodayGain').textContent='—');
       }
       $('portCount')&&($('portCount').textContent='0只');
       $('portCount2')&&($('portCount2').textContent='0只');
       return;
     }
-    let totalValue=0,totalGain=0,totalCost=0,up=0,down=0;
+    let totalValue=0,totalGain=0,totalCost=0,totalTodayGain=0,totalYesterdayGain=0,up=0,down=0;
     const html=state.portfolio.map((p,i)=>{
       const d=state.funds[p.code]||{};
       const price=d.estimate??d.nav;
       const cost=p.cost*p.shares;
       const gain=Number.isFinite(price)?(price-p.cost)*p.shares:null;
       const gainPct=Number.isFinite(price)&&p.cost>0?((price-p.cost)/p.cost*100):null;
+      // 今日收益 = (当前价 - 昨日净值) * 份额
+      const hist=d.history||[];
+      const todayNav=hist.at(-1);
+      const yestNav=hist.at(-2);
+      const prevNav=hist.at(-3);
+      const todayPrice=price??todayNav;
+      const todayGain=(Number.isFinite(todayPrice)&&Number.isFinite(yestNav))?(todayPrice-yestNav)*p.shares:null;
+      const yesterdayGain=(Number.isFinite(yestNav)&&Number.isFinite(prevNav))?(yestNav-prevNav)*p.shares:null;
       if(Number.isFinite(price))totalValue+=price*p.shares;
       totalCost+=cost;
       if(Number.isFinite(gain))totalGain+=gain;
+      if(Number.isFinite(todayGain))totalTodayGain+=todayGain;
+      if(Number.isFinite(yesterdayGain))totalYesterdayGain+=yesterdayGain;
       if((d.pct??0)>=0)up++;else down++;
       const m=d.metrics;
       const sigs=[];
@@ -1438,10 +1520,11 @@ function renderPortfolio(){
             <div class="fc-est">${price!=null?'估值 '+price.toFixed(4):'暂无估值'}</div>
           </div>
         </div>
-        <div class="fc-grid">
+        <div class="fc-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="gi">持仓金额<b>${Number.isFinite(price)?'¥'+(price*p.shares).toFixed(0):'—'}</b></div>
           <div class="gi">持有收益<b class="${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</b></div>
-          <div class="gi">累计收益<b class="${gainPct==null?'':(gainPct>=0?'up':'down')}">${gainPct==null?'—':fmtPct(gainPct)}</b></div>
+          <div class="gi">今日收益<b class="${todayGain==null?'':(todayGain>=0?'up':'down')}">${todayGain==null?'—':(todayGain>=0?'+':'')+todayGain.toFixed(2)}</b></div>
+          <div class="gi">昨日收益<b class="${yesterdayGain==null?'':(yesterdayGain>=0?'up':'down')}">${yesterdayGain==null?'—':(yesterdayGain>=0?'+':'')+yesterdayGain.toFixed(2)}</b></div>
         </div>
         ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
         ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
@@ -1469,67 +1552,99 @@ function renderPortfolio(){
     });
     // 汇总
     const totalPct=totalCost>0?(totalGain/totalCost*100):null;
+    const totalAssets=totalValue+(totalTodayGain||0);
     if($('portTotalReturn')){
       $('portTotalReturn').textContent=totalPct==null?'—':fmtPct(totalPct);
       $('portTotalReturn').className='main '+(totalGain>=0?'up':'down');
     }
-    if($('portDetail'))$('portDetail').textContent=`${up}涨 ${down}跌 · 实时数据`;
+    if($('portDetail'))$('portDetail').textContent=`${up}涨 ${down}跌 · 总成本 ¥${totalCost.toFixed(0)}`;
     if($('portValue'))$('portValue').textContent='¥'+totalValue.toFixed(0);
+    if($('portTodayGain')){
+      $('portTodayGain').textContent=totalTodayGain==null?'—':(totalTodayGain>=0?'+':'')+'¥'+totalTodayGain.toFixed(2);
+      $('portTodayGain').className='count '+(totalTodayGain>=0?'up':'down');
+    }
+    if($('portTotalAssets'))$('portTotalAssets').textContent='¥'+totalAssets.toFixed(0);
     if($('portCount'))$('portCount').textContent=state.portfolio.length+'只';
     if($('portTotalReturn2')){
       $('portTotalReturn2').textContent=totalPct==null?'—':fmtPct(totalPct);
       $('portTotalReturn2').className='main '+(totalGain>=0?'up':'down');
     }
-    if($('portDetail2'))$('portDetail2').textContent=`${up}涨 ${down}跌 · 实时数据`;
+    if($('portDetail2'))$('portDetail2').textContent=`${up}涨 ${down}跌 · 总成本 ¥${totalCost.toFixed(0)}`;
     if($('portValue2'))$('portValue2').textContent='¥'+totalValue.toFixed(0);
+    if($('portTodayGain2')){
+      $('portTodayGain2').textContent=totalTodayGain==null?'—':(totalTodayGain>=0?'+':'')+'¥'+totalTodayGain.toFixed(2);
+      $('portTodayGain2').className='count '+(totalTodayGain>=0?'up':'down');
+    }
+    if($('portTotalAssets2'))$('portTotalAssets2').textContent='¥'+totalAssets.toFixed(0);
     if($('portCount2'))$('portCount2').textContent=state.portfolio.length+'只';
   };
   renderList($('portfolioList'),$('portSummary'));
   renderList($('portfolioList2'),$('portSummary2'));
 }
-
 /* ============================================================
- * 渲染：波段信号 + 趋势强弱
+ * 渲染：波段信号 + 趋势强弱（带大白话解释）
  * ============================================================ */
 function renderBand(){
   const renderInto=(el)=>{
     if(!el)return;
-    const fund=state.portfolio.map(p=>state.funds[p.code]).find(x=>x?.metrics);
-    if(!fund){
+    const funds=state.portfolio.map(p=>state.funds[p.code]).filter(x=>x?.metrics);
+    if(!funds.length){
       el.innerHTML='<div class="empty-state"><div class="icon">📶</div>添加基金后自动计算波段信号</div>';
       return;
     }
-    const m=fund.metrics;
-    const bandPos=m.bandScore; // 0-100
-    const trendPos=m.trendScore;
-    el.innerHTML=`
-      <div class="band-grid">
+    // 取每只基金的波段和趋势做汇总
+    const items=funds.slice(0,4).map(f=>{
+      const m=f.metrics;
+      const bandText={
+        '低位区':'跌得比较便宜，可能有反弹机会',
+        '偏低':'比正常位置便宜一点',
+        '震荡':'不高不低，处于中间位置',
+        '偏高':'比正常位置贵一点',
+        '高位区':'涨得比较高，要注意回调风险'
+      }[m.band]||m.band;
+      const trendText={
+        '强势':'走势很强，短期向上',
+        '偏强':'走势偏强',
+        '震荡':'方向不明显，涨涨跌跌',
+        '偏弱':'走势偏弱',
+        '弱势':'走势较弱，短期向下'
+      }[m.trend]||m.trend;
+      const comboText={
+        '超跌后的反转观察区':'跌多了但开始走强，可以关注是否反转',
+        '下跌趋势中的超跌，不要盲目抄底':'还在下跌趋势里，即使便宜也别急着买',
+        '强势但存在高位风险':'涨得猛，但要防着跌回来',
+        '注意回撤压力':'高位且走弱，可能要跌了',
+        '趋势等待确认':'方向还没定，先看着',
+        '观望':'信号不明显，先不动',
+        '震荡观望':'震荡行情，等方向出来'
+      }[m.combo]||m.combo;
+      return `<div class="band-grid" style="margin-bottom:14px">
         <div class="band-item">
-          <div class="label">波段信号</div>
+          <div class="label">${safe(f.name)} · 波段信号</div>
           <div class="value ${m.bandTone==='low'?'up':(m.bandTone==='high'?'down':'flat')}">${safe(m.band)}</div>
-          <div class="sub">评分 ${m.bandScore}/100 · 置信度 ${safe(m.conf)}</div>
-          <div class="band-score-bar"><div class="marker" style="left:${bandPos}%"></div></div>
+          <div class="sub">评分 ${m.bandScore}/100 · ${bandText}</div>
+          <div class="band-score-bar"><div class="marker" style="left:${m.bandScore}%"></div></div>
           <span class="tag ${m.bandTone}">${safe(m.band)}</span>
         </div>
         <div class="band-item">
-          <div class="label">趋势强弱</div>
+          <div class="label">${safe(f.name)} · 趋势强弱</div>
           <div class="value ${m.trendScore>=60?'up':(m.trendScore<40?'down':'flat')}">${safe(m.trend)}</div>
-          <div class="sub">评分 ${m.trendScore}/100</div>
-          <div class="band-score-bar"><div class="marker" style="left:${trendPos}%"></div></div>
+          <div class="sub">评分 ${m.trendScore}/100 · ${trendText}</div>
+          <div class="band-score-bar"><div class="marker" style="left:${m.trendScore}%"></div></div>
           <span class="tag ${m.trendScore>=60?'strong':(m.trendScore<40?'weak':'neutral')}">${safe(m.trend)}</span>
         </div>
       </div>
-      <div class="fc-combo" style="margin-top:10px">
-        <b>组合判断：</b>${safe(m.combo)}<br>
-        <b>指标明细：</b>RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · BOLL ${(m.lower||0).toFixed(4)}~${(m.upper||0).toFixed(4)} · MACD ${m.macd.toFixed(4)} · DIF ${m.dif.toFixed(4)} · DEA ${m.dea.toFixed(4)}<br>
-        <b>均线：</b>MA5 ${(m.ma5||0).toFixed(4)} · MA10 ${(m.ma10||0).toFixed(4)} · MA20 ${(m.ma20||0).toFixed(4)}${m.ma60?' · MA60 '+m.ma60.toFixed(4):''}
+      <div class="fc-combo" style="margin-bottom:10px"><b>组合判断（${safe(f.name)}）：</b>${comboText}</div>
+      <div class="text-xs text-sec" style="margin-bottom:16px;padding-bottom:10px;border-bottom:1px dashed rgba(120,160,210,.15)">
+        指标明细：RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · BOLL ${(m.lower||0).toFixed(4)}~${(m.upper||0).toFixed(4)} · MACD ${m.macd.toFixed(4)} · MA5 ${(m.ma5||0).toFixed(4)} · MA20 ${(m.ma20||0).toFixed(4)}${m.ma60?' · MA60 '+m.ma60.toFixed(4):''}
       </div>`;
+    }).join('');
+    el.innerHTML=items;
   };
   renderInto($('bandContent'));
   renderInto($('bandContent2'));
   $('bandTime')&&($('bandTime').textContent=dateTimeStr());
 }
-
 /* ============================================================
  * 渲染：板块
  * ============================================================ */
@@ -1677,7 +1792,14 @@ function renderRank(){
     const bottom=[...rows].sort((a,b)=>(a.day??999)-(b.day??999)).slice(0,5);
     const mk=(title,arr,cls)=>`<div class="fund-rank-block"><div class="rank-title ${cls}">${title}</div>${arr.map((x,i)=>`<div class="rank-row"><span class="rank-no">${i+1}</span><span class="rank-name">${safe(x.name)}<small>${x.code}</small></span><b class="${(x.day??0)>=0?'up':'down'}">${fmtPct(x.day)}</b></div>`).join('')}</div>`;
     el.innerHTML=mk('今日涨幅 TOP5',top,'up')+mk('今日跌幅 TOP5',bottom,'down');
-    if(dsEl)dsEl.innerHTML=`基金排行源：${safe(state.source.fundRank||'—')} · 更新 ${timeStr()}`;
+    if(dsEl){
+      if(state.fundRankDate){
+        const d=new Date(state.fundRankDate);
+        dsEl.innerHTML=`基金排行源：${safe(state.source.fundRank||'—')} · 数据截至 ${d.getMonth()+1}月${d.getDate()}日（最近交易日）`;
+      }else{
+        dsEl.innerHTML=`基金排行源：${safe(state.source.fundRank||'—')} · 更新 ${timeStr()}`;
+      }
+    }
   };
   renderInto($('rankContent'),$('rankDS'));
   renderInto($('rankContent2'),$('rankDS2'));
@@ -1692,23 +1814,29 @@ function renderAdvice(){
     const vals=state.sectors.filter(x=>x.available);
     if(!vals.length){el.innerHTML='<tr><td colspan="7" class="text-sec text-center">暂无可靠数据</td></tr>';return}
     el.innerHTML=vals.map(s=>{
-      // 基于数据规则生成建议
-      let advice='观察',conf=50,risk='中';
       const ch=s.change??0,fl=s.flow??0;
-      if(ch>0&&fl>0){advice='观察/持有';conf=75;risk='中'}
-      else if(ch>0&&fl<0){advice='注意诱多';conf=45;risk='高'}
-      else if(ch<0&&fl<0){advice='观望';conf=70;risk='高'}
-      else if(ch<0&&fl>0){advice='关注止跌';conf=55;risk='中'}
-      else{advice='震荡观望';conf=50;risk='中'}
-      // 趋势/波段（简化：基于涨跌和资金）
-      const trend=ch>0.5?'强':(ch<-0.5?'弱':'震荡');
-      const band=fl>0&&ch<0?'偏低':(fl<0&&ch>0?'偏高':'中性');
+      // 基于数据规则生成建议（大白话）
+      let advice='先看着',conf=50,risk='中';
+      if(ch>0&&fl>0){advice='拿着别动';conf=75;risk='中'}
+      else if(ch>0&&fl<0){advice='小心假涨';conf=45;risk='高'}
+      else if(ch<0&&fl<0){advice='先别买';conf=70;risk='高'}
+      else if(ch<0&&fl>0){advice='等跌稳再说';conf=55;risk='中'}
+      else{advice='先看着';conf=50;risk='中'}
+      // 趋势：涨跌方向
+      const trend=ch>0.5?'向上':(ch<-0.5?'向下':'震荡');
+      // 波段：直接给建议（钱和价格配合着看）
+      let band='',bandCls='';
+      if(fl>0&&ch<0){band='可以关注';bandCls='up'}        // 跌了但资金在进：低位有人接
+      else if(fl<0&&ch>0){band='别追高';bandCls='down'}    // 涨了但资金在跑：涨得虚
+      else if(ch>0&&fl>0){band='持有';bandCls='up'}        // 涨且资金进：健康
+      else if(ch<0&&fl<0){band='先避开';bandCls='down'}    // 跌且资金跑：还在走弱
+      else{band='先不动';bandCls=''}
       return `<tr>
         <td><b>${safe(s.name)}</b></td>
         <td class="${ch>=0?'up':'down'}">${fmtPct(ch)}</td>
         <td class="${fl>=0?'up':'down'}">${fmtYi(fl)}</td>
         <td>${trend}</td>
-        <td>${band}</td>
+        <td class="${bandCls}"><b>${band}</b></td>
         <td>${advice}</td>
         <td><span class="tag-conf">${conf}%</span><span class="tag-risk ${risk==='高'?'high':(risk==='中'?'mid':'low')}">${risk}</span></td>
       </tr>`;
@@ -1774,55 +1902,118 @@ function renderMidLong(){
 /* ============================================================
  * 渲染：AI 资金博弈
  * ============================================================ */
+/* ============================================================
+ * 渲染：AI 资金博弈（深度拆解：总盘子/资金类型/板块/真假/闭环）
+ * ============================================================ */
 function renderAIFlow(){
   const renderInto=(el)=>{
     if(!el)return;
     const vals=state.sectors.filter(x=>x.available);
     const q=state.marketOrder;
-    const news=state.news;
+    const news=state.news||[];
+    const idx=state.indices||[];
     if(!vals.length&&!q){
       el.innerHTML='<div class="empty-state">等待真实数据…</div>';
       return;
     }
-    let facts=[],judges=[],risks=[];
-    // 事实
+
+    // 1. 市场总盘子：增量还是存量
+    const validIdx=idx.filter(x=>x.pct!=null);
+    const idxAvg=validIdx.length?validIdx.reduce((a,x)=>a+x.pct,0)/validIdx.length:0;
+    const upIdx=validIdx.filter(x=>x.pct>=0).length;
+    const downIdx=validIdx.filter(x=>x.pct<0).length;
+    let marketPlate='';
     if(q){
-      facts.push(`主力(超大+大单)净${q.main>=0?'流入':'流出'} ${fmtYi(Math.abs(q.main))}`);
-      facts.push(`中小单净${q.small>=0?'流入':'流出'} ${fmtYi(Math.abs(q.small))}`);
+      const totalFlow=q.main+(q.small||0);
+      const turnover=q.turnover||0;
+      if(Math.abs(totalFlow)>200e8)marketPlate='今天市场资金动静很大，属于增量博弈，钱明显进来了';
+      else if(Math.abs(totalFlow)>80e8)marketPlate='今天资金有动作，但不算特别猛，偏向存量里调结构';
+      else marketPlate='今天资金整体动静不大，属于存量博弈，钱就在几个板块里换来换去';
+    }else{
+      marketPlate='资金数据暂不全，先看价格和板块方向';
     }
-    const inflow=vals.filter(x=>x.flow>0).sort((a,b)=>b.flow-a.flow).slice(0,3);
-    const outflow=vals.filter(x=>x.flow<0).sort((a,b)=>a.flow-b.flow).slice(0,3);
-    if(inflow.length)facts.push('资金流入板块：'+inflow.map(x=>`${safe(x.name)} ${fmtYi(x.flow)}`).join('、'));
-    if(outflow.length)facts.push('资金流出板块：'+outflow.map(x=>`${safe(x.name)} ${fmtYi(x.flow)}`).join('、'));
-    // 判断
-    if(q&&q.main>0&&q.small<0){
-      judges.push('机构资金正在流入，同时散户资金流出，资金结构偏向机构。');
-    }else if(q&&q.main<0&&q.small>0){
-      judges.push('主力净流出同时散户净流入，注意资金结构分化，可能存在出货风险。');
-    }else if(inflow.length>=2){
-      judges.push(`资金集中流向${inflow.map(x=>safe(x.name)).join('、')}，需结合成交量、新闻、政策验证是否为趋势资金。`);
+
+    // 2. 资金类型拆解：谁在买卖
+    let whoPart='';
+    if(q){
+      const parts=[];
+      if(q.main>0)parts.push(`大资金（超大+大单）净买入 ${fmtYi(q.main)}，机构在干活`);
+      else if(q.main<0)parts.push(`大资金（超大+大单）净卖出 ${fmtYi(Math.abs(q.main))}，机构在撤退`);
+      else parts.push('大资金没明显方向');
+      if(q.small>0)parts.push(`散户（中小单）净买入 ${fmtYi(q.small)}，散户在买`);
+      else if(q.small<0)parts.push(`散户（中小单）净卖出 ${fmtYi(Math.abs(q.small))}，散户在卖`);
+      else parts.push('散户没明显方向');
+      whoPart=parts.join('；')+'。';
     }
-    // 新闻关联（只有逻辑相关才关联）
-    if(news.length){
-      const techNews=news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储/.test(n.title));
-      if(techNews.length&&inflow.length){
-        judges.push(`资讯中出现${techNews.length}条科技相关消息，与资金流向${inflow.length>=2?'可能':'弱'}相关，需进一步验证因果。`);
-      }
+
+    // 3. 钱进了哪些板块 + 是否分化
+    const inflow=vals.filter(x=>x.flow>0).sort((a,b)=>b.flow-a.flow).slice(0,5);
+    const outflow=vals.filter(x=>x.flow<0).sort((a,b)=>a.flow-b.flow).slice(0,5);
+    let sectorPart='';
+    if(inflow.length){
+      sectorPart='钱流得最多的板块：'+inflow.map(x=>`${safe(x.name)}涨${fmtPct(x.change)}、流入${fmtYi(x.flow)}`).join('；')+'。';
+      // 是否分化
+      const mixed=vals.filter(x=>x.flow>0&&x.change<0).length+vals.filter(x=>x.flow<0&&x.change>0).length;
+      if(mixed>=2)sectorPart+='注意：有些板块资金和价格方向不一致，说明里面有人在分歧。';
     }
-    // 风险
-    if(q&&q.main<0)risks.push('主力资金净流出，短期存在回调压力');
-    if(outflow.length>=3)risks.push('多个板块资金流出，市场风险偏好下降');
-    if(!risks.length)risks.push('暂无明显资金风险信号');
-    let html='<div class="fact-block fact"><b>【事实】</b><br>'+facts.join('<br>')+'</div>';
-    html+='<div class="fact-block judge"><b>【判断】</b><br>'+(judges.length?judges.join('<br>'):'当前数据不足以判断资金目的，需更多成交量和政策验证。')+'</div>';
-    html+='<div class="fact-block risk"><b>【风险】</b><br>'+risks.join('<br>')+'</div>';
+    if(outflow.length){
+      sectorPart+='钱跑得最多的板块：'+outflow.map(x=>`${safe(x.name)}${fmtPct(x.change)}、流出${fmtYi(Math.abs(x.flow))}`).join('；')+'。';
+    }
+
+    // 4. 风格切换
+    let stylePart='';
+    const techUp=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change>0).length;
+    const techDown=vals.filter(x=>['存储芯片','国产算力','半导体','半导体设备材料','PCB','CPO光模块','通信技术','MLCC'].includes(x.name)&&x.change<0).length;
+    if(techUp>=4)stylePart='科技板块整体走强，资金偏成长风格。';
+    else if(techDown>=4)stylePart='科技板块整体走弱，资金偏防御风格。';
+    else if(inflow.length&&inflow[0].name.includes('通信'))stylePart='资金偏向通信/AI硬件链，成长风格占优。';
+    else if(outflow.length&&['医药','消费','白酒'].some(k=>outflow[0].name.includes(k)))stylePart='资金从消费/医药流出，风格偏向科技或周期。';
+    else stylePart='风格切换不明显，资金在板块内部轮动。';
+
+    // 5. 验真假：量价配合与节奏
+    let verifyPart='';
+    const realInflow=inflow.filter(x=>x.flow>0&&x.change>0);
+    const fakeInflow=inflow.filter(x=>x.flow>0&&x.change<=0);
+    if(realInflow.length>=3)verifyPart='真流入信号：多个板块资金和价格一起涨，量价配合较好，持续性相对靠谱。';
+    else if(fakeInflow.length>=2)verifyPart='警惕假流入：有些板块资金流入但价格没涨，可能是主力在悄悄出货或洗盘。';
+    else verifyPart='量价配合一般，需要继续观察后面几天资金是否持续。';
+
+    // 6. 类型+方向+持续性+量价+位置 五件事闭环
+    let loopPart='';
+    if(q){
+      const dir=q.main>0?'流入':'流出';
+      const sustain=Math.abs(q.main)>100e8?'资金力度大，持续性可能较好':'资金力度一般，持续性待观察';
+      const volumn=idxAvg>0.5?'大盘有成交量配合':'大盘成交量配合一般';
+      const position=idxAvg>1?'市场位置偏高，注意别追高':(idxAvg<-1?'市场位置偏低，可能有机会':'市场位置在中间');
+      loopPart=`把五件事拼起来看：①类型是大资金${dir}；②方向是${dir==='流入'?'买':'卖'}盘主导；③持续性：${sustain}；④量价：${volumn}；⑤位置：${position}。`;
+    }
+
+    // 7. 大白话结论
+    let conclusion='';
+    if(q&&q.main>0&&inflow.length>=3){
+      conclusion='整体来看，大资金在买，钱进了科技/通信这些方向，量价也配合，短期可以留意这些板块的机会，但别追太高。';
+    }else if(q&&q.main<0){
+      conclusion='整体来看，大资金在卖，市场偏谨慎，今天不适合乱动，观望为主。';
+    }else if(!q&&vals.length){
+      conclusion='资金数据还没全，但板块涨跌有方向，先看板块强弱，等资金数据齐了再下结论。';
+    }else{
+      conclusion='资金方向不算特别强，板块在分化，先看着，别急着大动作。';
+    }
+
+    // 组装 HTML
+    let html='<div class="fact-block fact"><b>【一、市场总盘子】</b><br>'+marketPlate+'</div>';
+    html+='<div class="fact-block fact"><b>【二、谁在买卖】</b><br>'+(whoPart||'资金类型数据暂不全')+'</div>';
+    html+='<div class="fact-block fact"><b>【三、钱去了哪些板块】</b><br>'+(sectorPart||'板块资金数据暂不全')+'</div>';
+    html+='<div class="fact-block fact"><b>【四、风格切换】</b><br>'+stylePart+'</div>';
+    html+='<div class="fact-block judge"><b>【五、验真假（量价配合）】</b><br>'+verifyPart+'</div>';
+    html+='<div class="fact-block judge"><b>【六、五件事拼起来】</b><br>'+(loopPart||'等资金数据齐了再拼')+'</div>';
+    html+='<div class="fact-block concl"><b>【大白话结论】</b><br>'+conclusion+'</div>';
     html+='<div class="text-xs text-sec" style="margin-top:6px">分析基于真实数据规则生成，AI 仅在证据充分时下结论。仅供参考，不构成投资建议。</div>';
     el.innerHTML=html;
   };
   renderInto($('aiFlowContent'));
   renderInto($('aiFlowContent2'));
 }
-
 /* ============================================================
  * 渲染：组合体检
  * ============================================================ */
@@ -1904,28 +2095,53 @@ function renderCombo(){
  * ============================================================ */
 function newsTopic(n){
   const t=(n.title+' '+(n.summary||'')).toLowerCase();
-  if(/基金|etf|净值|公募|持仓|调仓|申购|赎回/.test(t))return'基金';
-  if(/政策|国务院|央行|财政部|证监会|发改委|工信部|监管/.test(t))return'政策';
-  if(/美股|美联储|美元|黄金|原油|纳指|标普|日经|韩国|欧洲|美国|外围/.test(t))return'外围';
-  if(/ai|算力|半导体|芯片|pcb|cpo|通信|机器人|科技/.test(t))return'科技';
+  if(/基金|etf|净值|公募|持仓|调仓|申购|赎回|理财|分红/.test(t))return'基金';
+  if(/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|lpr|mlf|逆回购|国常会/.test(t))return'政策';
+  if(/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|韩国|欧洲|美国|外围|国际|地缘|中东|俄乌|港股|恒生/.test(t))return'外围';
+  if(/ai|算力|半导体|芯片|存储|cpo|光模块|pcb|通信|机器人|科技|新能源|光伏|锂电|汽车|医药|消费|白酒/.test(t))return'科技';
   return'市场';
+}
+
+function topicScore(n,topic){
+  const t=(n.title+' '+(n.summary||'')).toLowerCase();
+  const maps={
+    '基金':/基金|etf|净值|公募|持仓|调仓|申购|赎回|理财|分红/,
+    '政策':/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|lpr|mlf|逆回购|国常会/,
+    '外围':/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|韩国|欧洲|美国|外围|国际|地缘|中东|俄乌|港股|恒生/,
+    '科技':/ai|算力|半导体|芯片|存储|cpo|光模块|pcb|通信|机器人|科技|新能源|光伏|锂电|汽车|医药|消费|白酒/,
+    '市场':/.*/
+  };
+  const re=maps[topic]||/.*/;
+  let score=0;
+  if(re.test(t))score+=10;
+  // 科技/政策/外围没有直接命中时，看是否含相关行业词
+  if(topic==='科技'&&/行业|产业|板块|公司|业绩|订单/.test(t))score+=3;
+  if(topic==='政策'&&/经济|宏观|会议|讲话|发布/.test(t))score+=3;
+  if(topic==='外围'&&/海外|全球|世界|国际贸易/.test(t))score+=3;
+  return score;
 }
 
 function ruleExplain(title,summary){
   const t=(String(title)+' '+String(summary)).toLowerCase();
-  if(/降息|lpr|逆回购|mlf|流动性|货币政策/.test(t))return'这类消息先影响市场流动性和风险偏好，再通过估值与资金面影响基金。仅凭新闻本身不能判断涨跌。';
-  if(/半导体|芯片|存储|cpo|光模块|pcb|算力|通信/.test(t))return'属于科技产业链事件，先看相关板块涨跌与资金是否同步，再判断对科技基金是短期催化还是趋势变化。';
-  if(/黄金|白银|原油|油价|美债|美元|美联储|纳指|标普/.test(t))return'属于外围或大宗商品变量，可能通过风险偏好、汇率和相关资产价格影响基金，需结合A股实际走势验证。';
-  if(/基金|公募|etf|净值|持仓|调仓|重仓/.test(t))return'直接涉及基金或资金配置，重点看基金持仓方向、净值变化和后续资金是否验证，不能只看标题下结论。';
-  if(/政策|国常会|国务院|财政部|证监会|央行|工信部/.test(t))return'政策属于基本面与预期变量；需要确认政策力度、受益行业和市场资金是否同步响应。';
-  return'这条快讯先作为事件背景，是否真正影响基金，要结合板块行情、资金、成交量和后续走势验证。';
+  if(/降息|lpr|逆回购|mlf|流动性|货币政策|降准/.test(t))return'这类消息先影响市场钱多少，钱多了股票容易涨，钱少了容易跌。对基金是间接影响。';
+  if(/半导体|芯片|存储|cpo|光模块|pcb|算力|通信|机器人/.test(t))return'这是科技圈的事，相关基金可能跟着动。但要看今天板块涨没涨、资金进没进，不能只看标题。';
+  if(/新能源|光伏|锂电|汽车|医药|消费|白酒/.test(t))return'这是相关行业消息，对应板块基金可能受影响，但要结合当天涨跌和资金流向看。';
+  if(/黄金|白银|原油|油价|美债|美元|美联储|纳指|标普|道指|日经|港股/.test(t))return'这是国外或大宗商品的消息，可能通过情绪影响A股，但A股走不走出来还要看自己。';
+  if(/基金|公募|etf|净值|持仓|调仓|重仓/.test(t))return'这条直接跟基金有关，注意它说的是哪类基金、什么方向，再对照自己持仓看。';
+  if(/政策|国常会|国务院|财政部|证监会|央行|工信部|发改委|监管/.test(t))return'这是政策消息，短期可能影响市场情绪，长期要看政策力度和执行。';
+  return'这条新闻先当背景看看，是否影响你的基金，要结合板块涨跌、资金流向和后面几天走势一起判断。';
 }
 
 function renderNews(filter){
   if(filter===undefined)filter=state.activeNewsFilter;
   state.activeNewsFilter=filter;
-  const all=[...state.news,...state.global].map(n=>({...n,topic:newsTopic(n)}));
-  const filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
+  const all=state.news.filter(n=>n.title&&String(n.title).trim()).map(n=>({...n,topic:newsTopic(n)}));
+  let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
+  // 如果某个分类没有直接命中，按关键词相关度补充
+  if(filter!=='all'&&!filtered.length&&all.length){
+    const scored=all.map(n=>({...n,score:topicScore(n,filter)})).sort((a,b)=>b.score-a.score);
+    filtered=scored.filter(x=>x.score>0).slice(0,10);
+  }
   const list=filtered.slice(0,18);
   const listEl=$('newsList');
   if(!listEl)return;
@@ -1995,7 +2211,7 @@ async function explainNewsBatch(){
     return;
   }
   const items=state.news.slice(0,12).map((n,i)=>({id:i+1,title:n.title,summary:String(n.summary||'').replace(/<[^>]+>/g,'').slice(0,180),source:n.source}));
-  const prompt=`你是基金资讯分析助手。只基于给出的新闻事实做一句话白话解读。严禁编造、严禁把相关性写成因果、严禁凭标题断言资金流向。每条最多45字。必须输出JSON数组，字段id,explain。
+  const prompt=`你是基金资讯分析助手。只基于给出的新闻事实做一句大白话解读，让小学文化的人也能听懂。严禁编造、严禁把相关性写成因果、严禁凭标题断言资金流向。每条最多45字。必须输出JSON数组，字段id,explain。
 
 ${JSON.stringify(items)}`;
   try{
@@ -2078,12 +2294,12 @@ function evidenceAI(){
     setAI('aiHistory','暂无历史数据');
   }
 
-  // 一句话结论
+  // 一句话结论（大白话）
   const conclusion=enough?
-    (strong.length>=2?'资金与价格共同偏向强势方向，但仍需成交量确认。':
-     weak.length>=2?'弱势板块存在资金与价格共振，暂不宜把单日下跌解释成长期趋势。':
-     '市场信号分歧，等待更多成交量/资金确认。'):
-    '证据尚不完整：当前不做确定性判断。';
+    (strong.length>=2?'今天资金和板块一起往上走，市场比较热，可以关注但别追高。':
+     weak.length>=2?'今天跌的板块多，资金也在往外跑，行情偏弱，先别急着买。':
+     '今天市场涨跌各半，钱也没明显方向，信号还不清楚，先看着。'):
+    '现在数据不够全，等一会儿刷新再看，不瞎猜。';
   setAI('aiConclusion',conclusion+' 仅供参考。');
   setAI('aiSentence',conclusion);
 
@@ -2119,8 +2335,8 @@ async function runMarketAI(){
     news:news.map(x=>({source:x.source,title:x.title,summary:String(x.summary||'').slice(0,100)})),
     holdings:fund.map(x=>({name:x.name,code:x.code,estimate:x.estimate,pct:x.pct,metrics:x.metrics?{band:x.metrics.band,trend:x.metrics.trend,bandScore:x.metrics.bandScore,trendScore:x.metrics.trendScore,rsi:x.metrics.rsi}:null}))
   };
-  const prompt=`你是严谨的基金投研分析助手。请基于以下证据输出中文JSON，字段：summary(80字内),fundFlow(80字内),newsImpact(80字内),risk(80字内),conclusion(100字内),confidence(0-100)。
-规则：1)资金、板块、成交量、新闻、政策、外围、历史指标必须区分事实与推断；2)没有证据就写"证据不足"；3)不能从单条新闻直接推断资金目的；4)不推荐具体买卖，只给风险和观察方向；5)不得制造任何不存在的数据。
+  const prompt=`你是基金投研分析助手。请基于以下证据输出中文JSON，字段：summary(80字内),fundFlow(80字内),newsImpact(80字内),risk(80字内),conclusion(100字内),confidence(0-100)。
+规则：1)资金、板块、成交量、新闻、政策、外围、历史指标必须区分事实与推断；2)没有证据就写"证据不足"；3)不能从单条新闻直接推断资金目的；4)不推荐具体买卖，只给风险和观察方向；5)不得制造任何不存在的数据；6)所有文字必须让小学文化的人也能一眼看懂，用大白话，禁止官话套话，结论直接说"可以关注"/"先别买"/"再看看"这种人话。
 证据：${JSON.stringify(evidence)}`;
   try{
     const r=await callDeepSeek([
