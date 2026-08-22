@@ -767,9 +767,47 @@ function scriptLoad(src,timeout=12000){
  * 数据源接口（全部真实，失败时返回空，不编造）
  * ============================================================ */
 
+/* ============================================================
+ * 数据源接口（全部真实，失败时返回空，不编造）
+ * 生产环境优先走 /api/* 代理，解决 Cloudflare Pages CORS
+ * ============================================================ */
+
+/* 是否启用代理：Cloudflare Pages / localhost 默认启用 */
+const USE_PROXY=(()=>{
+  try{
+    const h=location.hostname;
+    return h.includes('pages.dev')||h.includes('localhost')||h.includes('127.0.0.1')||h.includes('workers.dev');
+  }catch(e){return false}
+})();
+
+/* 通用代理请求 */
+async function proxyFetchJSON(apiPath,timeout=12000){
+  const r=await fetch('/api/'+apiPath,{cache:'no-store',headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error('proxy '+r.status);
+  return await r.json();
+}
+
+/* JSONP 通用解析 */
+function parseJSONP(text){
+  const m=text.match(/[\w$]+\(([\s\S]+)\)\s*;?\s*$/);
+  if(m)try{return JSON.parse(m[1])}catch{}
+  try{return JSON.parse(text)}catch{}
+  return null;
+}
+
 /* --- 基金实时估值（天天基金/东方财富） --- */
 async function fetchFundValuation(codes){
   if(!codes.length)return[];
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('funds?codes='+encodeURIComponent(codes.join(',')),12000);
+      const rows=j?.Data||[];
+      if(Array.isArray(rows)&&rows.length){
+        state.source.fundValuation='Cloudflare代理 · '+(j.source||'天天基金/东财');
+        return rows;
+      }
+    }catch(e){}
+  }
   const fields='FCODE,SHORTNAME,GSZZL,GZTIME,GSZ,NAV,PDATE';
   const bases=[
     'https://fundcomapi.tiantianfunds.com/mm/newCore/FundValuationLast',
@@ -794,6 +832,18 @@ async function fetchFundValuation(codes){
 
 /* --- 基金历史净值（东方财富 pingzhongdata） --- */
 async function fetchFundHistory(code){
+  if(USE_PROXY){
+    try{
+      const r=await fetch('/api/market?type=history&code='+code,{cache:'no-store'});
+      if(r.ok){
+        const j=await r.json();
+        if(j?.history?.length){
+          state.source.fundHistory='Cloudflare代理 · 东方财富历史净值';
+          return{closes:j.history,dates:j.dates||[],name:j.name||''};
+        }
+      }
+    }catch(e){}
+  }
   try{
     const oldTrend=window.Data_netWorthTrend,oldName=window.fS_name;
     await scriptLoad('https://fund.eastmoney.com/pingzhongdata/'+code+'.js?_='+Date.now());
@@ -809,28 +859,55 @@ async function fetchFundHistory(code){
 
 /* --- 基金排行（天天基金/东方财富） --- */
 async function fetchFundRank(){
-  try{
-    const old=window.rankData;
-    const src='https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=1nzf&st=desc&pi=1&pn=200&dx=1&_=__TS__'.replace('__TS__',Date.now());
-    await scriptLoad(src,12000);
-    const d=window.rankData;window.rankData=old;
-    const rows=Array.isArray(d?.datas)?d.datas:[];
-    state.fundRank=rows.map(x=>{
-      const a=Array.isArray(x)?x:String(x).split(',');
-      return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
-    }).filter(x=>x.code&&x.name);
-    state.source.fundRank=state.fundRank.length?'天天基金/东方财富基金排行':'不可用';
-  }catch(e){state.fundRank=[];state.source.fundRank='不可用'}
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('market?type=rank',12000);
+      const d=j?.data||j;
+      const rows=Array.isArray(d?.datas)?d.datas:[];
+      state.fundRank=rows.map(x=>{
+        const a=Array.isArray(x)?x:String(x).split(',');
+        return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
+      }).filter(x=>x.code&&x.name);
+      state.source.fundRank=state.fundRank.length?'Cloudflare代理 · 天天基金/东财基金排行':'不可用';
+    }catch(e){state.fundRank=[];state.source.fundRank='不可用'}
+  }else{
+    try{
+      const old=window.rankData;
+      const src='https://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=1nzf&st=desc&pi=1&pn=200&dx=1&_=__TS__'.replace('__TS__',Date.now());
+      await scriptLoad(src,12000);
+      const d=window.rankData;window.rankData=old;
+      const rows=Array.isArray(d?.datas)?d.datas:[];
+      state.fundRank=rows.map(x=>{
+        const a=Array.isArray(x)?x:String(x).split(',');
+        return{code:a[0]||'',name:a[1]||'',day:num(a[4]),m1:num(a[6]),m3:num(a[8]),ytd:num(a[10])};
+      }).filter(x=>x.code&&x.name);
+      state.source.fundRank=state.fundRank.length?'天天基金/东方财富基金排行':'不可用';
+    }catch(e){state.fundRank=[];state.source.fundRank='不可用'}
+  }
   renderRank();
 }
 
 /* --- 板块行情（东方财富 clist） --- */
 async function fetchBoardList(type){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('market?type=sectors',15000);
+      const data=j?.data||j;
+      const ind=Array.isArray(data?.industry)?data.industry:Object.values(data?.industry||{});
+      const con=Array.isArray(data?.concept)?data.concept:Object.values(data?.concept||{});
+      const all=type==='concept'?con:[...ind,...con];
+      state.source[type==='concept'?'conceptBoard':'industryBoard']=all.length?'Cloudflare代理 · 东方财富实时板块':'不可用';
+      return all;
+    }catch(e){}
+  }
   const fs=type==='concept'?'m:90+t:3+f:!50':'m:90+t:2+f:!50';
   const fields='f12,f14,f2,f3,f5,f6,f62,f66,f69,f72,f75,f78,f81,f84,f87,f184,f104,f105,f124';
   const u='https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&ut=fa5fd1943c7b386f172d6893dbbd1d0c&fltt=2&invt=2&fid=f62&fs='+encodeURIComponent(fs)+'&fields='+fields+'&_='+Date.now();
   try{
-    const j=await jsonp(u,'board',12000);
+    const r=await fetch(u,{cache:'no-store'});
+    if(!r.ok)throw new Error('network');
+    const text=await r.text();
+    const j=parseJSONP(text);
     const d=j?.data?.diff||[];
     state.source[type==='concept'?'conceptBoard':'industryBoard']=d.length?'东方财富实时板块':'不可用';
     return Array.isArray(d)?d:Object.values(d);
@@ -849,23 +926,33 @@ function pickBoard(all,rule){
 
 /* --- 全A股订单分层 --- */
 async function fetchMarketOrder(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('market?type=orders',15000);
+      const diff=j?.data?.data?.diff||j?.data?.diff||[];
+      const arr=Array.isArray(diff)?diff:Object.values(diff);
+      if(arr.length){
+        const sum=k=>arr.reduce((a,x)=>a+(num(x[k])||0),0);
+        state.marketOrder={main:sum('f62'),super:sum('f66'),large:sum('f69'),mid:sum('f72'),small:sum('f75'),count:arr.length};
+        state.source.marketOrder='Cloudflare代理 · 东方财富全A股订单分层';
+      }
+      renderWho();
+      return;
+    }catch(e){}
+  }
   try{
     const fs='m:0+t:6,m:0+t:13,m:0+t:80,m:1+t:2,m:1+t:23,m:0+t:7,m:1+t:3';
     const fields='f12,f14,f62,f66,f69,f72,f75';
     const u='https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=5000&po=1&np=1&ut=fa5fd1943c7b386f172d6893dbbd1d0c&fltt=2&invt=2&fid=f62&fs='+encodeURIComponent(fs)+'&fields='+fields+'&_='+Date.now();
-    const j=await jsonp(u,'market',15000);
+    const r=await fetch(u,{cache:'no-store'});
+    if(!r.ok)throw new Error('network');
+    const text=await r.text();
+    const j=parseJSONP(text);
     const d=j?.data?.diff||[];
     const arr=Array.isArray(d)?d:Object.values(d);
     if(!arr.length)throw new Error('empty');
     const sum=k=>arr.reduce((a,x)=>a+(num(x[k])||0),0);
-    state.marketOrder={
-      main:sum('f62'),
-      super:sum('f66'),
-      large:sum('f69'),
-      mid:sum('f72'),
-      small:sum('f75'),
-      count:arr.length
-    };
+    state.marketOrder={main:sum('f62'),super:sum('f66'),large:sum('f69'),mid:sum('f72'),small:sum('f75'),count:arr.length};
     state.source.marketOrder='东方财富全A股订单分层';
   }catch(e){state.marketOrder=null;state.source.marketOrder='不可用'}
   renderWho();
@@ -879,10 +966,27 @@ async function fetchIndices(){
     {name:'创业板指',em:'0.399006',el:'idxCY'},
     {name:'科创50',em:'1.000688',el:'idxKC'}
   ];
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('market?type=indices',10000);
+      const diff=j?.data?.data?.diff||j?.data?.diff||[];
+      const arr=Array.isArray(diff)?diff:Object.values(diff);
+      state.indices=idxDefs.map(d=>{
+        const x=arr.find(v=>v.f12===d.em.split('.')[1])||{};
+        return{name:d.name,code:d.em,price:num(x.f2),pct:num(x.f3),change:num(x.f4)};
+      });
+      state.source.indices=state.indices.some(x=>x.pct!==null)?'Cloudflare代理 · 东方财富指数':'不可用';
+      renderIndices();
+      return;
+    }catch(e){}
+  }
   try{
     const secids=idxDefs.map(x=>x.em).join(',');
     const u='https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f12,f14,f2,f3,f4&secids='+secids+'&_='+Date.now();
-    const j=await jsonp(u,'idx',8000);
+    const r=await fetch(u,{cache:'no-store'});
+    if(!r.ok)throw new Error('network');
+    const text=await r.text();
+    const j=parseJSONP(text);
     const diff=j?.data?.diff||[];
     const arr=Array.isArray(diff)?diff:Object.values(diff);
     state.indices=idxDefs.map((d,i)=>{
@@ -896,6 +1000,15 @@ async function fetchIndices(){
 
 /* --- 外围市场（腾讯行情） --- */
 async function fetchGlobal(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('global',10000);
+      state.global=Array.isArray(j?.items)?j.items.filter(x=>x.name&&x.pct!==null):[];
+      state.source.global=state.global.length?'Cloudflare代理 · 腾讯外围行情':'不可用';
+      renderContext();
+      return;
+    }catch(e){}
+  }
   try{
     const codes=['usDJI','usIXIC','usINX','hkHSI','hkHSTECH','nf_GC00','hf_CL'];
     const u='https://qt.gtimg.cn/q='+codes.join(',');
@@ -919,9 +1032,9 @@ async function fetchGlobal(){
   }catch(e){state.global=[];state.source.global='不可用'}
   renderContext();
 }
-
 /* ============================================================
  * 新闻模块（华尔街见闻 + 东方财富 + 同花顺 三源）
+ * 生产环境优先走 /api/news 代理
  * ============================================================ */
 function normalizeNewsItem(x,source){
   return{
@@ -934,6 +1047,14 @@ function normalizeNewsItem(x,source){
 }
 
 async function fetchWSCN(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=wscn&limit=20',10000);
+      const raw=j?.items||[];
+      const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
+      if(arr.length)return arr;
+    }catch(e){}
+  }
   const urls=[
     'https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=20',
     'https://api-one-wscn.awtmt.com/apiv1/content/information-flow?channel=global&accept=article&limit=20'
@@ -948,21 +1069,23 @@ async function fetchWSCN(){
       if(arr.length)return arr;
     }catch(e){}
   }
-  // CORS 降级：尝试代理
-  try{
-    const relay='https://api.allorigins.win/raw?url='+encodeURIComponent(urls[0]);
-    const r=await fetch(relay,{cache:'no-store'});
-    if(r.ok){
-      const j=await r.json();
-      const raw=j?.data?.items||[];
-      const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
-      if(arr.length)return arr;
-    }
-  }catch(e){}
   return [];
 }
 
 async function fetchTHS(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=ths&limit=60',10000);
+      const list=j?.items||[];
+      return list.map(x=>({
+        title:x.title||'',
+        summary:x.summary||x.digest||'',
+        time:x.time||'',
+        source:'同花顺',
+        url:x.url||''
+      })).filter(x=>x.title);
+    }catch(e){}
+  }
   try{
     const r=await fetch('https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&pagesize=60&track=website',{cache:'no-store'});
     if(!r.ok)throw new Error('network');
@@ -975,22 +1098,23 @@ async function fetchTHS(){
       source:'同花顺',
       url:''
     })).filter(x=>x.title);
-  }catch(e){
-    // 降级代理
-    try{
-      const relay='https://api.allorigins.win/raw?url='+encodeURIComponent('https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&pagesize=60&track=website');
-      const r=await fetch(relay,{cache:'no-store'});
-      if(r.ok){
-        const j=await r.json();
-        const list=(j.data&&j.data.list)||[];
-        return list.map(x=>({title:x.title||'',summary:x.digest||'',time:x.ctime?new Date(parseInt(x.ctime)*1000).toLocaleString('zh-CN',{hour:'2-digit',minute:'2-digit'}):'',source:'同花顺',url:''})).filter(x=>x.title);
-      }
-    }catch(e2){}
-    return [];
-  }
+  }catch(e){return[]}
 }
 
 async function fetchEastmoneyNews(keyword){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=em&limit=30',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>({
+        title:x.title||x.brief||'',
+        summary:x.summary||x.content||x.brief||'',
+        time:x.time||x.ctime||x.showTime||'',
+        source:'东方财富',
+        url:x.url||x.articleUrl||''
+      })).filter(x=>x.title);
+    }catch(e){}
+  }
   try{
     const param=encodeURIComponent(JSON.stringify({
       uid:'',keyword:String(keyword).slice(0,100),type:['cmsArticleWebOld'],
