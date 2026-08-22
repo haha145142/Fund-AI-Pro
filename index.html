@@ -106,6 +106,18 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fc-combo{font-size:11px;color:var(--text-sec);margin-top:6px;padding:6px 8px;background:rgba(242,247,255,.6);border-radius:10px;line-height:1.6}
 .fc-combo b{color:var(--text)}
 
+/* ===== 三路实时估值卡片 ===== */
+.fc-type-live{color:#e64545;font-weight:700}
+.fc-live{margin-top:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,rgba(255,244,240,.65),rgba(255,250,244,.65));border:1px solid rgba(230,69,69,.15)}
+.fc-live.fc-live-warn{background:linear-gradient(135deg,rgba(255,230,230,.8),rgba(255,240,240,.7));border:1.5px solid rgba(230,69,69,.45);box-shadow:0 2px 10px rgba(230,69,69,.10)}
+.fc-live-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.fc-live-tag{font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,#ff7a45,#e64545);padding:2px 8px;border-radius:10px}
+.fc-live-time{font-size:10px;color:var(--text-sec)}
+.fc-warn-tag{font-size:10px;font-weight:700;color:#fff;background:#e64545;padding:2px 8px;border-radius:10px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.fc-live-detail{font-size:11px;color:var(--text);line-height:1.7;margin-top:5px;word-break:break-all}
+.fc-live-note{font-size:10px;color:var(--text-sec);margin-top:4px;padding-top:4px;border-top:1px dashed rgba(120,160,210,.2)}
+
 /* ===== portfolio summary ===== */
 .portsum{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;padding:6px 6px 12px;border-bottom:1px solid rgba(0,0,0,.04);margin-bottom:6px}
 .portsum .main{font-size:18px;font-weight:700}
@@ -768,6 +780,329 @@ function lastTradeDateStr(d){
   return `${t.getUTCMonth()+1}月${t.getUTCDate()}日`;
 }
 
+/* ============================================================
+ * 盘中实时估值（三路反推）· 养基宝/小倍养基同款思路
+ * 路线① 重仓股穿透：前十大重仓股权重 × 个股实时涨跌（腾讯行情）
+ * 路线② 行业指数拟合：重仓股归类行业代表指数 × 权重
+ * 路线③ 主题指数拟合：基金主题映射代表指数实时涨跌
+ * 三路分歧 > 0.8% 标红"可能已调仓"；收盘后自动切回官方净值
+ * ============================================================ */
+
+/* --- 6位股票代码 → 腾讯代码 --- */
+function toTencentCode(code){
+  code=String(code||'');
+  if(!/^\d{6}$/.test(code))return null;
+  if(/^[695]/.test(code))return 'sh'+code;   // 沪市A股/基金
+  if(/^[023]/.test(code))return 'sz'+code;   // 深市
+  return null;
+}
+
+/* --- 基金名称 → 跟踪/主题指数（顺序敏感：长关键词优先） --- */
+const TRACK_INDEX_RULES=[
+ {kw:['科创50','科创板50'],code:'sh000688',name:'科创50'},
+ {kw:['沪深300','300联接','300增强','300ETF'],code:'sh000300',name:'沪深300'},
+ {kw:['中证A500','A500'],code:'sh000300',name:'沪深300近似'},
+ {kw:['中证500','500增强','500ETF'],code:'sh000905',name:'中证500'},
+ {kw:['中证1000','1000增强','1000ETF'],code:'sh000852',name:'中证1000'},
+ {kw:['上证50','50ETF'],code:'sh000016',name:'上证50'},
+ {kw:['创业板'],code:'sz399006',name:'创业板指'},
+ {kw:['恒生科技','港股通科技','港股科技','恒生互联网'],code:'hkHSTECH',name:'恒生科技'},
+ {kw:['恒生','港股通','香港','港股','沪港深','港币','大中华'],code:'hkHSI',name:'恒生指数'},
+ {kw:['纳斯达克','纳指','标普','美国','美股'],code:'sh513100',name:'纳指ETF参考'},
+ {kw:['黄金'],code:'sh518880',name:'黄金ETF'},
+ {kw:['红利低波','低波红利','红利'],code:'sh000015',name:'红利指数'},
+ {kw:['白酒'],code:'sz399997',name:'中证白酒'},
+ {kw:['新能车','新能源汽车','智能汽车','智能电动','电池'],code:'sz399976',name:'CS新能车'},
+ {kw:['光伏'],code:'sh515790',name:'光伏ETF'},
+ {kw:['军工','国防'],code:'sz399967',name:'中证军工'},
+ {kw:['证券','券商'],code:'sz399975',name:'证券公司'},
+ {kw:['银行'],code:'sz399986',name:'中证银行'},
+ {kw:['医疗','医药','创新药','生物医药','健康'],code:'sz399989',name:'中证医疗'},
+ {kw:['消费','食品饮料'],code:'sh000932',name:'中证消费'},
+ {kw:['有色金属','有色'],code:'sh000819',name:'有色金属'},
+ {kw:['化工'],code:'sh000813',name:'细分化工'},
+ {kw:['环保','低碳'],code:'sh000827',name:'中证环保'},
+ {kw:['人工智能','AI','机器人','智能'],code:'sh515070',name:'AI主题ETF'},
+ {kw:['芯片'],code:'sz159995',name:'芯片ETF'},
+ {kw:['半导体'],code:'sh512480',name:'半导体ETF'},
+ {kw:['科技','科创','电子','信息','软件','计算机','通信','5G','TMT'],code:'sz399006',name:'创业板指'}
+];
+
+/* --- 个股名称 → 行业代表指数（路线②用，未命中用沪深300） --- */
+const STOCK_SECTOR_MAP=[
+ {kw:['酒','食品','乳','奶','伊利','农业','牧原','温氏','海大','双汇','海天','涪陵','安井','金龙鱼','养殖','猪','饲料'],code:'sh000932',name:'消费'},
+ {kw:['宁德','比亚迪','亿纬','国轩','欣旺达','电池','锂','赣锋','天齐','盐湖','汇川','阳光电源','固德威','锦浪','德业','上能','盛弘','英维克','车','赛力斯','理想','长城','长安','吉利','广汽','上汽'],code:'sz399976',name:'新能源车'},
+ {kw:['隆基','通威','晶澳','天合','中环','光伏','太阳能','固德威','迈为','捷佳','帝尔','奥特维','高测','连城'],code:'sh515790',name:'光伏'},
+ {kw:['中航','航发','沈飞','洪都','军工','国防','重机','直升机','光电','彩虹','内蒙一机','菲利华','西部超导','钢研','抚顺'],code:'sz399967',name:'军工'},
+ {kw:['药','医疗','生物','迈瑞','爱尔','通策','智飞','万泰','药明','泰格','联影','恒瑞','百济','信达','片仔癀','同仁堂','白药','医院','眼科','牙'],code:'sz399989',name:'医药'},
+ {kw:['银行','工商','建设','农业银行','中国银行','交通银行','招行','邮储','兴业','浦发','民生','光大','平安银行','宁波银行','江苏银行','成都银行','杭州银行'],code:'sz399986',name:'银行'},
+ {kw:['证券','券商','中信','华泰','国泰','海通','招商证券','广发证券','申万','东方财富','湘财','中金','银河'],code:'sz399975',name:'券商'},
+ {kw:['半导体','芯片','中芯','华虹','北方华创','中微','韦尔','兆易','澜起','紫光国微','圣邦','卓胜微','寒武纪','海光','龙芯','长电','通富','甬矽','沪硅','立昂微','安集','鼎龙','南大光电','雅克','华特','正帆','至纯','盛美','精测','长川','芯源微','拓荆','神工','存储','江波龙','佰维','德明利','兆芯','紫光展锐'],code:'sh512480',name:'半导体'},
+ {kw:['PCB','沪电','深南','生益','景旺','东山精密','鹏鼎','胜宏','兴森','崇达','电路','覆铜板'],code:'sz159995',name:'电子/PCB'},
+ {kw:['光模块','中际旭创','新易盛','天孚','光迅','华工','剑桥','联特','铭普','光通信','光器件','CPO'],code:'sz159995',name:'光模块/电子'},
+ {kw:['AI','算力','服务器','浪潮','曙光','紫光股份','神州数码','海康','大华','讯飞','商汤','云从','格灵','数据','软件','金山','用友','恒生电子','同花顺','宝信','中控'],code:'sh515070',name:'AI/算力'},
+ {kw:['立讯','歌尔','蓝思','京东方','TCL','天马','领益','电连','精密','结构件','消费电子'],code:'sz159995',name:'消费电子'},
+ {kw:['紫金','洛钼','稀土','华友','钴','铜','铝','钨','钼','神华','陕煤','煤炭','石油','石化','海油','钢','宝钢','有色','黄金','银'],code:'sh000819',name:'资源/有色'},
+ {kw:['腾讯','阿里','美团','京东','拼多多','快手','百度','网易','中概','互联'],code:'hkHSTECH',name:'恒生科技'}
+];
+
+/* --- 基金分类 --- */
+function classifyFund(name){
+  const n=String(name||'');
+  if(/债|货币|理财|同业存单/.test(n))return 'bond';
+  if(/纳斯达克|纳指|标普|美国|美股/.test(n))return 'us';
+  if(/恒生|香港|港股/.test(n))return 'hk';
+  if(/联接|指数|ETF/.test(n))return 'index';
+  return 'active';
+}
+
+/* --- 基金名称 → 跟踪指数 --- */
+function matchTrackIndex(name){
+  const n=String(name||'');
+  for(const r of TRACK_INDEX_RULES){
+    if(r.kw.some(k=>n.includes(k)))return r;
+  }
+  return null;
+}
+
+/* --- 个股名称 → 行业指数 --- */
+function matchStockSector(stockName){
+  const n=String(stockName||'');
+  for(const r of STOCK_SECTOR_MAP){
+    if(r.kw.some(k=>n.includes(k)))return r;
+  }
+  return null;
+}
+
+/* ============================================================
+ * 腾讯实时行情（qt.gtimg.cn · 浏览器可直连 · GBK 编码）
+ * 批量拉取 + 25秒内存缓存 + 字段自洽校验（差异>0.2%时用价推涨跌）
+ * ============================================================ */
+const qtCache={_ts:0,_data:{}};
+async function fetchTencentPrices(tcodes){
+  const now=Date.now();
+  const need=tcodes.filter(tc=>tc&&!/[^a-z0-9]/i.test(tc)).filter(tc=>{
+    const c=qtCache._data[tc];
+    return !c||now-c.ts>25000;
+  });
+  if(!need.length)return;
+  try{
+    const r=await fetch('https://qt.gtimg.cn/q='+need.join(','),{cache:'no-store'});
+    if(!r.ok)return;
+    const text=new TextDecoder('gbk').decode(await r.arrayBuffer());
+    const re=/v_([a-z]{2}[\w]{2,6})="([^"]*)"/g;
+    let m;
+    while((m=re.exec(text))!==null){
+      const key=m[1];
+      const f=m[2].split('~');
+      const price=num(f[3]),prevClose=num(f[4]);
+      let pct=num(f[32]);
+      if(price!=null&&prevClose>0){
+        const implied=(price/prevClose-1)*100;
+        // 自洽校验：腾讯价/昨收推算 与 涨跌幅字段 差异>0.2%时以价格推算为准
+        if(pct==null||Math.abs(implied-pct)>0.2)pct=+implied.toFixed(2);
+        qtCache._data[key]={price,prevClose,pct,name:f[1],ts:now};
+      }
+    }
+    qtCache._ts=now;
+  }catch(e){}
+}
+function qtPct(tc){
+  const c=qtCache._data[tc];
+  return (c&&c.pct!=null)?c.pct:null;
+}
+
+/* ============================================================
+ * 基金持仓获取（前十大重仓股）
+ * localStorage 日级缓存 + /api/funds?type=holdings 代理（天天基金F10）
+ * ============================================================ */
+function bjDateKey(){
+  const d=new Date(Date.now()+8*3600*1000);
+  return d.toISOString().slice(0,10);
+}
+async function fetchFundHoldings(code){
+  const cacheKey='fundHoldings_'+code;
+  // 1) 内存缓存（state.funds）
+  const f=state.funds[code];
+  if(f&&f.holdings&&f.holdings.date===bjDateKey())return f.holdings;
+  // 2) localStorage（当日有效）
+  try{
+    const raw=JSON.parse(localStorage.getItem(cacheKey)||'null');
+    if(raw&&raw.date===bjDateKey()&&Array.isArray(raw.top10)&&raw.top10.length){
+      return raw;
+    }
+  }catch(e){}
+  // 3) 代理拉取（天天基金F10 季报持仓）
+  try{
+    const j=await proxyFetchJSON('funds?type=holdings&code='+code,15000);
+    if(j&&Array.isArray(j.top10)&&j.top10.length){
+      const d={date:bjDateKey(),top10:j.top10,stockRatio:j.stockRatio||0};
+      // 判断是否联接/ETF持仓（top10 是基金代码而非股票）
+      // 判断是否联接/ETF持仓（top10 是 ETF/LOF 基金代码而非股票：51/50/56/58沪 15/16/18深）
+      d.isFundHoldings=/^(51|50|56|58|15|16|18)/.test(String(d.top10[0].code||''));
+      try{localStorage.setItem(cacheKey,JSON.stringify(d))}catch(e){}
+      return d;
+    }
+  }catch(e){}
+  return null;
+}
+
+/* ============================================================
+ * 三路估值计算（价格已在 qtCache 中）
+ * 返回 {pct, spread, warn, detail[], cls, track}
+ * ============================================================ */
+function calcLiveRoutes(code,name){
+  const f=state.funds[code]||{};
+  const hold=f.holdings;
+  const bench=qtPct('sh000300');
+  const cls=classifyFund(name);
+  if(cls==='bond')return null;               // 债基不做盘中估值
+  const track=matchTrackIndex(name);
+  const detail=[];
+  const routeVals=[];
+
+  // 指数/联接基金：直接用跟踪指数（仓位≈95%×指数）
+  if(cls==='index'&&track){
+    const p=qtPct(track.code);
+    if(p!=null){
+      const v=+(p*0.95).toFixed(2);   // 联接基金约95%仓位
+      detail.push('跟踪'+track.name+' '+fmtPct(p)+'，按95%仓位折算');
+      return {pct:v,spread:0,warn:false,detail,cls,track:track.code};
+    }
+    return null;
+  }
+
+  // 路线① 重仓股穿透
+  if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings){
+    let acc=0,w=0;
+    const hits=[];
+    for(const s of hold.top10){
+      const tc=toTencentCode(s.code);
+      const pc=tc!=null?qtPct(tc):null;
+      if(pc!=null){
+        acc+=pc*s.ratio;
+        w+=s.ratio;
+        if(hits.length<4)hits.push(s.name+' '+fmtPct(pc));
+      }
+    }
+    if(w>=15&&bench!=null){
+      const v=(acc+(90-w)*bench)/100;
+      routeVals.push(v);
+      detail.push('①重仓股穿透 '+fmtPct(v)+'（前十大覆盖'+w.toFixed(0)+'%：'+hits.join('，')+'）');
+    }
+  }
+
+  // 路线② 行业指数拟合
+  if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings&&bench!=null){
+    let acc=0,w=0;
+    for(const s of hold.top10){
+      const sec=matchStockSector(s.name);
+      if(sec){
+        const p=qtPct(sec.code);
+        if(p!=null){acc+=p*s.ratio;w+=s.ratio}
+      }
+    }
+    if(w>=15){
+      const v=(acc+(90-w)*bench)/100;
+      routeVals.push(v);
+      detail.push('②行业拟合 '+fmtPct(v)+'（重仓股按行业归类加权）');
+    }
+  }
+
+  // 路线③ 主题指数拟合
+  if(track){
+    const p=qtPct(track.code);
+    if(p!=null){
+      routeVals.push(p);
+      detail.push('③主题拟合 '+fmtPct(p)+'（'+track.name+'）');
+    }
+  }else if((state.sectors||[]).some(s=>s.available&&s.change!=null)){
+    const sec=SECTOR_RULES.map((r,i)=>({r,s:state.sectors[i]}))
+      .find(x=>x.s&&x.s.available&&x.s.change!=null&&x.r.keys.some(k=>String(name||'').includes(k)));
+    if(sec){
+      routeVals.push(sec.s.change);
+      detail.push('③板块拟合 '+fmtPct(sec.s.change)+'（'+sec.r.name+'板块）');
+    }
+  }
+
+  if(!routeVals.length)return null;
+  // 取中位数
+  const arr=[...routeVals].sort((a,b)=>a-b);
+  const mid=arr.length===1?arr[0]:(arr.length===2?(arr[0]+arr[1])/2:arr[1]);
+  const spread=arr[arr.length-1]-arr[0];
+  return {
+    pct:+mid.toFixed(2),
+    spread:+spread.toFixed(2),
+    warn:arr.length>=2&&spread>0.8,   // 0.8% 分歧红线
+    detail,cls,
+    track:track?track.code:null
+  };
+}
+
+/* --- 单只基金实时估值完整入口（拉持仓+拉价格+算三路） --- */
+async function getFundLiveEstimate(code,name,prevNav){
+  try{
+    if(!isTradeTime())return null;
+    const hold=await fetchFundHoldings(code);
+    if(!state.funds[code])state.funds[code]={};
+    if(hold)state.funds[code].holdings=hold;
+    const track=matchTrackIndex(name);
+    if(track)state.funds[code].trackIdx=track.code;
+    // 收集需要的行情代码
+    const tcs=new Set(['sh000300']);
+    if(track)tcs.add(track.code);
+    if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings){
+      for(const s of hold.top10){
+        const tc=toTencentCode(s.code);
+        if(tc)tcs.add(tc);
+        const sec=matchStockSector(s.name);
+        if(sec)tcs.add(sec.code);
+      }
+    }
+    await fetchTencentPrices([...tcs]);
+    return calcLiveRoutes(code,name);
+  }catch(e){return null}
+}
+
+/* --- 30秒轻量刷新：只重拉价格 + 重算，不重新拉持仓 --- */
+async function refreshPortfolioPrices(){
+  if(!isTradeTime()||!state.portfolio.length)return;
+  try{
+    const tcs=new Set(['sh000300']);
+    for(const p of state.portfolio){
+      const f=state.funds[p.code];
+      if(!f)continue;
+      if(f.trackIdx)tcs.add(f.trackIdx);
+      if(f.holdings&&f.holdings.top10&&f.holdings.top10.length&&!f.holdings.isFundHoldings){
+        for(const s of f.holdings.top10){
+          const tc=toTencentCode(s.code);
+          if(tc)tcs.add(tc);
+          const sec=matchStockSector(s.name);
+          if(sec)tcs.add(sec.code);
+        }
+      }
+    }
+    await fetchTencentPrices([...tcs]);
+    let changed=false;
+    for(const p of state.portfolio){
+      const f=state.funds[p.code];
+      if(!f||!f.nav)continue;
+      const live=calcLiveRoutes(p.code,f.name||p.name||p.code);
+      if(live&&live.pct!=null){
+        f.live=live;
+        f.pct=live.pct;
+        f.estimate=+(f.nav*(1+live.pct/100)).toFixed(4);
+        f.time=timeStr()+' 实时';
+        changed=true;
+      }
+    }
+    if(changed){
+      state._hadLive=true;
+      renderPortfolio();
+    }
+  }catch(e){}
+}
+
 /* ===== 格式化工具 ===== */
 const fmtPct=v=>Number.isFinite(v)?`${v>=0?'+':''}${v.toFixed(2)}%`:'—';
 const fmtPctAbs=v=>Number.isFinite(v)?`${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%`:'—';
@@ -1374,10 +1709,10 @@ async function refreshFunds(){
     const est=num(v.GSZ??v.gsz);
     const pct=num(v.GSZZL??v.gszzl);
     const price=est??nav;
+    const fundName=v.SHORTNAME||v.name||h.name||p.name||'基金 '+p.code;
     state.funds[p.code]={
       code:p.code,
-      name:v.SHORTNAME||v.name||h.name||p.name||'基金 '+p.code,
-      nav,estimate:est,pct,
+      name:fundName,nav,estimate:est,pct,
       time:v.GZTIME||v.gztime||'',
       navDate:v.PDATE||'',
       history:h.closes,
@@ -1387,6 +1722,20 @@ async function refreshFunds(){
         h.closes.length?'东方财富历史净值':''
       ].filter(Boolean)
     };
+    /* 盘中：三路反推实时估值（腾讯行情+重仓股穿透）覆盖东财估值 */
+    if(isTradeTime()){
+      const live=await getFundLiveEstimate(p.code,fundName,nav);
+      if(live&&live.pct!=null){
+        state.funds[p.code].live=live;
+        state.funds[p.code].pct=live.pct;
+        state.funds[p.code].estimate=+(nav*(1+live.pct/100)).toFixed(4);
+        state.funds[p.code].time=timeStr()+' 实时';
+        state.funds[p.code].sources.push('腾讯行情·三路反推');
+        state._hadLive=true;
+      }
+    }else{
+      state.funds[p.code].live=null;   /* 收盘后清除，回到官方净值 */
+    }
   }
   renderPortfolio();
   renderBand();
@@ -1579,18 +1928,30 @@ function renderPortfolio(){
         sigs.push(`<span class="fc-sig ${m.bandTone}">${m.band}</span>`);
         sigs.push(`<span class="fc-sig ${m.trendScore>=60?'strong':(m.trendScore<40?'weak':'neutral')}">${m.trend}</span>`);
       }
-      const estLabel=d.estimate!=null?'盘中估值':(d.nav!=null?'官方净值':'暂无');
+      const estLabel=d.live?'盘中实时估值':(d.estimate!=null?'盘中估值':(d.nav!=null?'官方净值':'暂无'));
+      /* 三路估值明细（盘中） */
+      const liveHtml=d.live?`
+        <div class="fc-live ${d.live.warn?'fc-live-warn':''}">
+          <div class="fc-live-head">
+            <span class="fc-live-tag">⚡ 三路实时反推</span>
+            <span class="fc-live-time">${safe(d.time||'')}</span>
+            ${d.live.warn?`<span class="fc-warn-tag">⚠ 分歧${d.live.spread.toFixed(2)}% · 可能已调仓</span>`:''}
+          </div>
+          ${d.live.detail.length?`<div class="fc-live-detail">${d.live.detail.map(t=>safe(t)).join('<br>')}</div>`:''}
+          <div class="fc-live-note">${d.live.warn?'三路结果差太多，基金可能换了持仓，估值仅供参考':(d.live.spread<=0.3?'三路结果基本一致，估值可信度高':'三路结果略有差异，属正常范围')}</div>
+        </div>`:'';
       return `<div class="fund-card fade-in">
         <div class="fc-head">
           <div>
             <div class="fc-name">${safe(d.name||p.name||p.code)}<span class="fc-code">${p.code}</span></div>
-            <div class="fc-type">${estLabel}${d.time?' · '+safe(d.time):''}</div>
+            <div class="fc-type ${d.live?'fc-type-live':''}">${estLabel}${d.time?' · '+safe(d.time):''}</div>
           </div>
           <div>
             <div class="fc-pct ${d.pct==null?'flat':(d.pct>=0?'up':'down')}">${d.pct==null?'—':fmtPct(d.pct)}</div>
             <div class="fc-est">${price!=null?'估值 '+price.toFixed(4):'暂无估值'}</div>
           </div>
         </div>
+        ${liveHtml}
         <div class="fc-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="gi">持仓金额<b>${Number.isFinite(price)?'¥'+(price*p.shares).toFixed(0):'—'}</b></div>
           <div class="gi">持有收益<b class="${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</b></div>
@@ -2582,6 +2943,19 @@ refreshAll();
 // 自动刷新（2分钟）
 setInterval(()=>{if(!document.hidden)refreshAll()},120000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshAll()});
+
+// 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
+setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
+
+// 收盘自动切换：盘中用过实时估值 → 收盘/停止交易后自动刷回官方净值
+setInterval(()=>{
+  if(state._hadLive&&!isTradeTime()){
+    state._hadLive=false;
+    refreshFunds();
+  }
+},60000);
+// 页面从后台切回前台时，若在交易时段立即刷一次实时估值
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()});
 
 // 注册 Service Worker（PWA 离线支持）
 if('serviceWorker' in navigator){
