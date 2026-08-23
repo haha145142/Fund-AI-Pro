@@ -113,26 +113,26 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fc-combo b{color:var(--text)}
 
 /* ===== 持仓概览（支付宝/天天基金风格） ===== */
-.port-overview{padding:12px 0 6px}
-.port-overview-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+.port-overview{padding:12px 0 6px;position:relative;z-index:1}
+.port-overview-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;position:relative;z-index:2;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.85)}
 .port-overview-pnl{display:flex;flex-direction:column}
-.port-pnl-label{font-size:11px;color:var(--text-sec);margin-bottom:2px}
+.port-pnl-label{font-size:12px;color:#334155;margin-bottom:2px;font-weight:600}
 .port-pnl-amount{font-size:28px;font-weight:800;letter-spacing:-.5px}
 .port-pnl-amount.up{color:var(--up)}
 .port-pnl-amount.down{color:var(--down)}
 .port-pnl-pct{font-size:14px;font-weight:600;margin-top:2px}
 .port-pnl-pct.up{color:var(--up)}
 .port-pnl-pct.down{color:var(--down)}
-.port-overview-meta{font-size:12px;color:var(--text-sec);padding-bottom:4px}
-.port-overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.port-overview-meta{font-size:13px;color:#334155;padding-bottom:4px;font-weight:500}
+.port-overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;position:relative;z-index:2}
 .port-metric{background:rgba(0,0,0,.025);border-radius:12px;padding:10px 8px;text-align:center}
-.port-metric-label{font-size:10px;color:var(--text-sec);margin-bottom:4px}
-.port-metric-value{font-size:16px;font-weight:700}
+.port-metric-label{font-size:11px;color:#334155;margin-bottom:4px;font-weight:500}
+.port-metric-value{font-size:16px;font-weight:700;color:#0f172a}
 /* 时间维度切换 */
-.port-time-tabs{display:flex;gap:4px;margin-bottom:8px}
-.port-time-tab{flex:1;padding:7px 0;border:none;border-radius:10px;background:rgba(0,0,0,.03);font-size:12px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .15s}
+.port-time-tabs{display:flex;gap:4px;margin-bottom:8px;position:relative;z-index:2}
+.port-time-tab{flex:1;padding:7px 0;border:none;border-radius:10px;background:rgba(255,255,255,.6);font-size:11px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .15s}
 .port-time-tab.active{background:linear-gradient(135deg,#0a84ff,#0064d4);color:#fff;box-shadow:0 2px 8px rgba(10,132,255,.25)}
-.port-time-gain{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:linear-gradient(135deg,rgba(245,248,255,.9),rgba(237,242,255,.8));margin-bottom:6px}
+.port-time-gain{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.75);margin-bottom:6px;position:relative;z-index:2}
 .port-tg-label{font-size:12px;color:var(--text-sec);font-weight:600}
 .port-tg-value{font-size:20px;font-weight:800}
 .port-tg-value.up{color:var(--up)}
@@ -365,6 +365,8 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-ai{padding:8px 11px;border-radius:12px;background:linear-gradient(145deg,rgba(246,251,255,.98),rgba(237,246,255,.92));border-left:3px solid #5aa9f0;font-size:12px;line-height:1.7;color:#1e3a5f;font-weight:500;box-shadow:0 2px 8px rgba(10,132,255,.06)}
 .news-ai b{color:#0f172a}
 .news-ai .ai-tag{color:#0a84ff;font-weight:800;margin-right:5px;font-size:13px}
+.news-ai .ai-line{font-size:13px;font-weight:600;color:#1e3a5f;line-height:1.6;margin-bottom:3px}
+.news-ai .ai-detail-line{font-size:11px;color:#475569;line-height:1.65;padding:2px 0 2px 0;margin-top:2px}
 .news-feature{position:relative;padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(248,251,255,.95),rgba(237,246,255,.85));border:1px solid rgba(135,190,235,.4);margin-bottom:10px;box-shadow:0 12px 36px rgba(10,100,200,.08),inset 0 1.5px 0 rgba(255,255,255,.98);overflow:hidden}
 .news-feature::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);pointer-events:none;border-radius:18px 18px 0 0}
 .news-feature::after{content:'';position:absolute;top:6px;left:16px;right:50%;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.2));filter:blur(6px);pointer-events:none;border-radius:999px}
@@ -816,14 +818,14 @@ table td b{font-weight:700}
    </div>
    <!-- 时间维度收益切换 -->
    <div class="port-time-tabs">
-    <button class="port-time-tab active" data-period="today">今日</button>
-    <button class="port-time-tab" data-period="week">本周</button>
-    <button class="port-time-tab" data-period="month">本月</button>
-    <button class="port-time-tab" data-period="year">今年</button>
-    <button class="port-time-tab" data-period="total">以来</button>
+    <button class="port-time-tab active" data-period="3d">3天</button>
+    <button class="port-time-tab" data-period="1w">1周</button>
+    <button class="port-time-tab" data-period="15d">半月</button>
+    <button class="port-time-tab" data-period="3m">3月</button>
+    <button class="port-time-tab" data-period="6m">半年</button>
    </div>
    <div class="port-time-gain" id="portTimeGain">
-    <span class="port-tg-label">今日收益</span>
+    <span class="port-tg-label">最近3天收益</span>
     <span class="port-tg-value" id="portTodayGain">—</span>
    </div>
   </div>
@@ -1840,15 +1842,22 @@ function scriptLoad(src,timeout=12000){
 const USE_PROXY=(()=>{
   try{
     const h=location.hostname;
-    return h.includes('pages.dev')||h.includes('localhost')||h.includes('127.0.0.1')||h.includes('workers.dev');
+    // GitHub Pages / Cloudflare Pages / Workers / localhost 都走代理
+    return h.includes('pages.dev')||h.includes('localhost')||h.includes('127.0.0.1')||h.includes('workers.dev')||h.includes('github.io')||h.includes('vercel.app')||h.includes('netlify.app');
   }catch(e){return false}
 })();
 
 /* 通用代理请求 */
 async function proxyFetchJSON(apiPath,timeout=12000){
-  const r=await fetch('/api/'+apiPath,{cache:'no-store',headers:{'Accept':'application/json'}});
-  if(!r.ok)throw new Error('proxy '+r.status);
-  return await r.json();
+  const ctrl=new AbortController();
+  const tid=setTimeout(()=>ctrl.abort(),timeout);
+  try{
+    const r=await fetch('/api/'+apiPath,{cache:'no-store',headers:{'Accept':'application/json'},signal:ctrl.signal});
+    if(!r.ok)throw new Error('proxy '+r.status);
+    return await r.json();
+  }finally{
+    clearTimeout(tid);
+  }
 }
 
 /* JSONP 通用解析 */
@@ -2232,10 +2241,23 @@ function decodeEntities(text){
 }
 
 // 清理HTML标签 + 实体解码，把富文本变成干净纯文本
-function cleanHTML(text){
-  var s=decodeEntities(text);
+function cleanHTML(s){
+  if(s==null) return '';
+  if(typeof s==='object'){
+    // 尝试提取对象里的文本字段，避免 JSON.stringify 产生大括号乱码
+    if(s.title) s=s.title;
+    else if(s.content) s=s.content;
+    else if(s.text) s=s.text;
+    else s=JSON.stringify(s);
+  }
+  s=String(s);
+  s=s.replace(/\[object Object\]/g,'');
+  s=s.replace(/\\u[0-9a-fA-F]{4}/g,''); // 清理转义unicode
+  s=s.replace(/\\n|\\r|\\t/g,' '); // 清理转义换行
+  s=decodeEntities(s);
   s=s.replace(/<[^>]*>/g,''); // 移除所有 <p> <div> <br> 等标签
   s=s.replace(/&[a-z#0-9]+;/gi,''); // 兜底清理残留实体
+  s=s.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g,''); // 清理控制字符
   s=s.replace(/\s+/g,' ').trim(); // 合并连续空白
   return s;
 }
@@ -2398,8 +2420,8 @@ async function fetchCLSNews(){
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','财联社');
         return{
-          title:decodeEntities(x.title||''),
-          summary:decodeEntities(x.summary||x.content||''),
+          title:cleanHTML(x.title||''),
+          summary:cleanHTML(x.summary||x.content||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'财联社',
@@ -2427,8 +2449,8 @@ async function fetchCLSNews(){
           return list.filter(x=>x.title||x.content).map(x=>{
             const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
             return{
-              title:decodeEntities(x.title||(x.content||'').slice(0,40)),
-              summary:decodeEntities(x.brief||x.content||x.description||''),
+              title:cleanHTML(x.title||(x.content||'').slice(0,40)),
+              summary:cleanHTML(x.brief||x.content||x.description||''),
               time:formatNewsTime(ts),
               timestamp:ts,
               source:'财联社',
@@ -2782,29 +2804,34 @@ function checkMarketResonance(newsItem){
 async function refreshNewsOnly(force){
   if(state._newsLoading) return;
   const now=Date.now();
-  // 非强制刷新且距离上次不足15分钟则跳过
-  if(!force&&state.newsLastFetch&&now-state.newsLastFetch<900000){
+  // 非强制刷新且距离上次不足5分钟则跳过（从15分钟缩短到5分钟）
+  if(!force&&state.newsLastFetch&&now-state.newsLastFetch<300000){
     return;
   }
   state._newsLoading=true;
   const btn=$('newsRefreshBtn');
   if(btn) btn.classList.add('spin');
 
+  try{
   // 优先来源：财联社、金十数据、华尔街见闻、同花顺iFinD、第一财经
-  // 全部并行抓取，互不影响
+  // 全部并行抓取，互不影响（每个加8秒超时保护）
+  const withTimeout=(p,ms=8000)=>Promise.race([
+    p,
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))
+  ]);
   const results=await Promise.allSettled([
     // Tier 1: 快讯（优先级：财联社 > 金十 > 华尔街见闻 > 同花顺 > 第一财经）
-    fetchCLSNews(),
-    fetchJin10News(),
-    fetchWSCN(),
-    fetchTHS(),
-    fetchYicaiNews(),
-    fetchOfficialNews(),
+    withTimeout(fetchCLSNews()),
+    withTimeout(fetchJin10News()),
+    withTimeout(fetchWSCN()),
+    withTimeout(fetchTHS()),
+    withTimeout(fetchYicaiNews()),
+    withTimeout(fetchOfficialNews()),
     // Tier 2: 深度解读（财联社 + 第一财经的深度文章）
     // 已在 Tier 1 中获取，这里直接复用
     // Tier 3: 市场情绪
-    fetchGubaSentiment(),
-    fetchTHSForumSentiment()
+    withTimeout(fetchGubaSentiment()),
+    withTimeout(fetchTHSForumSentiment())
   ]);
   // Tier 1 results
   const cls=results[0].status==='fulfilled'?results[0].value:[];
@@ -2834,8 +2861,6 @@ async function refreshNewsOnly(force){
 
   if(all.length===0){
     // 全部失败：保留上一批数据，显示错误提示
-    state._newsLoading=false;
-    if(btn) btn.classList.remove('spin');
     const errStrip=$('newsErrorStrip');
     const errText=$('newsErrorText');
     if(errStrip) errStrip.style.display='flex';
@@ -2886,12 +2911,22 @@ async function refreshNewsOnly(force){
   state.source.jin10=jin10.length?'金十数据':'不可用';
   state.source.yicai=yicai.length?'第一财经':'不可用';
 
-  state._newsLoading=false;
-  if(btn) btn.classList.remove('spin');
   renderNews();
   updateNewsEvidence();
   // AI解读单独异步处理，不阻塞新闻显示
   explainNewsBatch().catch(()=>{});
+
+  }catch(e){
+    console.error('refreshNews error:',e);
+    const errStrip=$('newsErrorStrip');
+    const errText=$('newsErrorText');
+    if(errStrip) errStrip.style.display='flex';
+    if(errText) errText.textContent='刷新出错：'+(e.message||'未知错误')+'，显示最近一次成功数据';
+    updateNewsEvidence();
+  }finally{
+    state._newsLoading=false;
+    if(btn) btn.classList.remove('spin');
+  }
 }
 
 function updateNewsEvidence(){
@@ -3265,7 +3300,7 @@ function renderPortfolio(){
       return;
     }
     let totalValue=0,totalGain=0,totalCost=0,totalTodayGain=0,totalYesterdayGain=0;
-    let totalWeekGain=0,totalMonthGain=0,totalYearGain=0,up=0,down=0;
+    let total3dGain=0,total1wGain=0,total15dGain=0,total3mGain=0,total6mGain=0,up=0,down=0;
     // 预计算：总资产 + 盈亏对比标签（避免持仓占比/对比标签依赖尚未完成的循环累加）
     let _preVal=0,_preTG=0;
     const fundGains=[];
@@ -3302,18 +3337,22 @@ function renderPortfolio(){
       const todayPrice=price??todayNav;
       const todayGain=(Number.isFinite(todayPrice)&&Number.isFinite(yestNav))?(todayPrice-yestNav)*p.shares:null;
       const yesterdayGain=(Number.isFinite(yestNav)&&Number.isFinite(prevNav))?(yestNav-prevNav)*p.shares:null;
-      // 计算各时间维度收益
-      const weekGain=(Number.isFinite(todayPrice)&&hist.length>=7)?(todayPrice-hist[hist.length-7])*p.shares:null;
-      const monthGain=(Number.isFinite(todayPrice)&&hist.length>=30)?(todayPrice-hist[hist.length-30])*p.shares:null;
-      const yearGain=(Number.isFinite(todayPrice)&&hist.length>=250)?(todayPrice-hist[hist.length-250])*p.shares:null;
+      // 计算各时间维度收益（交易日：3天/5天/10天/60天/120天）
+      const gain3d=(Number.isFinite(todayPrice)&&hist.length>=3)?(todayPrice-hist[hist.length-3])*p.shares:null;
+      const gain1w=(Number.isFinite(todayPrice)&&hist.length>=5)?(todayPrice-hist[hist.length-5])*p.shares:null;
+      const gain15d=(Number.isFinite(todayPrice)&&hist.length>=10)?(todayPrice-hist[hist.length-10])*p.shares:null;
+      const gain3m=(Number.isFinite(todayPrice)&&hist.length>=60)?(todayPrice-hist[hist.length-60])*p.shares:null;
+      const gain6m=(Number.isFinite(todayPrice)&&hist.length>=120)?(todayPrice-hist[hist.length-120])*p.shares:null;
       if(Number.isFinite(price))totalValue+=price*p.shares;
       totalCost+=cost;
       if(Number.isFinite(gain))totalGain+=gain;
       if(Number.isFinite(todayGain))totalTodayGain+=todayGain;
       if(Number.isFinite(yesterdayGain))totalYesterdayGain+=yesterdayGain;
-      if(Number.isFinite(weekGain))totalWeekGain+=weekGain;
-      if(Number.isFinite(monthGain))totalMonthGain+=monthGain;
-      if(Number.isFinite(yearGain))totalYearGain+=yearGain;
+      if(Number.isFinite(gain3d))total3dGain+=gain3d;
+      if(Number.isFinite(gain1w))total1wGain+=gain1w;
+      if(Number.isFinite(gain15d))total15dGain+=gain15d;
+      if(Number.isFinite(gain3m))total3mGain+=gain3m;
+      if(Number.isFinite(gain6m))total6mGain+=gain6m;
       if((d.pct??0)>=0)up++;else down++;
       const m=d.metrics;
       const sigs=[];
@@ -3379,11 +3418,11 @@ function renderPortfolio(){
           <div class="fc-holding-cost">持仓成本 ¥${holdCost.toFixed(0)} · 持有收益率 <b class="${holdReturnRate==null?'':(holdReturnRate>=0?'up':'down')}">${holdReturnRate==null?'—':(holdReturnRate>=0?'+':'')+holdReturnRate.toFixed(2)+'%'}</b></div>
         </div>
         <div class="fc-time-gains" data-fund-idx="${i}">
-          <div class="fc-tg-item"><span class="fc-tg-label">今日</span><span class="fc-tg-val ${todayGain==null?'':(todayGain>=0?'up':'down')}">${todayGain==null?'—':(todayGain>=0?'+':'')+todayGain.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">本周</span><span class="fc-tg-val ${weekGain==null?'':(weekGain>=0?'up':'down')}">${weekGain==null?'—':(weekGain>=0?'+':'')+weekGain.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">本月</span><span class="fc-tg-val ${monthGain==null?'':(monthGain>=0?'up':'down')}">${monthGain==null?'—':(monthGain>=0?'+':'')+monthGain.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">今年</span><span class="fc-tg-val ${yearGain==null?'':(yearGain>=0?'up':'down')}">${yearGain==null?'—':(yearGain>=0?'+':'')+yearGain.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">以来</span><span class="fc-tg-val ${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">3天</span><span class="fc-tg-val ${gain3d==null?'':(gain3d>=0?'up':'down')}">${gain3d==null?'—':(gain3d>=0?'+':'')+gain3d.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">1周</span><span class="fc-tg-val ${gain1w==null?'':(gain1w>=0?'up':'down')}">${gain1w==null?'—':(gain1w>=0?'+':'')+gain1w.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">半月</span><span class="fc-tg-val ${gain15d==null?'':(gain15d>=0?'up':'down')}">${gain15d==null?'—':(gain15d>=0?'+':'')+gain15d.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">3月</span><span class="fc-tg-val ${gain3m==null?'':(gain3m>=0?'up':'down')}">${gain3m==null?'—':(gain3m>=0?'+':'')+gain3m.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">半年</span><span class="fc-tg-val ${gain6m==null?'':(gain6m>=0?'up':'down')}">${gain6m==null?'—':(gain6m>=0?'+':'')+gain6m.toFixed(2)}</span></div>
         </div>
         ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
         ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
@@ -3491,8 +3530,8 @@ function renderPortfolio(){
     if($('portTotalAssets'))$('portTotalAssets').textContent='¥'+totalAssets.toFixed(0);
     if($('portValue'))$('portValue').textContent='¥'+totalValue.toFixed(0);
     if($('portTodayGain')){
-      $('portTodayGain').textContent=totalTodayGain==null?'—':(totalTodayGain>=0?'+¥':'-¥')+Math.abs(totalTodayGain).toFixed(2);
-      $('portTodayGain').className='port-tg-value '+(totalTodayGain>=0?'up':'down');
+      $('portTodayGain').textContent=total3dGain==null?'—':(total3dGain>=0?'+¥':'-¥')+Math.abs(total3dGain).toFixed(2);
+      $('portTodayGain').className='port-tg-value '+(total3dGain==null?'':(total3dGain>=0?'up':'down'));
     }
     if($('portCount'))$('portCount').textContent=state.portfolio.length+'只';
     // 第二组：基金页（保持原样式）
@@ -3510,12 +3549,12 @@ function renderPortfolio(){
     if($('portCount2'))$('portCount2').textContent=state.portfolio.length+'只';
     // 时间维度切换（仅首页有切换按钮）
     if(sumEl.querySelector('.port-time-tab')){
-      const labels={today:'今日收益',week:'本周收益',month:'本月收益',year:'今年收益',total:'投资以来'};
-      const values={today:totalTodayGain,week:totalWeekGain,month:totalMonthGain,year:totalYearGain,total:totalGain};
+      const labels={today:'今日收益','3d':'最近3天收益','1w':'最近1周收益','15d':'最近半月收益','3m':'最近3月收益','6m':'最近半年收益'};
+      const values={today:totalTodayGain,'3d':total3dGain,'1w':total1wGain,'15d':total15dGain,'3m':total3mGain,'6m':total6mGain};
       const applyPeriod=(period)=>{
         const labelEl=document.querySelector('.port-tg-label');
         const gainEl=document.querySelector('#portTodayGain');
-        if(labelEl)labelEl.textContent=labels[period];
+        if(labelEl)labelEl.textContent=labels[period]||'收益';
         if(gainEl){
           const v=values[period];
           gainEl.textContent=v==null?'—':(v>=0?'+¥':'-¥')+Math.abs(v).toFixed(2);
@@ -3523,7 +3562,7 @@ function renderPortfolio(){
         }
         document.querySelectorAll('.fc-time-gains').forEach(el=>{
           el.querySelectorAll('.fc-tg-item').forEach((item,idx)=>{
-            item.style.display=['today','week','month','year','total'].indexOf(period)===idx?'flex':'none';
+            item.style.display=['3d','1w','15d','3m','6m'].indexOf(period)===idx?'flex':'none';
           });
         });
       };
@@ -3534,6 +3573,8 @@ function renderPortfolio(){
           applyPeriod(tab.dataset.period);
         };
       });
+      // 初始化：默认显示"3天"维度
+      applyPeriod('3d');
     }
   };
   renderList($('portfolioList'),$('portSummary'));
@@ -4229,85 +4270,191 @@ function newsTopic(n){
   return '市场';
 }
 
-// 新闻大白话解读：一句话、20-30字、三年级小孩能听懂、绝不使用专业词
-// 禁止词（全部替换成大白话）：
-// 逢低布局→趁便宜买点；超跌反弹→跌多了涨一下；利空→坏消息；利好→好消息；
-// 资金面→大家手里的钱；板块轮动→风水轮流转；受益→跟着沾光；承压→要跌；
-// 回调→跌一点；配置→买点；布局→买点；企稳→不跌了；震荡→涨涨跌跌；
-// 反弹→往上涨一点；分化→有的涨有的跌；看多→觉得要涨；看空→觉得要跌；
-// 提振→让大家有信心；流动性→市场上的钱；估值→贵不贵
+// 新闻大白话解读：邻居大叔讲财经风格
+// 4段式：一句话总结 + 关键信息 + 对钱包的影响 + 该咋办
+// 禁止词：流动性/估值修复/远期定价/逢低布局/超跌反弹/板块轮动等
+// 每段不超过3句话，短句为主，用生活例子打比方
 function ruleExplain(title,summary,newsItem){
   const raw=cleanHTML(title)+' '+cleanHTML(summary);
-  const t=raw; // 不用toLowerCase，中文正则直接匹配
-  let line='';
+  const t=raw;
 
-  if(/中东|伊朗|以色列|加沙|霍尔木兹/.test(t)){
-    line='中东又打仗了，石油黄金可能要涨，别乱追。';
-  }else if(/俄乌|俄罗斯|乌克兰|停火/.test(t)){
-    line='俄乌那边有动静，黄金可能晃一下，不用慌。';
-  }else if(/关税|贸易战|加征|制裁|贸易摩擦/.test(t)){
-    line='又要加税了，出口的股票可能跌，先躲躲。';
-  }else if(/降准|降息|LPR下调|放水|宽松/.test(t)){
-    line='国家把钱袋子松了松，市场上钱变多了，股票容易涨。';
-  }else if(/加息|升息|缩表|收紧|通胀/.test(t)){
-    line='国家把钱袋子收紧了，钱变少了，股票可能要跌。';
-  }else if(/机器人|人形机器人|具身智能|大模型|DeepSeek/.test(t)){
-    line='机器人又出新花样了，科技股会热闹一阵，别追高。';
-  }else if(/算力|CPO|光模块|光通信|半导体|芯片|存储|人工智能|AI/.test(t)){
-    line='AI和芯片又有好消息，相关股票可能涨，等便宜了再买。';
-  }else if(/黄金|金价|央行购金|避险/.test(t)){
-    line='黄金涨价了，大家都在买黄金保值，手里有的拿着。';
+  // 提取关键数字（亿/万/百万/亿元）
+  const amountMatch=raw.match(/(\d+(?:\.\d+)?)\s*亿/);
+  const amount=amountMatch?amountMatch[1]+'亿':'';
+  const wanMatch=raw.match(/(\d+(?:\.\d+)?)\s*万(?!亿)/);
+  const wanAmount=wanMatch?wanMatch[1]+'万':'';
+  const moneyStr=amount||wanAmount;
+
+  // 提取公司名（更全面匹配）
+  const companyMatch=raw.match(/([\u4e00-\u9fa5]{2,8})(?:股份|集团|科技|矿业|高新|证券|银行|医药|能源|电子|电气|重工|建材|光电|通信|生物|新材)/);
+  const company=companyMatch?companyMatch[1]:'';
+  // 提取券商/机构名
+  const brokerMatch=raw.match(/(中金|中信|华泰|国君|招商|海通|广发|兴业|东方|光大|申万)[\u4e00-\u9fa5]*?(?:证券|证券研究|研究所)/);
+  const broker=brokerMatch?brokerMatch[0]:'';
+
+  let oneLine='', keyPoint='', impact='', action='';
+
+  if(/中东|伊朗|以色列|加沙|霍尔木兹|红海/.test(t)){
+    oneLine='中东那边又干起来了，石油可能涨价，黄金要被抢。';
+    keyPoint='打仗石油就供不上，油价一涨运费就贵，啥东西都跟着贵。大家怕出事就抢黄金，金价就往上蹿。';
+    impact='手里有黄金基金的能喝口汤，但石油涨价对大部分股票是坏消息，因为成本高了。';
+    action='黄金基金拿着别动。没买的别因为打仗就冲进去买黄金，打仗这事说停就停。';
+  }else if(/俄乌|俄罗斯|乌克兰/.test(t)){
+    oneLine='俄乌那边又有动静，但离咱们远，影响不大。';
+    keyPoint='主要影响欧洲的天然气和粮食价格。对A股就是开盘晃一下，半天就回来了。';
+    impact='你买的国内基金基本不受影响，不用自己吓自己。';
+    action='这条消息没啥大影响，不用瞎折腾。该定投定投，该干嘛干嘛。';
+  }else if(/关税|贸易战|加征|制裁|出口管制/.test(t)){
+    oneLine='又要加税或者制裁了，做出口生意的公司要难受。';
+    keyPoint='加了税东西卖贵了，老外就不买了。公司卖得少赚得就少，股价就跌。特别是芯片、新能源这些被盯上的行业。';
+    impact='出口多的股票和基金短期要跌，汽车、家电、电子配件受影响最大。';
+    action='手里有出口类基金的趁反弹减点仓。没买的先别碰，等这事消停了再说。';
+  }else if(/降准|降息|LPR|放水|宽松|逆回购|MLF/.test(t)){
+    oneLine='国家松钱了，银行能借出来的钱变多了，利息也低了。';
+    keyPoint='钱变便宜了，存银行不划算，大家就拿钱去买股票买房。钱多了股价就容易涨，就像水多了船就高。';
+    impact='股票基金多半要涨，科技股和券商股最敏感，涨得最猛。';
+    action='手里有的拿着别卖，想加仓的可以慢慢加。但也别一把梭，万一涨几天又回来了呢。';
+  }else if(/加息|升息|缩表|收紧|提高利率/.test(t)){
+    oneLine='美国又要加息或者收钱了，全球股市都要抖一下。';
+    keyPoint='钱变贵了，存银行就有利息谁还冒险买股票？资金就从股市往银行跑，股价就跌。';
+    impact='科技股跌得最狠，因为科技公司靠借钱发展，利息高了成本就高。国内基金也会跟着晃。';
+    action='先别加仓，等跌稳了再说。手里仓位重的趁反弹减一点，别硬扛。';
+  }else if(/机器人|人形机器人|具身智能/.test(t)){
+    oneLine='机器人又有新技术了，大家觉得以后能替代人工都在抢。';
+    keyPoint='机器人要是真能干活，工厂就不需要请人了，省下的钱就是利润。但现在还在烧钱阶段，离赚钱还早。';
+    impact='科技基金可能涨一波，但炒得快凉得也快，追高的容易站岗。';
+    action='手里有的先拿着看周一开盘。没买的别追高，等回调再考虑。这东西现在就是炒概念。';
+  }else if(/算力|CPO|光模块|半导体|芯片|人工智能|AI|大模型/.test(t)){
+    oneLine='AI和芯片'+(company?'（'+company+'）':'')+'又有好消息，相关股票可能涨。';
+    keyPoint='AI现在最火，大家觉得以后能赚大钱都在抢芯片。但很多AI公司现在还亏着钱，靠讲故事撑股价。';
+    impact='半导体和算力基金短期可能继续涨。但涨太多了就是在吹泡泡，早晚要破。';
+    action='手里有的拿着，但别全仓压科技。没买的等跌一点再进，别买在山顶上。';
+  }else if(/黄金|金价|避险|金价创新高/.test(t)){
+    oneLine='黄金又涨了，大家都在买黄金保值。';
+    keyPoint='世道不稳的时候黄金最靠谱，打仗、通胀、经济不好大家都买黄金。买的人多了价格就涨。';
+    impact='黄金基金要涨，黄金股也跟着沾光。但涨太多也有风险，黄金不生利息。';
+    action='手里有黄金基金的拿着，赚了可以卖点锁定利润。没有的别追太高，等回调再买。';
   }else if(/原油|油价|石油|欧佩克|OPEC/.test(t)){
-    line='油价变了，能源股票跟着动，不用太当回事。';
-  }else if(/新能源|光伏|锂电|储能|风电|氢能/.test(t)){
-    line='新能源有消息，跌了很久了，别着急抄底，等真涨起来再说。';
-  }else if(/医药|制药|疫苗|创新药|医疗|集采/.test(t)){
-    line='医药有新消息，一天两天的消息不影响长期，正常拿着。';
-  }else if(/地产|房地产|楼市|房贷|救市/.test(t)){
-    line='房子又出政策了，能不能救起来不好说，别重仓买地产。';
-  }else if(/消费|白酒|食品|零售|旅游|出行/.test(t)){
-    line='消费有新消息，大家花钱多不多直接影响这些股票。';
+    oneLine='油价变了，'+'涨了运费就贵，跌了运费就便宜。';
+    keyPoint='石油是工业的血液，油价涨了快递费、机票、塑料件全都贵。跌了这些成本就降。';
+    impact='能源基金跟着油价走。但对大多数国内基金影响不大，最多晃一下。';
+    action='看看就行，别因为一天涨跌就买卖。有能源基金的注意下方向。';
+  }else if(/新能源|光伏|锂电|储能|风电|电动车/.test(t)){
+    oneLine='新能源'+(company?'（'+company+'）':'')+'有消息了，跌了很久不知道能不能起来。';
+    keyPoint='新能源跌了两年多了，出个利好大家想抄底。但每次涨两天就又回去了，说明大家还没信心。';
+    impact='新能源基金可能涨一下，但别指望马上反转。底部是一个区域不是一天。';
+    action='别急着买，等连续涨几天放量了再说。手里有的别割肉，熬着。别抄在半山腰。';
+  }else if(/医药|制药|疫苗|创新药|集采|医疗/.test(t)){
+    oneLine='医药有新消息了。但一天两天的消息改变不了什么。';
+    keyPoint='医药是刚需，人总要生病吃药。但集采把药价压得很低，药企赚得少了。创新药有前途但要烧很多年钱。';
+    impact='医药基金小涨小跌，不会有大动静。除非出了爆款新药才可能大涨。';
+    action='正常拿着，该怎么定投怎么定投。医药是长期的事，别因为一条消息就动。';
+  }else if(/地产|房地产|楼市|房贷|保障房/.test(t)){
+    oneLine='房子又出政策了，但能不能救起来不好说。';
+    keyPoint='房子现在没人买，出了政策大家也就看一眼。买不买房看的是兜里有没有钱、工作稳不稳，不是看政策。';
+    impact='地产和银行基金可能涨一下，但别抱太大希望。涨两天可能又回去了。';
+    action='别重仓买地产基金。手里有的趁涨减点，没有的看看热闹就行。';
+  }else if(/消费|白酒|食品|零售|旅游|餐饮/.test(t)){
+    oneLine='消费有新消息，看大家愿不愿意花钱。';
+    keyPoint='大家兜里有钱才敢花钱，花钱了这些公司才赚得到钱。现在大家存钱的多花钱的少。';
+    impact='消费基金跟着动，但短期影响不大。除非真金白银发消费券才有点用。';
+    action='正常拿着，不用因为一条消息就动。消费是慢功夫急不来。';
   }else if(/银行|券商|保险|金融/.test(t)){
-    line='银行券商有消息，金融股票跟着动，跟政策走。';
-  }else if(/基金经理|调仓|换经理|限购|大额申购/.test(t)){
-    line='你买的基金有变动，赶紧去看看是不是换了经理。';
-  }else if(/国务院|证监会|央行|财政部|发改委|政策|补贴|监管/.test(t)){
-    line='国家出政策了，相关行业会有动静，跟着政策走。';
+    oneLine='金融股有消息了，跟着国家政策走。';
+    keyPoint='银行赚的是利息差，降息对银行不好。券商靠大家买卖股票赚钱，行情好券商就赚。';
+    impact='金融基金看政策脸色。政策松了券商涨，利息降了银行跌。';
+    action='看看政策说的是啥，跟你手里的基金对不对得上。别盲目跟风。';
+  }else if(/基金经理|调仓|换经理|限购|大额申购|分红/.test(t)){
+    oneLine='你买的基金有变动了，得关注。';
+    keyPoint='换经理是大事，新经理的操作风格跟旧的不一样，涨跌幅可能完全变。限购说明买的人太多或者基金规模太大了。';
+    impact='你买的基金以后涨跌可能跟以前不一样了。换经理后头三个月最关键。';
+    action='赶紧去看看你买的基金是不是换了经理。换了的话先观察一个月，不行就换基金。';
+  }else if(/国务院|证监会|央行|财政部|发改委|工信部|政策|补贴|支持|规划/.test(t)){
+    oneLine='国家出政策了，说的那个行业要沾光。';
+    keyPoint='国家政策是指挥棒，说让哪个行业好，银行就给那个行业贷款、给补贴。有钱进来股票就涨。';
+    impact='政策点名的行业基金可能涨一波。但政策从出台到落地要时间，别指望当天就涨。';
+    action='看看政策说的是啥行业。手里有相关基金的拿着，没有的等回调再买，别追高。';
   }else if(/美股|纳指|标普|道指|美联储|美债|美元/.test(t)){
-    line='美国股市有动静，A股开盘可能晃一下，半天就回来。';
-  }else if(/港股|恒生|南向|港股通/.test(t)){
-    line='港股在动，有港股基金的看看，没有的不用管。';
-  }else if(/北向|外资|沪股通|深股通/.test(t)){
-    line='外国钱在买或者卖A股，跟着看看风向就行。';
-  }else if(/业绩预增|利润大增|营收大增|扭亏|赚钱了/.test(t)){
-    line='这家公司真赚到钱了，股票可能涨，看看能不能持续。';
-  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市|被查/.test(t)){
-    line='这家公司出事了，股票可能跌，看看你有没有买。';
-  }else if(/减持|套现|大股东卖/.test(t)){
-    line='大老板在卖自己公司的股票，短期可能要跌，小心点。';
-  }else if(/增持|回购|大股东买|举牌/.test(t)){
-    line='有人在大量买这只股票，短期可能涨，跟着看看。';
-  }else if(/涨价|提价|价格上涨/.test(t)){
-    line='东西涨价了，卖东西的公司赚更多，股票可能涨。';
-  }else if(/降价|跌价|价格战|打折/.test(t)){
-    line='东西在打折卖，公司赚得少了，股票可能跌。';
-  }else if(/IPO|新股|打新|上市/.test(t)){
-    line='有新公司要上市了，对市场影响不大，看看就行。';
-  }else if(/成交量|放量|缩量|成交/.test(t)){
-    line='今天买股票卖股票的人变多了或少了，看大家热情高不高。';
+    oneLine='美国股市有动静，A股开盘会跟着晃一下。';
+    keyPoint='美国是全球最大股市，它一哆嗦全世界都跟着抖。但A股有自己的节奏，一般半天就各走各的了。';
+    impact='国内基金开盘可能涨或跌，但通常一两天就回来了。不用太紧张。';
+    action='不用因为美股涨跌就买卖国内基金。除非你买的是纳指基金，那得盯着看。';
+  }else if(/港股|恒生|南向|恒生科技/.test(t)){
+    oneLine='港股在动，有港股基金的得看看。';
+    keyPoint='港股和A股是邻居，经常一起涨一起跌。但港股受美国影响更大，有时候跟A股走反方向。';
+    impact='港股基金涨跌明显一点，国内基金影响不大。恒生科技基金波动最大。';
+    action='有港股基金的看看方向。没有的不用管，港股水太深别瞎碰。';
+  }else if(/北向|外资|沪股通|深股通|QFII/.test(t)){
+    oneLine='外国钱在买或卖A股，可以看个风向。';
+    keyPoint='外资买说明老外觉得中国股票便宜了，卖说明他们觉得要跌。但外资也不是神仙，经常买在高点卖在低点。';
+    impact='外资大买的当天A股容易涨，大卖的当天容易跌。但长期看外资买啥跟咱没关系。';
+    action='看看就行，别跟着外资买卖。他们今天买明天就可能卖，你跟不上。';
+  }else if(/业绩预增|利润大增|营收大增|扭亏|预喜|超预期/.test(t)){
+    oneLine=(company?company:'公司')+'赚到钱了，而且比大家预想的还多。';
+    keyPoint='公司赚钱了，买它股票的人就能分到钱。大家一看赚这么多就抢着买，股价就涨。这是实打实的好事。';
+    impact='这只股票和相关基金大概率要涨。但要看看是不是一次性的，比如卖了个楼赚的钱不算。';
+    action='手里有的拿着，看看下个季度还能不能继续赚。没买的别追高，等回调再考虑。';
+  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市|财务造假/.test(t)){
+    oneLine=(company?company:'公司')+'出事了，亏钱或者被查了。';
+    keyPoint='公司出事大家怕血本无归就抢着卖，卖的人多了股价就跌。被立案调查更严重，可能退市血本无归。';
+    impact='这只股票和相关基金大概率要跌，跌多少看出事严重程度。退市的话就归零了。';
+    action='赶紧查查你买的基金里有没有这只股票。有的话考虑换基金，没有的别去抄底。';
+  }else if(/减持|套现|大股东卖|高管减持/.test(t)){
+    oneLine=(company?company:'公司')+'的大老板在卖自己公司的股票。';
+    keyPoint='大老板最了解自己公司值多少钱。他都在卖，说明他觉得现在股价够高了，再不卖就跌了。';
+    impact='这只股票短期可能跌。大老板卖几千万甚至几个亿，散户接不住。';
+    action='手里有的减一点保平安。没有的绝对别买，大老板都跑了你去接盘？';
+  }else if(/增持|回购|举牌|大股东买/.test(t)){
+    oneLine='有人花大钱买'+(company?company:'这只')+'股票，觉得以后还能涨。';
+    keyPoint='花真金白银买说明有底气，觉得现在便宜了。公司回购就像老板自己掏钱买自己的东西，说明他觉得值。';
+    impact='这只股票短期可能涨。但回购增持只是信号，不能保证一定涨。';
+    action='手里有的拿着。没买的可以关注但别追高，等确认趋势再进。';
+  }else if(/涨价|提价|价格上涨|提价幅度/.test(t)){
+    oneLine='东西涨价了，卖这个东西的公司能多赚钱。';
+    keyPoint='东西卖贵了但成本没变，多出来的全是利润。但涨价太多买的人就少了，要把握度。';
+    impact='卖这个东西的公司股票可能涨。但涨太多会引来竞争对手降价。';
+    action='看看就行，别因为一个涨价消息就冲进去。得看是不是全行业都在涨。';
+  }else if(/降价|跌价|价格战|降价促销/.test(t)){
+    oneLine='东西降价了，还在打价格战。';
+    keyPoint='东西卖便宜了赚得少了，甚至可能亏本卖。打价格战就是比谁钱多能耗，小公司先撑不住。';
+    impact='相关公司股票可能跌。但消费者得实惠，对消费类是好事。';
+    action='手里有相关基金的减一点。没有的先别碰，等价格战打完了再说。';
+  }else if(/扩产|投产|新建|项目投资|产能/.test(t)){
+    oneLine=(company?company:'公司')+(moneyStr?'砸了'+moneyStr:'砸钱')+'扩建新项目。';
+    keyPoint='扩建说明看好未来需求，'+(moneyStr?moneyStr+'不是小数目，':'')+'万一以后需求没那么大，这钱就砸手里了。就像你贷款开了个大饭店结果没人来吃。';
+    impact='短线可能被炒一波"新概念"。但长线得看它能不能真赚回本，赚不回来就是个坑。';
+    action='手里有的先拿着看周一开盘反应。没买的别看概念就瞎冲，涨太猛千万别追高。';
+  }else if(/调整|回调|下跌|跌幅/.test(t)&&/科技|AI|芯片|半导体|人工智能/.test(t)){
+    oneLine=(broker?broker+'说了，':'')+'最近科技股跌，不光因为美国利息高，更因为大家发现很多AI公司光有概念不赚钱。';
+    keyPoint='得看这些AI公司以后能不能真把技术变成钞票。光讲故事不赚钱，股价迟早撑不住。就像开个网红店打卡的人多但不赚钱。';
+    impact='科技股现在还在"挤泡沫"阶段，短期可能还得震荡一阵子。别指望马上反弹。';
+    action='仓位重的趁反弹减点仓。仓位轻的装死躺平，千万别现在割肉，也别急着抄底。等看到业绩真正好转了再说。';
+  }else if(/研报|评级|上调|下调|目标价|维持/.test(t)){
+    oneLine=(broker?broker:'券商')+'发研报了，说了'+(company?company:'某公司')+'的看法。';
+    keyPoint='研报就是机构分析师写的分析报告。上调评级就是觉得更好了，下调就是觉得不行了。但研报经常马后炮，涨了才说好。';
+    impact='上调评级短期可能涨一点，下调可能跌一点。但影响一般就一两天。';
+    action='看看就行别太当真。研报说好不一定好，说不好不一定坏。关键看公司业绩。';
   }else{
     const kws=extractKeyWords(title);
     if(kws.length>=1){
-      line=kws[0]+'有新消息，就看大家买不买账，先看看别急。';
+      oneLine=kws[0]+'有新消息，但具体影响还不好说。';
+      keyPoint='一条消息说了不算，得看后面有没有真金白银跟着买进去。就像听说要下雨，但没下就是空炮。';
+      impact='对你的钱袋子影响不大，先观察。';
+      action='先别动，等看清楚了再说。该干嘛干嘛。';
     }else{
-      line='这条消息不太重要，对你的钱袋子没什么影响。';
+      oneLine='这条消息没啥大影响，不用瞎折腾。';
+      keyPoint='这种消息天天有，市场根本不当回事。就像听邻居说菜价涨了一毛，你也不会因此去囤白菜。';
+      impact='对你的基金和股票基本没影响。';
+      action='该干嘛干嘛，不用管它。';
     }
   }
 
   return {
-    summary: line,
-    text: line,
-    impact: '', why: '', action: '', final: ''
+    summary: oneLine,
+    keyPoint: keyPoint,
+    impact: impact,
+    action: action,
+    text: oneLine+' '+keyPoint+' '+impact+' '+action
   };
 }
 
@@ -4483,13 +4630,19 @@ function renderNews(filter){
   }else{
     // 单条新闻渲染（平铺列表，不折叠）
     const itemHtml=(n,i)=>{
+      // 强制转字符串，防止 [object Object]
+      if(n.title&&typeof n.title==='object') n.title=JSON.stringify(n.title).replace(/[\[\]{}"]/g,'');
+      if(n.summary&&typeof n.summary==='object') n.summary=JSON.stringify(n.summary).replace(/[\[\]{}"]/g,'');
+      // 统一用 cleanHTML 清理，彻底解决乱码
+      const cleanTitle=cleanHTML(n.title||'');
+      const cleanSummary=cleanHTML(n.summary||'');
       const cls=sourceClass(n.source);
       const tierCls=sourceTierClass(n.source||(n.sources&&n.sources[0]||''));
       const tierLabel=sourceTier(n.source||(n.sources&&n.sources[0]||''));
       const timeVal=safe(n.time||'');
-      const title=n.url?`<a href="${safe(n.url)}" target="_blank" rel="noopener">${safe(n.title)}</a>`:safe(n.title);
+      const title=n.url?`<a href="${safe(n.url)}" target="_blank" rel="noopener">${safe(cleanTitle)}</a>`:safe(cleanTitle);
       // 突发新闻检测
-      const isBreaking=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||'');
+      const isBreaking=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(cleanTitle||'');
       // 来源标签 + 分类层级
       let sourceBadge='';
       if(n.multiSource&&n.sources&&n.sources.length>=2){
@@ -4502,15 +4655,23 @@ function renderNews(filter){
       // AI解读（一句话大白话）
       let aiHtml='';
       if(n.ai){
-        const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai), text:String(n.ai)};
+        const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai)};
         const line=aiObj.summary||aiObj.text||'';
+        const kp=aiObj.keyPoint||'';
+        const imp=aiObj.impact||'';
+        const act=aiObj.action||'';
         if(line){
-          aiHtml=`<div class="news-ai"><span class="ai-tag">🤖</span>${safe(cleanHTML(line))}</div>`;
+          aiHtml=`<div class="news-ai">
+            <div class="ai-line"><span class="ai-tag">🤖</span>${safe(cleanHTML(line))}</div>
+            ${kp?`<div class="ai-detail-line"><b style="color:#0a84ff">📌 关键点：</b>${safe(cleanHTML(kp))}</div>`:''}
+            ${imp?`<div class="ai-detail-line"><b style="color:#d94a4a">💰 对钱包：</b>${safe(cleanHTML(imp))}</div>`:''}
+            ${act?`<div class="ai-detail-line"><b style="color:#047857">👉 该咋办：</b>${safe(cleanHTML(act))}</div>`:''}
+          </div>`;
         }
       }
       // 摘要
-      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,100)):'';
-      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>100?'…':''}</div>`:'';
+      const summaryText=cleanSummary?safe(cleanSummary.slice(0,100)):'';
+      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${cleanSummary.length>100?'…':''}</div>`:'';
       // 影响板块
       const r=n.resonanceInfo||{};
       let sectorHtml='';
@@ -4573,7 +4734,7 @@ function renderAISummary(){
   if(!all||!all.length){el.style.display='none';return;}
   el.style.display='block';
 
-  var allText=all.map(function(n,i){return '新闻'+i+': '+n.title+' '+n.summary;}).join(' | ');
+  var allText=all.map(function(n,i){return '新闻'+i+': '+cleanHTML(n.title||'')+' '+cleanHTML(n.summary||'');}).join(' | ');
   var t=allText.toLowerCase();
 
   // 统计多空新闻数量
@@ -4722,26 +4883,24 @@ async function explainNewsBatch(){
     return;
   }
 
-  const prompt=`你是一个给小学三年级小孩讲财经新闻的人。要求极其简单：
+  const prompt=`你是一个懂行、有实战经验的邻居大叔，给老百姓讲财经新闻。要求：
 
-1. 每条新闻只写一句话，20到30个字。
-2. 绝对不能用这些词：逢低布局、右侧配置、超跌反弹、利空、利好、资金面、板块轮动、受益、承压、回调、配置、布局、企稳、震荡、反弹、分化、看多、看空、提振、流动性、估值、共振、边际、仓位。
-3. 用生活里的大白话，像跟奶奶聊天一样。
-4. 直接说结果：谁可能涨、谁可能跌、该怎么办，别绕弯子。
-5. 用"可能""多半"，别说死。
+1. 一句话大白话总结：用最短的话说清这新闻讲了啥。
+2. 关键信息：把新闻里的具体金额、时间、公司名、核心风险或利好明确点出来，不能漏。
+3. 对钱包的影响：好事还是坏事？短期可能怎么走？为什么？
+4. 该咋办：给一个具体的应对思路。
 
-举例：
-"国家放水了"→"国家把钱袋子松了松，市场上钱变多了，股票容易涨。"
-"逢低布局"→"等便宜了再买点。"
-"资金面紧张"→"大家手里的钱变紧了，买股票的人少了。"
+禁止词：流动性、估值修复、远期定价、逢低布局、右侧配置、超跌反弹、利空、利好、资金面、板块轮动、受益、承压、回调、配置、布局、企稳、震荡、反弹、分化、看多、看空、提振、共振、边际、仓位。
 
-必须输出JSON数组，每条字段：id, text
+用生活化的比喻，像跟奶奶聊天。每段不超过3句话，多用短句。宁可少说，不能说"可能涨也可能跌"这种废话。如果偏中性就直接说没啥大影响。
+
+必须输出JSON数组，每条字段：id, summary, keyPoint, impact, action
 
 ${JSON.stringify(newsToFetch)}`;
 
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你给小学三年级小孩讲财经新闻。每条只写一句大白话（20-30字），绝对不用专业词，像跟奶奶聊天。字段：id, text。'},
+      {role:'system',content:'你是一个懂行、有实战经验的邻居大叔，给老百姓讲财经新闻。每条输出4段：一句话大白话总结(summary)、关键信息(keyPoint)、对钱包的影响(impact)、该咋办(action)。绝对不用专业词，像跟奶奶聊天。字段：id, summary, keyPoint, impact, action。'},
       {role:'user',content:prompt}
     ], getDSModel());
     
@@ -4749,8 +4908,10 @@ ${JSON.stringify(newsToFetch)}`;
     const arr=Array.isArray(parsed)?parsed:(parsed.items||parsed.data||[]);
     const map=new Map(arr.map(x=>[Number(x.id), {
       summary: String(x.summary||x.text||'').trim(),
-      text: String(x.summary||x.text||'').trim(),
-      impact: '', why: '', action: '', final: ''
+      keyPoint: String(x.keyPoint||'').trim(),
+      impact: String(x.impact||'').trim(),
+      action: String(x.action||'').trim(),
+      text: String(x.summary||x.text||'').trim()
     }]));
     
     needAI.forEach((item,idx)=>{
@@ -5379,16 +5540,16 @@ document.addEventListener('visibilitychange',()=>{
     state.lastUpdate=new Date();
     evidenceAI();
     updateSourceStatus();
-    refreshNewsOnly(false); // 新闻按15分钟规则判断是否刷新
+    refreshNewsOnly(false); // 新闻按5分钟规则判断是否刷新
   }
 });
 
-// 新闻独立自动刷新（15分钟）
+// 新闻独立自动刷新（5分钟）
 setInterval(()=>{
   if(!document.hidden){
     refreshNewsOnly(false);
   }
-},900000);
+},300000);
 
 // 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
 setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
