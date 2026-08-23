@@ -147,16 +147,20 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fc-holding-cost b{font-size:11px}
 /* 时间维度收益 */
 /* 时间维度收益 - Tab单选模式 */
-.fc-time-gains{margin:8px 0 4px;padding:10px;border-radius:12px;background:rgba(245,247,250,.8);position:relative;z-index:2}
-.fc-tg-tabs{display:flex;gap:5px;margin-bottom:8px}
-.fc-tg-tab{flex:1;padding:6px 0;font-size:11px;font-weight:500;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.fc-time-gains{margin:8px 0 4px;padding:12px;border-radius:12px;background:rgba(245,247,250,.8);position:relative;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.fc-tg-tabs{display:flex;gap:6px;margin-bottom:0}
+.fc-tg-tab{flex:1;padding:7px 0;font-size:12px;font-weight:500;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;text-align:center}
 .fc-tg-tab.active{background:#3b82f6;color:#fff;font-weight:700;border-color:#3b82f6;box-shadow:0 2px 8px rgba(59,130,246,.25)}
-.fc-tg-display{display:flex;align-items:baseline;gap:8px;justify-content:center;padding:2px 0}
-.fc-tg-display-label{font-size:11px;color:#94a3b8;font-weight:500;white-space:nowrap}
-.fc-tg-display-val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.5px;line-height:1.1}
+.fc-tg-divider{height:1px;background:#e2e8f0;margin:10px 0}
+.fc-tg-display{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:0 2px}
+.fc-tg-tags{display:flex;gap:4px;flex-shrink:0}
+.fc-tg-display-right{display:flex;align-items:baseline;gap:8px}
+.fc-tg-display-label{font-size:12px;color:#94a3b8;font-weight:500;white-space:nowrap}
+.fc-tg-display-val{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.5px;line-height:1.1}
 .fc-tg-display-val.up{color:var(--up)}
 .fc-tg-display-val.down{color:var(--down)}
 .fc-tg-display-val.neutral{color:#94a3b8}
+.fc-tg-combo{font-size:13px;color:#666;margin-top:6px;line-height:1.4;padding:0 2px}
 /* 盈亏对比标签 */
 .fc-hold-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:middle}
 .fc-hold-best{background:#fef2f2;color:#dc2626}
@@ -2150,57 +2154,51 @@ async function fetchGlobal(){
 
 // 解析各种时间格式为北京时间戳(ms)
 function parseNewsTime(raw, source){
-  if(!raw) return Date.now();
-  // 已经是数字时间戳（秒或毫秒）
+  // 重要：新闻发布时间绝不允许用 Date.now() 伪造。拿不到真实时间就返回 0，避免旧闻显示成“刚刚”。
+  if(raw===null || raw===undefined || String(raw).trim()==='') return 0;
   if(typeof raw==='number'){
+    if(!isFinite(raw) || raw<=0) return 0;
     return raw<1e12 ? raw*1000 : raw;
   }
   const s=String(raw).trim();
-  // 纯数字字符串
-  if(/^\d{10}$/.test(s)) return parseInt(s)*1000;
-  if(/^\d{13}$/.test(s)) return parseInt(s);
-  // 华尔街见闻格式："2024-01-15 14:30:00" 或 ISO
+  if(/^\d{10}$/.test(s)) return parseInt(s,10)*1000;
+  if(/^\d{13}$/.test(s)) return parseInt(s,10);
   if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(s)){
     const d=new Date(s.replace(' ','T'));
     if(!isNaN(d.getTime())) return d.getTime();
   }
-  // 东方财富格式："01-15 14:30" 或 "2024-01-15"
   if(/^\d{2}-\d{2} \d{2}:\d{2}/.test(s)){
     const now=new Date();
-    const year=now.getFullYear();
-    const d=new Date(year+'-'+s.replace(' ','T'));
+    const d=new Date(now.getFullYear()+'-'+s.replace(' ','T'));
     if(!isNaN(d.getTime())) return d.getTime();
   }
-  // "今天 14:30" 或 "刚刚"
   if(/今天/.test(s)){
     const m=s.match(/(\d{1,2}):(\d{2})/);
     if(m){
       const now=new Date();
-      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
-      return d.getTime();
+      return new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1],10),parseInt(m[2],10)).getTime();
     }
   }
   if(/刚刚|分钟前|小时前/.test(s)){
     const m1=s.match(/(\d+)分钟前/);
-    if(m1) return Date.now()-parseInt(m1[1])*60000;
+    if(m1) return Date.now()-parseInt(m1[1],10)*60000;
     const m2=s.match(/(\d+)小时前/);
-    if(m2) return Date.now()-parseInt(m2[1])*3600000;
-    return Date.now();
+    if(m2) return Date.now()-parseInt(m2[1],10)*3600000;
+    if(/刚刚/.test(s)) return Date.now();
+    return 0;
   }
-  // 格式 "14:30" 只有时间，默认今天
-  if(/^\d{2}:\d{2}$/.test(s)){
+  if(/^\d{1,2}:\d{2}$/.test(s)){
     const now=new Date();
     const [h,m]=s.split(':').map(Number);
     const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m);
-    // 如果时间比当前晚，说明是昨天的
     if(d.getTime()>Date.now()+60000) d.setDate(d.getDate()-1);
     return d.getTime();
   }
-  return Date.now();
+  return 0;
 }
 
 function formatNewsTime(ts){
-  if(!ts) return '';
+  if(!ts) return '时间未知';
   const d=new Date(ts);
   const now=new Date();
   const sameDay=d.toDateString()===now.toDateString();
@@ -2321,7 +2319,7 @@ async function fetchTHS(){
     const j=await r.json();
     const list=(j.data&&j.data.list)||[];
     return list.map(x=>{
-      const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
+      const ts=x.ctime?parseInt(x.ctime,10)*1000:0;
       return{
         title:cleanHTML(x.title||''),
         summary:cleanHTML(x.digest||''),
@@ -2371,7 +2369,7 @@ async function fetchJin10News(){
         if(Array.isArray(list)&&list.length){
           return list.filter(x=>x.data?.content||x.content||x.title).map(x=>{
             const ct=cleanHTML(x.data?.content||x.content||x.title||'');
-            const ts=x.data?.time?new Date(x.data.time).getTime():Date.now();
+            const ts=x.data?.time?new Date(x.data.time).getTime():0;
             return{
               title:ct.slice(0,50),
               summary:ct.slice(0,120),
@@ -2421,7 +2419,7 @@ async function fetchOfficialNews(){
       const list=j?.data?.list||[];
       if(Array.isArray(list)&&list.length){
         return list.filter(x=>x.title).map(x=>{
-          const ts=x.showTime?new Date(x.showTime).getTime():Date.now();
+          const ts=x.showTime?new Date(x.showTime).getTime():0;
           return{
             title:cleanHTML(x.title||''),
             summary:cleanHTML(x.digest||x.summary||''),
@@ -2478,7 +2476,7 @@ async function fetchCLSNews(){
         const list=j?.data?.roll_data||j?.data||[];
         if(Array.isArray(list)&&list.length){
           return list.filter(x=>x.title||x.content).map(x=>{
-            const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
+            const ts=x.ctime?parseInt(x.ctime,10)*1000:0;
             return{
               title:cleanHTML(x.title||(x.content||'').slice(0,40)),
               summary:cleanHTML(x.brief||x.content||x.description||''),
@@ -2581,7 +2579,7 @@ async function fetchEastmoneyFlash(){
       const list=j?.data?.fastList||j?.data?.list||[];
       if(Array.isArray(list)&&list.length){
         return list.filter(x=>x.title||x.content).map(x=>{
-          const ts=x.showTime?new Date(x.showTime).getTime():(x.ctime?parseInt(x.ctime)*1000:Date.now());
+          const ts=x.showTime?new Date(x.showTime).getTime():(x.ctime?parseInt(x.ctime,10)*1000:0);
           const title=cleanHTML(x.title||'');
           const content=cleanHTML(x.content||x.digest||'');
           return{
@@ -2633,7 +2631,7 @@ async function fetchSinaNews(){
       const list=j?.data||[];
       if(Array.isArray(list)&&list.length){
         return list.filter(x=>x.title).map(x=>{
-          const ts=x.ctime?parseInt(x.ctime)*1000:(x.create_time?new Date(x.create_time).getTime():Date.now());
+          const ts=x.ctime?parseInt(x.ctime,10)*1000:(x.create_time?new Date(x.create_time).getTime():0);
           return{
             title:cleanHTML(x.title||''),
             summary:cleanHTML(x.intro||x.summary||''),
@@ -3588,13 +3586,16 @@ function renderPortfolio(){
             <button class="fc-tg-tab" data-p="6m">6月</button>
             <button class="fc-tg-tab" data-p="y">1年</button>
           </div>
+          <div class="fc-tg-divider"></div>
           <div class="fc-tg-display">
-            <span class="fc-tg-display-label">近1周收益</span>
-            <span class="fc-tg-display-val ${gain1w==null?'neutral':(gain1w>=0?'up':'down')}">${gain1w==null?'—':(gain1w>=0?'+':'')+gain1w.toFixed(2)}</span>
+            ${sigs.length?`<div class="fc-tg-tags">${sigs.join('')}</div>`:''}
+            <div class="fc-tg-display-right">
+              <span class="fc-tg-display-label">近1周收益</span>
+              <span class="fc-tg-display-val ${gain1w==null?'neutral':(gain1w>=0?'up':'down')}">${gain1w==null?'—':(gain1w>=0?'+':'')+gain1w.toFixed(2)}</span>
+            </div>
           </div>
+          ${m?`<div class="fc-tg-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
         </div>
-        ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
-        ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
         <div class="fc-reason-wrap">
           <button class="fc-reason-btn" data-reason="${i}">
             <span>📊 为什么${d.pct==null?'涨跌':(d.pct>=0?'涨':'跌')}？</span>
@@ -4705,7 +4706,7 @@ function clusterNewsEvents(newsArray){
 
   // 解析新闻时间
   function parseNewsTime(n){
-    if(!n.time) return Date.now();
+    if(!n.time) return Number(n.timestamp)||0;
     const t=String(n.time);
     const m=t.match(/(\d{1,2}):(\d{2})/);
     if(m){
@@ -4714,7 +4715,7 @@ function clusterNewsEvents(newsArray){
       cn.setUTCHours(parseInt(m[1]),parseInt(m[2]),0,0);
       return cn.getTime()-8*60*60*1000;
     }
-    return Date.now();
+    return 0;
   }
 
   // 获取新闻涉及板块
@@ -5101,22 +5102,38 @@ async function explainNewsBatch(){
     return;
   }
 
-  const prompt=`你是一个懂行、有实战经验的邻居大叔，给老百姓讲财经新闻。
+  const prompt=`你是"财经大白话播报员"，专给小学文化的人讲新闻。所有专业词必须翻译成生活比喻。
 
-【绝对禁止】
-- 禁止使用"可能更赚""小心点""别急着买"等模棱两可、千篇一律的废话
-- 禁止对同类新闻（如多条减持公告）给出完全一样的模板化回复，每条必须结合具体公司名和数字
-- 禁止遗漏新闻中的具体金额、时间、比例
+【角色设定】
+你就是村口小卖部老板，街坊邻居来问你"今天有啥大事"，你用最土的大白话给他们讲。
+
+【绝对禁止的词（出现一个就失败）】
+流动性、估值修复、远期定价、逢低布局、右侧配置、超跌反弹、利空、利好、资金面、板块轮动、受益、承压、回调、配置、布局、企稳、震荡、反弹、分化、看多、看空、提振、共振、边际、仓位、赛道、赋能、闭环、链路、预期差、安全边际、阿尔法、贝塔、戴维斯双击、护城河、景气度、渗透率、国产替代、产能出清、库存周期、风险偏好、风险溢价、期限利差、信用利差、估值中枢、业绩兑现、盈利预测、目标价、评级、买入评级、增持评级、中性评级、减持评级、卖出评级。
+
+【替换规则（必须这样翻译）】
+- "逢低布局" → "趁便宜买点"
+- "资金面收紧" → "国家收紧钱袋子"
+- "利空" → "坏消息"
+- "利好" → "好消息"
+- "回调" → "跌了一阵"
+- "震荡" → "上上下下不稳定"
+- "反弹" → "跌完又涨回来"
+- "配置" → "买"
+- "企稳" → "不跌了，稳住了"
+- "赛道" → "行业"
+- "增持/减持" → "多买点/卖掉一些"
 
 【解读结构（每条必须按此4段输出）】
-1. summary - 大白话翻译：用一句话把这件专业的事翻译成"开小店/买菜"的例子，必须包含公司名
-2. keyPoint - 关键数据：明确列出新闻中的核心数字（如：投资X亿元、减持不超过X%、时间X月X日），不能漏
-3. impact - 利弊分析：这件事对股价/基金是利好还是利空？为什么？结合常识判断
-4. action - 操作参考：给出具体、可执行的建议，区分"持有的"和"没买的"两种情况
+1. summary - 大白话翻译：一句话讲清楚这事，20-30个字以内，必须包含公司名，用"开小店/买菜/存钱"等生活比喻
+2. keyPoint - 关键数据：只列数字（投资X亿、涨了X%、什么时候），不要废话
+3. impact - 利弊分析：这事对老百姓的钱袋子有啥影响？好事还是坏事？一句话说清
+4. action - 操作参考：手上有这个的怎么办？没有的要不要凑热闹？
 
-禁止词：流动性、估值修复、远期定价、逢低布局、右侧配置、超跌反弹、利空、利好、资金面、板块轮动、受益、承压、回调、配置、布局、企稳、震荡、反弹、分化、看多、看空、提振、共振、边际、仓位。
-
-每段不超过3句话，多用短句。宁可少说，不能说"可能涨也可能跌"。如果偏中性就直接说没啥大影响。
+【铁律】
+- summary最多30个字，多了就砍
+- 不许说"可能涨也可能跌"这种废话
+- 每条新闻的回复必须不一样，不许复制粘贴模板
+- 如果新闻没啥大影响，就直接说"这事跟咱没啥关系"
 
 必须输出JSON数组，每条字段：id, summary, keyPoint, impact, action
 
@@ -5124,7 +5141,7 @@ ${JSON.stringify(newsToFetch)}`;
 
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是一个懂行、有实战经验的邻居大叔，给老百姓讲财经新闻。每条新闻必须输出4段：大白话翻译(summary，含公司名)、关键数据(keyPoint，含具体数字)、利弊分析(impact)、操作参考(action，区分持有和没买)。绝对不用专业词，像跟奶奶聊天。禁止模板化回复，每条必须结合具体公司。字段：id, summary, keyPoint, impact, action。'},
+      {role:'system',content:'你是"财经大白话播报员"，专给小学文化的人讲新闻。把所有专业词翻译成生活比喻（如"逢低布局"→"趁便宜买"、"资金面收紧"→"国家收紧钱袋子"）。每条新闻输出4段：summary（20-30字大白话，含公司名）、keyPoint（关键数字）、impact（对钱袋子好坏）、action（手上有没有怎么办）。禁止所有金融术语。像跟奶奶聊天一样说人话。字段：id, summary, keyPoint, impact, action。'},
       {role:'user',content:prompt}
     ], getDSModel());
     
