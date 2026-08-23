@@ -146,13 +146,17 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fc-holding-cost{font-size:10px;color:var(--text-sec)}
 .fc-holding-cost b{font-size:11px}
 /* 时间维度收益 */
-.fc-time-gains{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:8px 0 4px;padding:8px 4px;border-radius:12px;background:rgba(245,247,250,.8);position:relative;z-index:2}
-.fc-tg-item{display:flex;flex-direction:column;align-items:center;gap:2px}
-.fc-tg-label{font-size:10px;color:#94a3b8;font-weight:500}
-.fc-tg-val{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
-.fc-tg-val.up{color:var(--up)}
-.fc-tg-val.down{color:var(--down)}
-.fc-tg-val.neutral{color:#94a3b8}
+/* 时间维度收益 - Tab单选模式 */
+.fc-time-gains{margin:8px 0 4px;padding:10px;border-radius:12px;background:rgba(245,247,250,.8);position:relative;z-index:2}
+.fc-tg-tabs{display:flex;gap:5px;margin-bottom:8px}
+.fc-tg-tab{flex:1;padding:6px 0;font-size:11px;font-weight:500;border-radius:8px;border:1px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.fc-tg-tab.active{background:#3b82f6;color:#fff;font-weight:700;border-color:#3b82f6;box-shadow:0 2px 8px rgba(59,130,246,.25)}
+.fc-tg-display{display:flex;align-items:baseline;gap:8px;justify-content:center;padding:2px 0}
+.fc-tg-display-label{font-size:11px;color:#94a3b8;font-weight:500;white-space:nowrap}
+.fc-tg-display-val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.5px;line-height:1.1}
+.fc-tg-display-val.up{color:var(--up)}
+.fc-tg-display-val.down{color:var(--down)}
+.fc-tg-display-val.neutral{color:#94a3b8}
 /* 盈亏对比标签 */
 .fc-hold-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:middle}
 .fc-hold-best{background:#fef2f2;color:#dc2626}
@@ -2940,6 +2944,7 @@ async function refreshNewsOnly(force){
   if(btn) btn.classList.add('spin');
   // 每次刷新清空AI缓存，确保用最新新闻重新生成解读
   state.newsAI={};
+  const now=Date.now();
   console.log('[新闻刷新] 开始手动刷新，USE_PROXY='+USE_PROXY);
 
   try{
@@ -3063,7 +3068,7 @@ async function refreshNewsOnly(force){
     const errStrip=$('newsErrorStrip');
     const errText=$('newsErrorText');
     if(errStrip) errStrip.style.display='flex';
-    if(errText) errText.textContent='刷新出错：'+(e.message||'未知错误')+'，显示最近一次成功数据';
+    if(errText) errText.textContent='部分新闻源暂不可用，已显示最近成功数据。请稍后重试';
     updateNewsEvidence();
   }finally{
     state._newsLoading=false;
@@ -3570,12 +3575,23 @@ function renderPortfolio(){
           <div class="fc-holding-track"><div class="fc-holding-fill" style="width:${Math.min(holdingPct,100)}%"></div></div>
           <div class="fc-holding-cost">持仓成本 ¥${holdCost.toFixed(0)} · 持有收益率 <b class="${holdReturnRate==null?'':(holdReturnRate>=0?'up':'down')}">${holdReturnRate==null?'—':(holdReturnRate>=0?'+':'')+holdReturnRate.toFixed(2)+'%'}</b></div>
         </div>
-        <div class="fc-time-gains" data-fund-idx="${i}">
-          <div class="fc-tg-item"><span class="fc-tg-label">1周</span><span class="fc-tg-val ${gain1w==null?'neutral':(gain1w>=0?'up':'down')}">${gain1w==null?'—':(gain1w>=0?'+':'')+gain1w.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">1月</span><span class="fc-tg-val ${gain1m==null?'neutral':(gain1m>=0?'up':'down')}">${gain1m==null?'—':(gain1m>=0?'+':'')+gain1m.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">3月</span><span class="fc-tg-val ${gain3m==null?'neutral':(gain3m>=0?'up':'down')}">${gain3m==null?'—':(gain3m>=0?'+':'')+gain3m.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">6月</span><span class="fc-tg-val ${gain6m==null?'neutral':(gain6m>=0?'up':'down')}">${gain6m==null?'—':(gain6m>=0?'+':'')+gain6m.toFixed(2)}</span></div>
-          <div class="fc-tg-item"><span class="fc-tg-label">1年</span><span class="fc-tg-val ${gain1y==null?'neutral':(gain1y>=0?'up':'down')}">${gain1y==null?'—':(gain1y>=0?'+':'')+gain1y.toFixed(2)}</span></div>
+        <div class="fc-time-gains" data-fund-idx="${i}"
+          data-gw="${gain1w==null?'':gain1w}"
+          data-gm="${gain1m==null?'':gain1m}"
+          data-g3m="${gain3m==null?'':gain3m}"
+          data-g6m="${gain6m==null?'':gain6m}"
+          data-gy="${gain1y==null?'':gain1y}">
+          <div class="fc-tg-tabs">
+            <button class="fc-tg-tab active" data-p="w">1周</button>
+            <button class="fc-tg-tab" data-p="m">1月</button>
+            <button class="fc-tg-tab" data-p="3m">3月</button>
+            <button class="fc-tg-tab" data-p="6m">6月</button>
+            <button class="fc-tg-tab" data-p="y">1年</button>
+          </div>
+          <div class="fc-tg-display">
+            <span class="fc-tg-display-label">近1周收益</span>
+            <span class="fc-tg-display-val ${gain1w==null?'neutral':(gain1w>=0?'up':'down')}">${gain1w==null?'—':(gain1w>=0?'+':'')+gain1w.toFixed(2)}</span>
+          </div>
         </div>
         ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
         ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
@@ -3632,10 +3648,27 @@ function renderPortfolio(){
       </div>`;
     }).join('');
     listEl.innerHTML=html;
-    // 基金卡片下方时间收益：全部显示（3天/1周/半月/3月/半年）
+    // 基金卡片下方时间收益：Tab单选切换
     listEl.querySelectorAll('.fc-time-gains').forEach(el=>{
-      el.querySelectorAll('.fc-tg-item').forEach(item=>{
-        item.style.display='flex';
+      const periodLabels={w:'1周',m:'1月','3m':'3月','6m':'6月',y:'1年'};
+      el.querySelectorAll('.fc-tg-tab').forEach(tab=>{
+        tab.onclick=()=>{
+          el.querySelectorAll('.fc-tg-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          const p=tab.dataset.p;
+          const raw=el.dataset['g'+p];
+          const labelEl=el.querySelector('.fc-tg-display-label');
+          const valEl=el.querySelector('.fc-tg-display-val');
+          labelEl.textContent='近'+periodLabels[p]+'收益';
+          if(raw===''){
+            valEl.textContent='—';
+            valEl.className='fc-tg-display-val neutral';
+          }else{
+            const num=parseFloat(raw);
+            valEl.textContent=(num>=0?'+':'')+num.toFixed(2);
+            valEl.className='fc-tg-display-val '+(num>=0?'up':'down');
+          }
+        };
       });
     });
     // 绑定事件
