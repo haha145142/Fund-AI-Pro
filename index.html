@@ -1884,15 +1884,32 @@ const USE_PROXY=(()=>{
 
 /* 通用代理请求 */
 async function proxyFetchJSON(apiPath,timeout=12000){
-  const ctrl=new AbortController();
-  const tid=setTimeout(()=>ctrl.abort(),timeout);
-  try{
-    const r=await fetch('/api/'+apiPath,{cache:'no-store',headers:{'Accept':'application/json'},signal:ctrl.signal});
-    if(!r.ok)throw new Error('proxy '+r.status);
-    return await r.json();
-  }finally{
-    clearTimeout(tid);
+  const endpoints=[
+    '/api/'+apiPath,
+    'https://fund-ai-pro.pages.dev/api/'+apiPath
+  ];
+  let lastErr=null;
+  for(const endpoint of endpoints){
+    const ctrl=new AbortController();
+    const tid=setTimeout(()=>ctrl.abort(),timeout);
+    try{
+      const r=await fetch(endpoint,{
+        cache:'no-store',
+        headers:{'Accept':'application/json','Cache-Control':'no-cache'},
+        signal:ctrl.signal
+      });
+      if(!r.ok) throw new Error('proxy '+r.status+' '+endpoint);
+      const text=await r.text();
+      let data;
+      try{ data=JSON.parse(text); }catch(e){ throw new Error('非JSON响应 '+endpoint); }
+      return data;
+    }catch(e){
+      lastErr=e;
+    }finally{
+      clearTimeout(tid);
+    }
   }
+  throw lastErr||new Error('news api unavailable');
 }
 
 /* JSONP 通用解析 */
@@ -2997,7 +3014,7 @@ async function refreshNewsOnly(force=true){
     if(!normalized.length){
       const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
       if(errStrip) errStrip.style.display='flex';
-      if(errText) errText.textContent='新闻接口暂时没有可用数据，保留最近一次成功数据';
+      if(errText) errText.textContent='新闻接口暂无可用数据，保留最近一次成功数据';
       updateNewsEvidence(); return;
     }
     const junk=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|奥运|世界杯|彩票|赌博|色情|低俗)/i;
@@ -3034,7 +3051,7 @@ async function refreshNewsOnly(force=true){
     console.error('refreshNews error:',e);
     const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
     if(errStrip) errStrip.style.display='flex';
-    if(errText) errText.textContent='新闻接口暂时不可用，已保留最近一次成功数据';
+    if(errText) errText.textContent='新闻接口暂时不可用，正在切换备用接口';
     updateNewsEvidence();
   }finally{
     state._newsLoading=false;
