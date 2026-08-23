@@ -2200,7 +2200,7 @@ function parseNewsTime(raw, source){
     if(d.getTime()>Date.now()+60000) d.setDate(d.getDate()-1);
     return d.getTime();
   }
-  return Date.now();
+  return 0;
 }
 
 function formatNewsTime(ts){
@@ -2999,7 +2999,7 @@ async function refreshNewsOnly(force){
   state.source.guba=guba.length?'东方财富股吧':'不可用';
   state.source.thsForum=thsForum.length?'同花顺社区':'不可用';
 
-  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off,...emflash,...sina].filter(x=>x.title&&x.timestamp);
+  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off,...emflash,...sina].filter(x=>x.title&&Number(x.timestamp)>0);
   state.newsSources={cls,jin10,wscn,ths,yicai,off,emflash,sina};
   console.log('[新闻刷新] 抓取结果: 财联社='+cls.length+' 金十='+jin10.length+' 华尔街见闻='+wscn.length+' 同花顺='+ths.length+' 第一财经='+yicai.length+' 东方财富='+off.length+' 东财7x24='+emflash.length+' 新浪='+sina.length+' 总计='+all.length);
 
@@ -4712,7 +4712,7 @@ function clusterNewsEvents(newsArray){
 
   // 解析新闻时间
   function parseNewsTime(n){
-    if(!n.time) return Date.now();
+    if(!n.time) return 0;
     const t=String(n.time);
     const m=t.match(/(\d{1,2}):(\d{2})/);
     if(m){
@@ -4721,7 +4721,7 @@ function clusterNewsEvents(newsArray){
       cn.setUTCHours(parseInt(m[1]),parseInt(m[2]),0,0);
       return cn.getTime()-8*60*60*1000;
     }
-    return Date.now();
+    return 0;
   }
 
   // 获取新闻涉及板块
