@@ -758,6 +758,212 @@ table td b{font-weight:700}
 .ds-status{padding:9px 11px;border-radius:12px;background:#f7fbff;border:1px solid #dcecff;font-size:11px;color:#64748b;line-height:1.6}
 .ai-run{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:520px){.ds-row{grid-template-columns:1fr}.ds-btn{width:100%}}
+
+/* ============================================================
+ * Fund AI Pro · iOS 26 Liquid Glass UI
+ * 统一替换旧的“纯白卡片”视觉，保留内容与布局不变
+ * ============================================================ */
+:root{
+  --liquid-bg:rgba(255,255,255,.34);
+  --liquid-bg-strong:rgba(255,255,255,.48);
+  --liquid-border:rgba(255,255,255,.66);
+  --liquid-shadow:0 18px 55px rgba(31,74,120,.12),0 5px 18px rgba(31,74,120,.06);
+  --liquid-inset:inset 0 1.5px 0 rgba(255,255,255,.90),inset 0 -1px 0 rgba(170,205,235,.22);
+}
+
+/* 页面底色更通透，让玻璃真的“悬浮”在背景上 */
+html,body{
+  background:#edf5fc!important;
+}
+body{
+  background:
+    radial-gradient(circle at 8% 2%,rgba(155,210,255,.32),transparent 30%),
+    radial-gradient(circle at 92% 22%,rgba(196,190,255,.18),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(175,225,255,.22),transparent 38%),
+    linear-gradient(180deg,#eef7ff 0%,#eaf3fb 48%,#f2f7fc 100%)!important;
+}
+
+/* 一级卡片：统一液态玻璃 */
+.glass,
+.sc-liquid,
+.combo-glass-card,
+.combo-overlap-card{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.58),rgba(255,255,255,.24))!important;
+  backdrop-filter:blur(30px) saturate(175%) brightness(1.04)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(175%) brightness(1.04)!important;
+  border:1px solid var(--liquid-border)!important;
+  box-shadow:var(--liquid-shadow),var(--liquid-inset)!important;
+}
+
+/* 一级玻璃高光 */
+.glass::before,
+.sc-liquid::before,
+.combo-glass-card::before,
+.combo-overlap-card::before{
+  display:block!important;
+  content:''!important;
+  position:absolute!important;
+  inset:0!important;
+  height:55%!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,0))!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+.glass::after,
+.sc-liquid::after,
+.combo-glass-card::after,
+.combo-overlap-card::after{
+  display:block!important;
+  content:''!important;
+  position:absolute!important;
+  top:-70px!important;
+  right:-45px!important;
+  width:190px!important;
+  height:190px!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle,rgba(110,190,255,.14),transparent 70%)!important;
+  filter:blur(10px)!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+.glass > *,
+.sc-liquid > *,
+.combo-glass-card > *,
+.combo-overlap-card > *{
+  position:relative;
+  z-index:1;
+}
+
+/* 基金卡片、组合内部小卡，也不再是死白 */
+.fund-card,
+.port-overview-top,
+.port-metric,
+.fc-time-gains,
+.fc-tg-display,
+.band-item,
+.wc,
+.fc-holding-bar,
+.fc-reason-btn,
+.fc-reason-body,
+.duo .note{
+  background:rgba(255,255,255,.30)!important;
+  backdrop-filter:blur(22px) saturate(165%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(165%)!important;
+  border-color:rgba(255,255,255,.55)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.72),0 7px 24px rgba(40,90,130,.045)!important;
+}
+
+/* 新闻区域：新闻条目本身做成一层层悬浮玻璃 */
+.news-item,
+.news-flat-card,
+.news-feature{
+  background:linear-gradient(145deg,rgba(255,255,255,.44),rgba(255,255,255,.20))!important;
+  backdrop-filter:blur(24px) saturate(170%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(170%)!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+  box-shadow:0 10px 32px rgba(35,85,130,.075),inset 0 1px rgba(255,255,255,.82)!important;
+}
+.news-flat-card{
+  border-radius:22px!important;
+  padding:14px!important;
+  margin:0 0 10px!important;
+}
+.news-item{
+  border-bottom:1px solid rgba(255,255,255,.45)!important;
+}
+.news-feature{
+  border-radius:22px!important;
+}
+
+/* 新闻 AI 解读：保持重点色，但玻璃化 */
+.news-ai,
+.news-deep,
+.news-sentiment,
+.ai-summary-card,
+.evidence-strip{
+  backdrop-filter:blur(22px) saturate(165%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(165%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.72),0 8px 25px rgba(40,90,130,.055)!important;
+}
+.news-ai{
+  background:linear-gradient(145deg,rgba(238,248,255,.52),rgba(222,241,255,.27))!important;
+}
+.news-deep{
+  background:linear-gradient(145deg,rgba(232,244,255,.55),rgba(214,234,255,.25))!important;
+}
+.news-sentiment{
+  background:linear-gradient(145deg,rgba(255,251,220,.52),rgba(255,246,190,.25))!important;
+}
+.evidence-strip{
+  background:rgba(255,255,255,.26)!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+}
+.evidence-strip.evidence-ok{
+  color:#176b55;
+  background:rgba(232,250,243,.32)!important;
+  border-color:rgba(90,190,150,.30)!important;
+}
+.evidence-strip.evidence-warn{
+  color:#8a5b08;
+  background:rgba(255,247,210,.38)!important;
+  border-color:rgba(245,190,70,.35)!important;
+}
+.evidence-strip.evidence-err{
+  color:#a33d3d;
+  background:rgba(255,235,235,.35)!important;
+  border-color:rgba(220,100,100,.30)!important;
+}
+.evidence-strip.evidence-loading{
+  color:#42647f;
+  background:rgba(230,244,255,.34)!important;
+}
+
+/* 新闻筛选按钮 / 刷新按钮也做成漂浮胶囊 */
+.news-filter,
+.news-refresh-btn,
+.refresh-btn{
+  background:rgba(255,255,255,.34)!important;
+  backdrop-filter:blur(20px) saturate(175%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(175%)!important;
+  border-color:rgba(255,255,255,.62)!important;
+  box-shadow:0 8px 24px rgba(35,80,120,.09),inset 0 1px rgba(255,255,255,.88)!important;
+}
+.news-filter.active{
+  background:linear-gradient(145deg,rgba(70,166,255,.78),rgba(20,126,235,.58))!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.65)!important;
+  box-shadow:0 8px 25px rgba(10,132,255,.20),inset 0 1px rgba(255,255,255,.48)!important;
+}
+
+/* 底部导航：强化悬浮玻璃 */
+.bottom-nav,
+.nav-bar,
+nav.bottom-nav{
+  background:rgba(255,255,255,.34)!important;
+  backdrop-filter:blur(30px) saturate(180%)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(180%)!important;
+  border:1px solid rgba(255,255,255,.68)!important;
+  box-shadow:0 -8px 35px rgba(35,80,120,.10),inset 0 1px rgba(255,255,255,.9)!important;
+}
+
+/* 减少“纯白大块”的刺眼感 */
+.port-overview-grid .port-metric,
+.fc-tg-tab,
+.fc-actions button,
+.news-ai-setting .ai-setting-body{
+  background:rgba(255,255,255,.28)!important;
+  border-color:rgba(255,255,255,.52)!important;
+}
+
+/* 手机端玻璃层次更明显 */
+@media(max-width:520px){
+  .glass{border-radius:28px!important}
+  .fund-card{border-radius:20px!important}
+  .news-flat-card{border-radius:20px!important}
+}
+
 </style>
 <style id="liquid-glass-v2">
 :root{--lg-shadow:0 18px 50px rgba(35,78,125,.13),0 5px 18px rgba(35,78,125,.07),inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(170,205,240,.28)}
@@ -934,9 +1140,9 @@ body{background:radial-gradient(ellipse 90% 45% at 50% -8%,rgba(191,222,255,.48)
   </div>
   <div id="newsErrorStrip" style="display:none" class="news-error-strip">
    <span>⚠️</span>
-   <span id="newsErrorText">新闻源暂时无法更新，显示最近一次成功数据</span>
+   <span id="newsErrorText">新闻接口连接失败，已保留最近一次成功数据</span>
   </div>
-  <div id="newsEvidence" class="evidence-strip" style="margin-bottom:10px">正在接入真实资讯源 · 不使用模拟新闻</div>
+  <div id="newsEvidence" class="evidence-strip" style="margin-bottom:10px">🔵 正在读取实时资讯 · 不使用模拟新闻</div>
   <div id="newsList" class="news-list"><div class="empty-state"><div class="icon">📰</div>正在读取真实资讯…</div></div>
   <details class="news-ai-setting" id="newsAISetting">
    <summary>⚙️ AI设置 <span id="newsAIBadge" style="margin-left:auto;font-size:10px;color:var(--text-sec)">未配置 ›</span></summary>
@@ -3004,6 +3210,42 @@ function checkMarketResonance(newsItem){
   return {resonance:false, evidence:'暂未形成资金共振', from:null, sectors:sectorData};
 }
 
+
+// 新闻状态栏：成功/失败状态与真实数据保持一致
+function updateNewsEvidence(mode){
+  const el=$('newsEvidence');
+  if(!el)return;
+  const count=Array.isArray(state.news)?state.news.length:0;
+  const hasData=count>0;
+  const last=state.newsLastFetch?formatNewsTime(state.newsLastFetch):'—';
+
+  if(mode==='loading'){
+    el.innerHTML='🔵 正在读取实时资讯 · 不使用模拟新闻';
+    el.classList.remove('evidence-ok','evidence-warn','evidence-err');
+    el.classList.add('evidence-loading');
+    return;
+  }
+
+  if(hasData && mode!=='error'){
+    const sourceCount=new Set((state.news||[]).flatMap(n=>Array.isArray(n.sources)?n.sources:[n.source]).filter(Boolean)).size;
+    el.innerHTML=`🟢 实时资讯已连接 · ${count} 条${sourceCount?` · ${sourceCount} 个来源`:''} · 更新 ${last}`;
+    el.classList.remove('evidence-loading','evidence-warn','evidence-err');
+    el.classList.add('evidence-ok');
+    return;
+  }
+
+  if(hasData && mode==='error'){
+    el.innerHTML=`🟡 资讯接口重试中 · 显示最近一次成功数据 · 更新 ${last}`;
+    el.classList.remove('evidence-loading','evidence-ok','evidence-err');
+    el.classList.add('evidence-warn');
+    return;
+  }
+
+  el.innerHTML='🔴 暂时无法连接实时资讯源 · 正在重试';
+  el.classList.remove('evidence-loading','evidence-ok','evidence-warn');
+  el.classList.add('evidence-err');
+}
+
 // 新闻统一刷新：直接使用 /api/news 总接口，严格按真实发布时间排序
 async function refreshNewsOnly(force=true){
   if(state._newsLoading) return;
@@ -3012,6 +3254,7 @@ async function refreshNewsOnly(force=true){
   if(btn) btn.classList.add('spin');
   state.newsAI={};
   const now=Date.now();
+  updateNewsEvidence('loading');
   try{
     const j=await proxyFetchJSON('news',12000);
     let raw=Array.isArray(j)?j:(j?.items||j?.data?.items||j?.data||j?.news||[]);
@@ -3024,9 +3267,9 @@ async function refreshNewsOnly(force=true){
     }).filter(x=>x.title&&x.timestamp>0);
     if(!normalized.length){
       const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
-      if(errStrip) errStrip.style.display='flex';
-      if(errText) errText.textContent='新闻接口暂时没有返回有效数据，保留最近一次成功数据';
-      updateNewsEvidence(); return;
+      if(errStrip) errStrip.style.display=state.news.length?'flex':'none';
+      if(errText) errText.textContent='新闻接口暂时没有返回有效数据，已保留最近一次成功数据';
+      updateNewsEvidence('error'); return;
     }
     const junk=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|奥运|世界杯|彩票|赌博|色情|低俗)/i;
     let clean=normalized.filter(x=>x.title.length>=4&&x.title.length<=120&&!junk.test(x.title));
