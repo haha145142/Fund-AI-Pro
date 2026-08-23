@@ -1,912 +1,303 @@
-// Cloudflare Pages Function: 新闻代理（实时版 v4 · 多源修正版）
-// 路径：/api/news
-//
-// 设计目标：
-// 1. 用户打开 App 时由前端请求一次 /api/news；本函数每次都重新抓取上游，不使用新闻缓存。
-// 2. 多新闻源并行请求，避免“一个源慢导致全部新闻慢”。
-// 3. 统一返回 title / summary / timestamp / time / source / sources / tier / url。
-// 4. 同一事件去重时优先保留更高等级来源；同等级再保留更新时间更新的版本。
-// 5. source 参数兼容旧版：wscn / ths / em / emflash / sina / cls / official / yicai / jin10 / guba / thsforum / all。
-// 6. AI 解读不在这里处理，前端拿到新闻后自行异步生成 AI 解读。
-// 7. 新闻接口明确禁止 CDN / 浏览器缓存。
-//
-// 来源等级：
-// Tier 1：官方公告/监管（巨潮资讯、证监会等）
-// Tier 2：权威财经快讯（财联社、第一财经）
-// Tier 3：市场资讯（华尔街见闻）
-// Tier 4：综合资讯（东方财富、同花顺、金十）
-//
-// 注意：部分财经网站会调整未公开接口。本文件对单个来源采用“失败即跳过”策略，
-// 某一个源失效不会拖垮整个新闻接口。
+// Fund-AI-Pro /api/news
+// 新闻代理 v5：实时优先、多源并行、分级排序、去重、无缓存。
+// AI 解读不在这里处理，保持前端现有 AI 解读逻辑不变。
 
 export async function onRequestGet(context) {
   const { request } = context;
-  const url = new URL(request.url);
+  const u = new URL(request.url);
+  const source = (u.searchParams.get('source') || 'all').toLowerCase();
+  const requested = Number.parseInt(u.searchParams.get('limit') || '50', 10);
+  const limit = Math.min(Math.max(Number.isFinite(requested) ? requested : 50, 10), 100);
+  const now = Date.now();
 
-  const source = (url.searchParams.get('source') || 'all').toLowerCase();
-  const limitRaw = parseInt(url.searchParams.get('limit') || '30', 10);
-  const limit = Math.min(Math.max(Number.isFinite(limitRaw) ? limitRaw : 30, 5), 60);
-
-  const commonHeaders = {
-    'User-Agent':
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+  const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/139 Safari/537.36';
+  const baseHeaders = {
+    'User-Agent': UA,
     Accept: 'application/json, text/plain, */*',
     'Accept-Language': 'zh-CN,zh;q=0.9',
     'Cache-Control': 'no-cache',
     Pragma: 'no-cache',
   };
-
-  const corsHeaders = {
+  const cors = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json; charset=utf-8',
-
-    // 新闻不能走旧缓存。
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
     'CDN-Cache-Control': 'no-store',
     'Cloudflare-CDN-Cache-Control': 'no-store',
     Pragma: 'no-cache',
   };
 
-  const should = (name) => source === 'all' || source === name;
+  if (request.method === 'OPTIONS') return new Response('', { headers: cors });
 
-  const cleanText = (value) => {
-    if (value == null) return '';
-    if (typeof value === 'object') {
-      if (value.text != null) return cleanText(value.text);
-      if (value.content != null) return cleanText(value.content);
-      if (value.summary != null) return cleanText(value.summary);
-      if (value.brief != null) return cleanText(value.brief);
-      return '';
-    }
+  const clean = (v) => String(v ?? '')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ').trim();
 
-    return String(value)
-      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/gi, ' ')
-      .replace(/&amp;/gi, '&')
-      .replace(/&lt;/gi, '<')
-      .replace(/&gt;/gi, '>')
-      .replace(/\s+/g, ' ')
-      .trim();
-  };
-
-  const parseTimestamp = (value) => {
-    if (value == null || value === '') return 0;
-
-    if (typeof value === 'number') {
-      if (!Number.isFinite(value)) return 0;
-      return value < 1e12 ? value * 1000 : value;
-    }
-
-    const s = String(value).trim();
-
+  const ts = (v) => {
+    if (v == null || v === '') return 0;
+    if (typeof v === 'number') return v < 1e12 ? v * 1000 : v;
+    const s = String(v).trim();
     if (/^\d{10}$/.test(s)) return Number(s) * 1000;
     if (/^\d{13}$/.test(s)) return Number(s);
-
     const t = Date.parse(s.replace(/\./g, '-'));
     return Number.isFinite(t) ? t : 0;
   };
 
-  const formatTime = (timestamp) => {
-    if (!timestamp) return '';
+  const fmt = (t) => t ? new Date(t).toLocaleString('zh-CN', {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }) : '';
 
-    const d = new Date(timestamp);
-    if (Number.isNaN(d.getTime())) return '';
-
-    return d.toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
-  };
-
-  const normalize = ({
-    title,
-    summary,
-    timestamp,
-    sourceName,
-    tier,
-    url: itemUrl = '',
-    id = '',
-  }) => {
-    const cleanTitleValue = cleanText(title);
-    if (!cleanTitleValue) return null;
-
-    const ts = parseTimestamp(timestamp);
-
+  const item = ({ title, summary, timestamp, sourceName, tier, url = '', id = '' }) => {
+    const titleText = clean(title);
+    if (!titleText) return null;
+    const time = ts(timestamp);
     return {
-      id: id ? String(id) : `${sourceName}-${ts}-${cleanTitleValue.slice(0, 32)}`,
-      title: cleanTitleValue,
-      summary: cleanText(summary).slice(0, 500),
-      timestamp: ts || 0,
-      time: formatTime(ts),
+      id: String(id || `${sourceName}-${time}-${titleText.slice(0, 40)}`),
+      title: titleText,
+      summary: clean(summary).slice(0, 600),
+      timestamp: time,
+      time: fmt(time),
       source: sourceName,
       sources: [sourceName],
       tier,
-      url: typeof itemUrl === 'string' ? itemUrl : '',
+      url: typeof url === 'string' ? url : '',
     };
   };
 
-  const fetchText = async (target, init = {}, timeout = 9000) => {
+  const get = async (url, init = {}, timeout = 8000) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout);
-
     try {
-      const response = await fetch(target, {
-        ...init,
-        cache: 'no-store',
-        signal: controller.signal,
-      });
+      const r = await fetch(url, { ...init, cache: 'no-store', signal: controller.signal });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r;
+    } finally { clearTimeout(timer); }
+  };
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+  const safe = async (name, fn) => {
+    try { return (await fn()) || []; }
+    catch (e) { console.log(`[news:${name}]`, e?.message || e); return []; }
+  };
+
+  // ---------- 财联社：新版实时电报 v1，签名本地计算，无 key ----------
+  const sha1 = async (text) => {
+    const h = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(text));
+    return [...new Uint8Array(h)].map(x => x.toString(16).padStart(2, '0')).join('');
+  };
+
+  const md5 = (input) => {
+    const b = new TextEncoder().encode(input);
+    const K = Array.from({ length: 64 }, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) >>> 0);
+    const S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+    const n = (((b.length + 8) >> 6) + 1) * 64;
+    const p = new Uint8Array(n); p.set(b); p[b.length] = 128;
+    const dv = new DataView(p.buffer); const bits = b.length * 8;
+    dv.setUint32(n - 8, bits >>> 0, true); dv.setUint32(n - 4, Math.floor(bits / 4294967296), true);
+    const add = (a, c) => (a + c) >>> 0;
+    const rol = (x, c) => (x << c) | (x >>> (32 - c));
+    let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+    for (let off = 0; off < n; off += 64) {
+      const M = new Uint32Array(16); for (let i = 0; i < 16; i++) M[i] = dv.getUint32(off + i * 4, true);
+      let A = a0, B = b0, C = c0, D = d0;
+      for (let i = 0; i < 64; i++) {
+        let F, g;
+        if (i < 16) { F = (B & C) | (~B & D); g = i; }
+        else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) % 16; }
+        else if (i < 48) { F = B ^ C ^ D; g = (3 * i + 5) % 16; }
+        else { F = C ^ (B | ~D); g = (7 * i) % 16; }
+        const oldD = D;
+        D = C; C = B;
+        B = add(B, rol(add(add(add(A, F >>> 0), K[i]), M[g]), S[i]));
+        A = oldD;
       }
-
-      return response;
-    } finally {
-      clearTimeout(timer);
+      a0 = add(a0, A); b0 = add(b0, B); c0 = add(c0, C); d0 = add(d0, D);
     }
+    return [a0,b0,c0,d0].map(x => Array.from({length:4}, (_,i) => ((x >>> (i*8)) & 255).toString(16).padStart(2,'0')).join('')).join('');
   };
 
-  const safeTask = async (name, fn) => {
-    try {
-      const items = await fn();
-      return Array.isArray(items) ? items : [];
-    } catch (error) {
-      console.log(`[news:${name}] unavailable`, error?.message || error);
-      return [];
-    }
-  };
+  const fetchCLS = async () => safe('cls', async () => {
+    const p = new URLSearchParams({ appName: 'CailianpressWeb', os: 'web', sv: '7.7.5', last_time: '', refresh_type: '1', rn: String(Math.min(limit, 100)) });
+    p.sort();
+    p.set('sign', md5(await sha1(p.toString())));
+    const r = await get(`https://www.cls.cn/v1/roll/get_roll_list?${p.toString()}`, { headers: { ...baseHeaders, Referer: 'https://www.cls.cn/' } }, 9000);
+    const list = r.ok ? ((await r.json())?.data?.roll_data || []) : [];
+    return list.map(x => item({
+      title: x.title || x.brief, summary: x.content || x.brief,
+      timestamp: x.ctime || x.create_time, sourceName: '财联社', tier: 2,
+      url: x.shareurl || x.url || (x.id ? `https://www.cls.cn/detail/${x.id}` : ''), id: x.id,
+    })).filter(Boolean);
+  });
 
-  // ------------------------------------------------------------
-  // Tier 3：华尔街见闻
-  // ------------------------------------------------------------
-  const fetchWSCN = async () => {
-    // 华尔街见闻当前常用 live 接口；旧 awtmt 域名保留为回退。
-    const targets = [
+  // ---------- 东方财富 7x24：主力实时备用 ----------
+  const fetchEMFlash = async () => safe('emflash', async () => {
+    const trace = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    const urls = [
+      `https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&req_trace=${encodeURIComponent(trace)}&_=${Date.now()}`,
+      `https://np-listapi.eastmoney.com/nlist/api/list/get?client=web&column_id=102&limit=${limit}&last_time=&_=${Date.now()}`,
+    ];
+    for (const url of urls) {
+      try {
+        const j = await (await get(url, { headers: { ...baseHeaders, Referer: 'https://kuaixun.eastmoney.com/' } })).json();
+        const list = j?.data?.fastNewsList || j?.data?.list || j?.data?.fastList || j?.data?.data || [];
+        const rows = (Array.isArray(list) ? list : []).map(x => item({
+          title: x.title || x.content || x.summary, summary: x.summary || x.content || x.brief,
+          timestamp: x.showTime || x.pubTime || x.ctime || x.publishTime || x.time || x.timestamp,
+          sourceName: '东方财富7x24', tier: 4, url: x.url_unique || x.url || x.link, id: x.id || x.newsId,
+        })).filter(x => x && x.timestamp);
+        if (rows.length) return rows;
+      } catch (e) { console.log('[news:emflash:endpoint]', e?.message || e); }
+    }
+    return [];
+  });
+
+  // ---------- 华尔街见闻 ----------
+  const fetchWSCN = async () => safe('wscn', async () => {
+    const urls = [
       `https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${limit}&_=${Date.now()}`,
       `https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${limit}&_=${Date.now()}`,
     ];
-    for (const target of targets) {
+    for (const url of urls) {
       try {
-        const response = await fetchText(target, {
-          headers: { ...commonHeaders, Referer: 'https://wallstreetcn.com/' },
-        });
-        const json = await response.json();
-        const items = json?.data?.items || json?.data?.day_items || [];
-        const rows = (Array.isArray(items) ? items : [])
-          .map((x) => normalize({
-            title: x.title || x.resource?.title || x.content_text,
-            summary: x.summary || x.brief || x.content_text || x.resource?.content_text,
-            timestamp: x.display_time || x.publish_time || x.created_at || x.ctime || x.time,
-            sourceName: '华尔街见闻',
-            tier: 3,
-            url: x.uri || x.resource?.uri || '',
-            id: x.id || x.resource?.id || '',
-          }))
-          .filter(Boolean)
-          .filter((x) => x.timestamp > 0);
+        const j = await (await get(url, { headers: { ...baseHeaders, Referer: 'https://wallstreetcn.com/' } })).json();
+        const list = j?.data?.items || j?.data?.day_items || [];
+        const rows = (Array.isArray(list) ? list : []).map(x => item({
+          title: x.title || x.resource?.title || x.content_text,
+          summary: x.summary || x.brief || x.content_text || x.resource?.content_text,
+          timestamp: x.display_time || x.publish_time || x.created_at || x.ctime || x.time,
+          sourceName: '华尔街见闻', tier: 3, url: x.uri || x.resource?.uri, id: x.id || x.resource?.id,
+        })).filter(x => x && x.timestamp);
         if (rows.length) return rows;
-      } catch (error) {
-        console.log('[news:wscn] endpoint failed', error?.message || error);
-      }
+      } catch (e) { console.log('[news:wscn:endpoint]', e?.message || e); }
     }
     return [];
-  };
+  });
 
-  // ------------------------------------------------------------
-  // Tier 4：同花顺
-  // ------------------------------------------------------------
-  const fetchTHS = async () => {
-    const target =
-      `https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&pagesize=${limit}&track=website&_=${Date.now()}`;
-
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://news.10jqka.com.cn/',
-      },
-    });
-
-    const json = await response.json();
-    const list = json?.data?.list || [];
-
-    return list
-      .map((x) =>
-        normalize({
-          title: x.title,
-          summary: x.digest || x.summary || '',
-          timestamp: x.ctime || x.time || x.showTime,
-          sourceName: '同花顺',
-          tier: 4,
-          url: x.url || x.url_pc || '',
-          id: x.id || x.news_id || '',
-        }),
-      )
-      .filter(Boolean);
-  };
-
-  // ------------------------------------------------------------
-  // Tier 4：东方财富
-  // ------------------------------------------------------------
-  const fetchEM = async () => {
-    const param = {
-      uid: '',
-      keyword: 'A股 股票 市场 政策 业绩 半导体 芯片 AI 算力 基金 ETF',
-      type: ['cmsArticleWebOld'],
-      client: 'web',
-      clientType: 'web',
-      clientVersion: 'curr',
-      param: {
-        cmsArticleWebOld: {
-          searchScope: 'default',
-          sort: 'default',
-          pageIndex: 1,
-          pageSize: limit,
-          preTag: '',
-          postTag: '',
-        },
-      },
-    };
-
-    const target =
-      `https://search-api-web.eastmoney.com/search/jsonp?cb=jQueryCallback&param=${encodeURIComponent(
-        JSON.stringify(param),
-      )}&_=${Date.now()}`;
-
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://so.eastmoney.com/',
-      },
-    });
-
-    const text = await response.text();
-    const match = text.match(/jQueryCallback\(([\s\S]+)\)\s*;?\s*$/);
-
-    if (!match) return [];
-
-    const json = JSON.parse(match[1]);
-    const list =
-      json?.result?.cmsArticleWebOld ||
-      json?.data?.cmsArticleWebOld ||
-      [];
-
-    return list
-      .map((x) =>
-        normalize({
-          title: x.title || x.brief,
-          summary: x.content || x.brief || x.summary,
-          timestamp: x.ctime || x.showTime || x.publishTime,
-          sourceName: '东方财富',
-          tier: 4,
-          url: x.url || x.articleUrl || '',
-          id: x.id || x.articleId || '',
-        }),
-      )
-      .filter(Boolean);
-  };
-
-  // ------------------------------------------------------------
-  // Tier 2：财联社
-  //
-  // 说明：
-  // 财联社旧 telegraph 接口在 2026 年已经出现 404，不能继续把
-  // /nodeapi/updateTelegraphList 当作可靠实时接口。
-  // 这里使用当前仍可访问的 depth/hot 数据作为 Tier 2 备用来源。
-  // ------------------------------------------------------------
-  const sha1Hex = async (text) => {
-    const data = new TextEncoder().encode(text);
-    const hash = await crypto.subtle.digest('SHA-1', data);
-    return [...new Uint8Array(hash)]
-      .map((b) => b.toString(16).padStart(2, '0'))
-      .join('');
-  };
-
-  // 财联社接口的 sign 为 md5(sha1(sorted query string))。
-  // Cloudflare Workers 没有 Node crypto，因此这里实现纯 Web Crypto MD5。
-  const md5Hex = (input) => {
-    const bytes = new TextEncoder().encode(input);
-
-    const rotateLeft = (x, c) => (x << c) | (x >>> (32 - c));
-    const add = (a, b) => (a + b) >>> 0;
-
-    const K = new Uint32Array(64);
-    for (let i = 0; i < 64; i++) {
-      K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) >>> 0;
-    }
-
-    const S = [
-      7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
-      5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
-      4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
-      6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21,
-    ];
-
-    const bitLen = bytes.length * 8;
-    const paddedLength = (((bytes.length + 8) >> 6) + 1) * 64;
-    const buffer = new Uint8Array(paddedLength);
-    buffer.set(bytes);
-    buffer[bytes.length] = 0x80;
-
-    const view = new DataView(buffer.buffer);
-    view.setUint32(paddedLength - 8, bitLen >>> 0, true);
-    view.setUint32(paddedLength - 4, Math.floor(bitLen / 4294967296), true);
-
-    let a0 = 0x67452301;
-    let b0 = 0xefcdab89;
-    let c0 = 0x98badcfe;
-    let d0 = 0x10325476;
-
-    for (let offset = 0; offset < paddedLength; offset += 64) {
-      const M = new Uint32Array(16);
-      for (let i = 0; i < 16; i++) {
-        M[i] = view.getUint32(offset + i * 4, true);
-      }
-
-      let A = a0;
-      let B = b0;
-      let C = c0;
-      let D = d0;
-
-      for (let i = 0; i < 64; i++) {
-        let F;
-        let g;
-
-        if (i < 16) {
-          F = (B & C) | (~B & D);
-          g = i;
-        } else if (i < 32) {
-          F = (D & B) | (~D & C);
-          g = (5 * i + 1) % 16;
-        } else if (i < 48) {
-          F = B ^ C ^ D;
-          g = (3 * i + 5) % 16;
-        } else {
-          F = C ^ (B | ~D);
-          g = (7 * i) % 16;
-        }
-
-        const temp = D;
-        const sum = add(add(add(A, F >>> 0), K[i]), M[g]);
-        D = C;
-        C = B;
-        B = add(B, rotateLeft(sum, S[i]));
-        A = temp;
-      }
-
-      a0 = add(a0, A);
-      b0 = add(b0, B);
-      c0 = add(c0, C);
-      d0 = add(d0, D);
-    }
-
-    const words = [a0, b0, c0, d0];
-    return words
-      .map((word) => {
-        let out = '';
-        for (let i = 0; i < 4; i++) {
-          out += ((word >>> (i * 8)) & 0xff).toString(16).padStart(2, '0');
-        }
-        return out;
-      })
-      .join('');
-  };
-
-  const getCLSSignedParams = async (extra = {}) => {
-    const params = new URLSearchParams({
-      appName: 'CailianpressWeb',
-      os: 'web',
-      sv: '7.7.5',
-      ...extra,
-    });
-
-    params.sort();
-
-    const sha1 = await sha1Hex(params.toString());
-    const sign = md5Hex(sha1);
-    params.set('sign', sign);
-
-    return params;
-  };
-
-  const fetchCLS = async () => {
-    // 当前可用的财联社深度接口。
-    // 如果接口返回结构变化，安全地返回空数组，不影响其他来源。
-    const params = await getCLSSignedParams();
-
-    const urls = [
-      `https://www.cls.cn/v3/depth/home/assembled/1000?${params.toString()}`,
-      `https://www.cls.cn/v2/article/hot/list?${params.toString()}`,
-    ];
-
-    for (const target of urls) {
-      try {
-        const response = await fetchText(target, {
-          headers: {
-            ...commonHeaders,
-            Referer: 'https://www.cls.cn/',
-          },
-        });
-
-        const json = await response.json();
-
-        const raw =
-          json?.data?.data ||
-          json?.data?.list ||
-          json?.data?.articles ||
-          json?.data ||
-          [];
-
-        const list = Array.isArray(raw) ? raw : [];
-
-        const items = list
-          .map((x) =>
-            normalize({
-              title:
-                x.title ||
-                x.brief ||
-                x.article_title ||
-                x.content?.title,
-              summary:
-                x.brief ||
-                x.content ||
-                x.article_brief ||
-                x.summary,
-              timestamp:
-                x.ctime ||
-                x.create_time ||
-                x.publish_time ||
-                x.article_time,
-              sourceName: '财联社',
-              tier: 2,
-              url:
-                x.shareurl ||
-                x.url ||
-                (x.id ? `https://www.cls.cn/detail/${x.id}` : ''),
-              id: x.id || x.article_id || '',
-            }),
-          )
-          .filter(Boolean);
-
-        if (items.length) return items.slice(0, limit);
-      } catch (error) {
-        console.log('[news:cls] endpoint failed', error?.message || error);
-      }
-    }
-
-    return [];
-  };
-
-  // ------------------------------------------------------------
-  // Tier 1：巨潮资讯 / 上市公司公告
-  //
-  // 使用巨潮公告查询接口获取当天最新公告。
-  // 这是“官方信息”而不是把东方财富包装成官方。
-  // ------------------------------------------------------------
-  const fetchOfficial = async () => {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
-    const today = `${yyyy}-${mm}-${dd}`;
-
-    const form = new URLSearchParams();
-    form.set('pageNum', '1');
-    form.set('pageSize', String(Math.min(limit, 30)));
-    form.set('column', 'szse');
-    form.set('tabName', 'latest');
-    form.set('plate', '');
-    form.set('stock', '');
-    form.set('searchkey', '');
-    form.set('secid', '');
-    form.set('category', '');
-    form.set('trade', '');
-    form.set('seDate', `${today}~${today}`);
-
-    const response = await fetchText(
-      'https://www.cninfo.com.cn/new/hisAnnouncement/query',
-      {
-        method: 'POST',
-        headers: {
-          ...commonHeaders,
-          Referer: 'https://www.cninfo.com.cn/',
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        },
-        body: form.toString(),
-      },
-      10000,
-    );
-
-    const json = await response.json();
-    const announcements = json?.announcements || [];
-
-    return announcements
-      .map((x) =>
-        normalize({
-          title: x.announcementTitle || x.title,
-          summary: x.announcementTitle || '',
-          timestamp: x.announcementTime || x.seDate || x.publishTime,
-          sourceName: '巨潮资讯',
-          tier: 1,
-          url: x.adjunctUrl
-            ? `https://static.cninfo.com.cn/${String(x.adjunctUrl).replace(/^\/+/, '')}`
-            : 'https://www.cninfo.com.cn/',
-          id: x.announcementId || x.id || x.adjunctUrl || '',
-        }),
-      )
-      .filter(Boolean);
-  };
-
-  // ------------------------------------------------------------
-  // Tier 2：第一财经
-  //
-  // 第一财经公开首页没有一个稳定、公开、长期承诺的新闻 JSON API。
-  // 因此这里采用首页结构中的新闻链接作为“补充源”，解析失败则跳过。
-  // 不伪造时间：拿不到真实时间就 timestamp=0。
-  // ------------------------------------------------------------
-  const fetchYicai = async () => {
-    const response = await fetchText('https://www.yicai.com/', {
-      headers: {
-        ...commonHeaders,
-        Accept: 'text/html,application/xhtml+xml',
-        Referer: 'https://www.yicai.com/',
-      },
-    });
-
-    const html = await response.text();
-    const results = [];
-    const seen = new Set();
-
-    // 提取 /news/数字.html 链接附近的标题。
-    const re =
-      /<a[^>]+href=["'](https?:\/\/(?:www\.)?yicai\.com\/news\/\d+\.html|\/news\/\d+\.html)["'][^>]*>([\s\S]{1,300}?)<\/a>/gi;
-
-    let match;
-    while ((match = re.exec(html)) && results.length < limit * 2) {
-      const href = match[1].startsWith('http')
-        ? match[1]
-        : `https://www.yicai.com${match[1]}`;
-
-      const title = cleanText(match[2]);
-
-      if (!title || title.length < 4 || seen.has(href)) continue;
-      seen.add(href);
-
-      results.push(
-        normalize({
-          title,
-          summary: '',
-          timestamp: 0,
-          sourceName: '第一财经',
-          tier: 2,
-          url: href,
-          id: href,
-        }),
-      );
-    }
-
-    return results.filter(Boolean).slice(0, limit);
-  };
-
-  // ------------------------------------------------------------
-  // Tier 4：金十数据（补充快讯）
-  // ------------------------------------------------------------
-  const fetchJin10 = async () => {
-    const targets = [
+  // ---------- 金十：独立域名备用快讯 ----------
+  const fetchJin10 = async () => safe('jin10', async () => {
+    for (const url of [
       `https://flash-api.jin10.com/get_flash_list?channel=-8200&vip=1&_=${Date.now()}`,
       `https://flash-api.jin10.com/get_flash_list?channel=-8200&_=${Date.now()}`,
-    ];
-
-    for (const target of targets) {
+    ]) {
       try {
-        const response = await fetchText(target, {
-          headers: {
-            ...commonHeaders,
-            Referer: 'https://www.jin10.com/',
-          },
-        });
-
-        const json = await response.json();
-        const list = json?.data || json?.list || [];
-
-        if (!Array.isArray(list) || !list.length) continue;
-
-        const items = list
-          .map((x) => {
-            const data = x?.data || x;
-            const text =
-              data?.content ||
-              data?.title ||
-              data?.brief ||
-              data?.summary ||
-              '';
-
-            return normalize({
-              title: text,
-              summary: text,
-              timestamp: data?.time || data?.ctime || data?.timestamp,
-              sourceName: '金十数据',
-              tier: 4,
-              url: data?.link || data?.url || '',
-              id: data?.id || '',
-            });
-          })
-          .filter(Boolean);
-
-        if (items.length) return items.slice(0, limit);
-      } catch (error) {
-        console.log('[news:jin10] endpoint failed', error?.message || error);
-      }
-    }
-
-    return [];
-  };
-
-
-
-  // ------------------------------------------------------------
-  // Tier 4：东方财富 7x24 实时快讯
-  // 前端会以 source=emflash 单独请求这一源。
-  // 这是比搜索结果更适合“最新快讯”的接口。
-  // ------------------------------------------------------------
-  const fetchEMFlash = async () => {
-    // 东方财富 7x24 快讯；np-weblist 为当前常用域名，req_trace 可降低 403。
-    const trace = (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`);
-    const targets = [
-      `https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&req_trace=${encodeURIComponent(trace)}`,
-      `https://np-listapi.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&type=0&req_trace=${encodeURIComponent(trace)}`,
-    ];
-    for (const target of targets) {
-      try {
-        const response = await fetchText(target, {
-          headers: { ...commonHeaders, Referer: 'https://kuaixun.eastmoney.com/' },
-        });
-        const json = await response.json();
-        const list = json?.data?.fastNewsList || json?.data?.fastList ||
-          json?.data?.list || (Array.isArray(json?.data) ? json.data : []);
-        const rows = (Array.isArray(list) ? list : [])
-          .map((x) => normalize({
-            title: x.title || x.content || x.summary,
-            summary: x.summary || x.content || x.digest || x.brief || '',
-            timestamp: x.showTime || x.pubTime || x.ctime || x.publishTime || x.time || x.timestamp,
-            sourceName: '东方财富7x24',
-            tier: 4,
-            url: x.url_unique || x.url || x.link || '',
-            id: x.id || x.newsId || x.news_id || '',
-          }))
-          .filter(Boolean)
-          .filter((x) => x.timestamp > 0)
-          .slice(0, limit);
+        const j = await (await get(url, { headers: { ...baseHeaders, Referer: 'https://www.jin10.com/' } })).json();
+        const list = j?.data || j?.list || [];
+        const rows = (Array.isArray(list) ? list : []).map(x => { const d = x?.data || x; return item({
+          title: d?.content || d?.title || d?.brief || d?.summary,
+          summary: d?.content || d?.brief || d?.summary,
+          timestamp: d?.time || d?.ctime || d?.timestamp,
+          sourceName: '金十数据', tier: 4, url: d?.link || d?.url, id: d?.id,
+        }); }).filter(Boolean);
         if (rows.length) return rows;
-      } catch (error) {
-        console.log('[news:emflash] endpoint failed', error?.message || error);
-      }
+      } catch (e) { console.log('[news:jin10:endpoint]', e?.message || e); }
     }
     return [];
-  };
+  });
 
-  // ------------------------------------------------------------
-  // Tier 4：新浪财经 7x24 滚动新闻
-  // ------------------------------------------------------------
-  const fetchSina = async () => {
-    const target =
-      `https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=2516&k=&num=${limit}&page=1&_=${Date.now()}`;
+  // ---------- 新浪财经 7x24 ----------
+  const fetchSina = () => safe('sina', async () => {
+    const j = await (await get(`https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=2516&k=&num=${limit}&page=1&_=${Date.now()}`, { headers: { ...baseHeaders, Referer: 'https://finance.sina.com.cn/' } })).json();
+    return (Array.isArray(j?.data) ? j.data : []).map(x => item({
+      title: x.title, summary: x.intro || x.summary || x.content,
+      timestamp: x.ctime || x.create_time || x.time, sourceName: '新浪财经', tier: 4, url: x.url, id: x.id || x.docid,
+    })).filter(Boolean);
+  });
 
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://finance.sina.com.cn/',
-      },
-    });
+  // ---------- 同花顺 ----------
+  const fetchTHS = () => safe('ths', async () => {
+    const j = await (await get(`https://news.10jqka.com.cn/tapp/news/push/stock/?page=1&pagesize=${limit}&track=website&_=${Date.now()}`, { headers: { ...baseHeaders, Referer: 'https://news.10jqka.com.cn/' } })).json();
+    const list = j?.data?.list || [];
+    return (Array.isArray(list) ? list : []).map(x => item({
+      title: x.title, summary: x.digest || x.summary, timestamp: x.ctime || x.time || x.showTime,
+      sourceName: '同花顺', tier: 4, url: x.url || x.url_pc, id: x.id || x.news_id,
+    })).filter(Boolean);
+  });
 
-    const json = await response.json();
-    const list = json?.data || [];
+  // ---------- 巨潮资讯：官方公告 ----------
+  const fetchOfficial = () => safe('official', async () => {
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const form = new URLSearchParams({ pageNum:'1', pageSize:String(Math.min(limit,30)), column:'szse', tabName:'latest', plate:'', stock:'', searchkey:'', secid:'', category:'', trade:'', seDate:`${today}~${today}` });
+    const j = await (await get('https://www.cninfo.com.cn/new/hisAnnouncement/query', { method:'POST', headers:{ ...baseHeaders, Referer:'https://www.cninfo.com.cn/', 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8' }, body:form.toString() }, 10000)).json();
+    return (j?.announcements || []).map(x => item({
+      title: x.announcementTitle || x.title, summary: x.announcementTitle,
+      timestamp: x.announcementTime || x.seDate || x.publishTime, sourceName:'巨潮资讯', tier:1,
+      url: x.adjunctUrl ? `https://static.cninfo.com.cn/${String(x.adjunctUrl).replace(/^\/+/, '')}` : 'https://www.cninfo.com.cn/', id:x.announcementId || x.id || x.adjunctUrl,
+    })).filter(Boolean);
+  });
 
-    return (Array.isArray(list) ? list : [])
-      .map((x) =>
-        normalize({
-          title: x.title,
-          summary: x.intro || x.summary || x.content || '',
-          timestamp: x.ctime || x.create_time || x.time,
-          sourceName: '新浪财经',
-          tier: 4,
-          url: x.url || '',
-          id: x.id || x.docid || '',
-        }),
-      )
-      .filter(Boolean)
-      .filter((x) => x.timestamp > 0)
-      .slice(0, limit);
-  };
+  // ---------- 第一财经：补充源（不伪造时间） ----------
+  const fetchYicai = () => safe('yicai', async () => {
+    const html = await (await get('https://www.yicai.com/', { headers:{ ...baseHeaders, Accept:'text/html,application/xhtml+xml', Referer:'https://www.yicai.com/' } })).text();
+    const out=[]; const seen=new Set();
+    const re=/<a[^>]+href=["'](https?:\/\/(?:www\.)?yicai\.com\/news\/\d+\.html|\/news\/\d+\.html)["'][^>]*>([\s\S]{1,300}?)<\/a>/gi;
+    let m; while((m=re.exec(html)) && out.length<limit){ const url=m[1].startsWith('http')?m[1]:`https://www.yicai.com${m[1]}`; const title=clean(m[2]); if(title.length<4||seen.has(url))continue; seen.add(url); const x=item({title,summary:'',timestamp:0,sourceName:'第一财经',tier:2,url,id:url}); if(x)out.push(x); }
+    return out;
+  });
 
-  // ------------------------------------------------------------
-  // Tier 4：东方财富股吧热度（三级情绪）
-  // 注意：这里不是新闻源，不进入主新闻列表。
-  // ------------------------------------------------------------
-  const fetchGuba = async () => {
-    const target =
-      'https://guba.eastmoney.com/interface/GetData.aspx?path=topics/hotlist&param=ps=20&p=1';
+  const enabled = (name) => source === 'all' || source === name;
+  const jobs = [];
+  if (enabled('cls')) jobs.push(fetchCLS());
+  if (enabled('emflash') || enabled('em')) jobs.push(fetchEMFlash());
+  if (enabled('wscn')) jobs.push(fetchWSCN());
+  if (enabled('jin10')) jobs.push(fetchJin10());
+  if (enabled('sina')) jobs.push(fetchSina());
+  if (enabled('ths')) jobs.push(fetchTHS());
+  if (enabled('official')) jobs.push(fetchOfficial());
+  if (enabled('yicai')) jobs.push(fetchYicai());
 
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://guba.eastmoney.com/',
-      },
-    });
+  const batches = await Promise.all(jobs);
+  let all = batches.flat().filter(Boolean);
 
-    const json = await response.json();
-    const list = json?.Data || json?.data || [];
+  // 时效策略：有真实时间的新闻只保留最近 36 小时；如果上游全部异常，再放宽到 72 小时，绝不伪造新时间。
+  const freshCut = now - 36 * 60 * 60 * 1000;
+  const fresh = all.filter(x => !x.timestamp || x.timestamp >= freshCut);
+  if (fresh.filter(x => x.timestamp).length >= Math.min(10, limit)) all = fresh;
+  else all = all.filter(x => !x.timestamp || x.timestamp >= now - 72 * 60 * 60 * 1000);
 
-    return (Array.isArray(list) ? list : [])
-      .slice(0, Math.min(limit, 20))
-      .map((x) => ({
-        title: cleanText(x.title || x.topic_title || ''),
-        summary: cleanText(x.desc || x.content || ''),
-        heat: x.hit_count || x.read_count || x.views || 0,
-        reply: x.reply_count || x.post_count || 0,
-        source: '东方财富股吧',
-        url: x.url || x.topic_url || '',
-      }))
-      .filter((x) => x.title);
-  };
-
-  // ------------------------------------------------------------
-  // Tier 4：同花顺社区/论股堂热帖（三级情绪）
-  // ------------------------------------------------------------
-  const fetchTHSForum = async () => {
-    const target =
-      'https://t.10jqka.com.cn/newlt/lthot/lthotlist/?type=hot&page=1&pagesize=20';
-
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://t.10jqka.com.cn/',
-      },
-    });
-
-    const json = await response.json();
-    const list = json?.data?.list || json?.result || [];
-
-    return (Array.isArray(list) ? list : [])
-      .slice(0, Math.min(limit, 20))
-      .map((x) => ({
-        title: cleanText(x.title || ''),
-        summary: cleanText(x.content || x.desc || ''),
-        heat: x.views || x.read_num || 0,
-        reply: x.reply_num || x.comment_num || 0,
-        source: '同花顺社区',
-        url: x.url || x.share_url || '',
-      }))
-      .filter((x) => x.title);
-  };
-
-  // ------------------------------------------------------------
-  // 同一事件去重
-  // ------------------------------------------------------------
-  const normalizeKey = (title) =>
-    cleanText(title)
-      .toLowerCase()
-      .replace(/[，。、“”‘’：；！？,.!?;:()[\]{}【】\s]/g, '')
-      .replace(
-        /^(突发|快讯|重磅|刚刚|最新|速报|市场消息|据悉|消息称|财联社电报)/,
-        '',
-      )
-      .slice(0, 60);
-
-  const mergeNews = (lists) => {
-    const map = new Map();
-
-    for (const list of lists) {
-      for (const item of list) {
-        if (!item || !item.title) continue;
-
-        const key = normalizeKey(item.title);
-        if (!key) continue;
-
-        const old = map.get(key);
-
-        if (!old) {
-          map.set(key, item);
-          continue;
-        }
-
-        // 更高权威等级优先；同等级取更新时间更新的一条。
-        const shouldReplace =
-          item.tier < old.tier ||
-          (item.tier === old.tier &&
-            Number(item.timestamp || 0) > Number(old.timestamp || 0));
-
-        const main = shouldReplace ? item : old;
-        const secondary = shouldReplace ? old : item;
-
-        const sources = [
-          ...new Set([
-            ...(main.sources || [main.source]),
-            ...(secondary.sources || [secondary.source]),
-          ]),
-        ];
-
-        map.set(key, {
-          ...main,
-          sources,
-          source: main.source,
-        });
-      }
+  // 同事件去重：标题高度相似时合并来源，优先保留时间更新的版本。
+  const normalizeKey = s => clean(s).toLowerCase().replace(/[\s，。、“”‘’：:；;！!？?（）()【】\[\]《》<>·…—\-_/]+/g, '').slice(0, 80);
+  const dedup = new Map();
+  for (const x of all) {
+    const key = normalizeKey(x.title);
+    if (!key) continue;
+    const old = dedup.get(key);
+    if (!old) dedup.set(key, x);
+    else {
+      const winner = (x.timestamp > old.timestamp) ? x : (x.tier < old.tier ? x : old);
+      winner.sources = [...new Set([...(winner.sources || [winner.source]), ...(old.sources || [old.source]), ...(x.sources || [x.source])])];
+      dedup.set(key, winner);
     }
+  }
 
-    return [...map.values()]
-      .sort((a, b) => {
-        // 主列表永远优先最新时间；时间相近时再优先权威来源。
-        const ta = Number(a.timestamp || 0);
-        const tb = Number(b.timestamp || 0);
-        if (ta !== tb) return tb - ta;
-        return (a.tier || 99) - (b.tier || 99);
-      })
-      .slice(0, Math.min(limit * 2, 80));
-  };
+  all = [...dedup.values()];
+  // 实时优先：先按最新时间；同一 15 分钟窗口内再按来源等级排序。
+  all.sort((a,b) => {
+    if (!a.timestamp && b.timestamp) return 1;
+    if (a.timestamp && !b.timestamp) return -1;
+    const diff = b.timestamp - a.timestamp;
+    if (Math.abs(diff) <= 15 * 60 * 1000 && a.tier !== b.tier) return a.tier - b.tier;
+    return diff;
+  });
 
-  // ------------------------------------------------------------
-  // 并行抓取
-  // ------------------------------------------------------------
-  const tasks = [];
+  const rows = all.slice(0, limit);
+  const latestTimestamp = rows.reduce((m,x) => Math.max(m, x.timestamp || 0), 0);
+  const latestAgeSeconds = latestTimestamp ? Math.max(0, Math.round((now-latestTimestamp)/1000)) : null;
 
-  if (should('wscn')) tasks.push(safeTask('wscn', fetchWSCN));
-  if (should('ths')) tasks.push(safeTask('ths', fetchTHS));
-  if (should('em')) tasks.push(safeTask('em', fetchEM));
-  if (should('emflash')) tasks.push(safeTask('emflash', fetchEMFlash));
-  if (should('sina')) tasks.push(safeTask('sina', fetchSina));
-  if (should('cls')) tasks.push(safeTask('cls', fetchCLS));
-  if (should('official')) tasks.push(safeTask('official', fetchOfficial));
-  if (should('yicai')) tasks.push(safeTask('yicai', fetchYicai));
-  if (should('jin10')) tasks.push(safeTask('jin10', fetchJin10));
-  if (should('guba')) tasks.push(safeTask('guba', fetchGuba));
-  if (should('thsforum')) tasks.push(safeTask('thsforum', fetchTHSForum));
-
-  // all：一次并行请求全部来源。
-  const lists = await Promise.all(tasks);
-  const merged = mergeNews(lists);
-
-  const fetchedAt = Date.now();
-  const latestTimestamp = merged.length ? Number(merged[0].timestamp || 0) : 0;
-  const latestAgeMinutes = latestTimestamp
-    ? Math.max(0, Math.floor((fetchedAt - latestTimestamp) / 60000))
-    : null;
-
-  const responseBody = {
-    items: merged,
-    count: merged.length,
-    fetchedAt,
+  return new Response(JSON.stringify({
+    ok: true,
+    updatedAt: now,
     latestTimestamp,
-    latestAgeMinutes,
-    realtime: latestAgeMinutes != null && latestAgeMinutes <= 30,
-    cache: 'no-store',
-    sources: [
-      ...new Set(merged.flatMap((x) => x.sources || [x.source])),
-    ],
-  };
-
-  return new Response(JSON.stringify(responseBody), {
-    status: 200,
-    headers: corsHeaders,
-  });
-}
-
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Max-Age': '86400',
-      'Cache-Control': 'no-store',
-    },
-  });
+    latestTime: fmt(latestTimestamp),
+    latestAgeSeconds,
+    count: rows.length,
+    sources: [...new Set(rows.flatMap(x => x.sources || [x.source]))],
+    items: rows,
+  }), { headers: cors });
 }
