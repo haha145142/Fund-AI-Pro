@@ -267,7 +267,7 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-title{font-size:13px;line-height:1.55;font-weight:650}
 .news-title a{color:inherit;text-decoration:none}
 .news-summary{font-size:11px;color:#64748b;line-height:1.6;margin:4px 0 0 0}
-.news-ai{margin:6px 0 0 0;padding:8px 10px;border-radius:12px;background:rgba(246,250,255,.92);border-left:3px solid #7db9f2;font-size:11px;line-height:1.65;color:#334155}
+.news-ai{margin:6px 0 0 0;padding:8px 12px;border-radius:12px;background:rgba(246,250,255,.92);border-left:3px solid #7db9f2;font-size:12.5px;line-height:1.7;color:#334155;font-weight:500}
 .news-ai b{color:#0f172a}
 .news-ai .ai-tag{color:#0a84ff;font-weight:700;margin-right:4px}
 .news-feature{padding:12px;border-radius:17px;background:linear-gradient(145deg,#f8fbff,#edf6ff);border:1px solid rgba(135,190,235,.35);margin-bottom:8px;box-shadow:inset 0 1px rgba(255,255,255,.95)}
@@ -2484,6 +2484,25 @@ function matchSentiment(newsItem, sentPosts){
   return {matched, overall};
 }
 
+// ===== 重要新闻过滤 =====
+// 只保留对基金投资有实际参考价值的新闻，过滤掉流水账式快讯
+function isImportantNews(n){
+  const t=(String(n.title)+' '+String(n.summary||'')).toLowerCase();
+  if(String(n.title).trim().length<8) return false;
+  const policyKW=['降息','降准','加息','lpr','mlf','逆回购','国常会','国务院','央行','财政部','证监会','发改委','工信部','金融监管','政策','监管','处罚','立案','退市','改革','规划','补贴','减税','刺激','稳增长','化债'];
+  const marketKW=['美股','纳指','标普','道指','美联储','鲍威尔','非农','cpi','ppi','pmi','gdp','社融','m2','通胀','通缩','加息','缩表','qe','外资','北向','南向','港股','恒生','日经','欧洲央行','地缘','中东','俄乌','关税','制裁','贸易'];
+  const fundKW=['基金','etf','净值','公募','私募','持仓','调仓','申购','赎回','分红','基金经理','重仓','规模','清盘','发行','募集','理财','资管','保险资金','社保','养老'];
+  const techKW=['半导体','芯片','算力','ai','人工智能','大模型','cpo','光模块','pcb','存储','机器人','新能源','光伏','锂电','风电','储能','医药','创新药','cxo','白酒','消费','汽车','房地产','地产','城投','原油','黄金','铜','铁矿石','稀土'];
+  const corpKW=['业绩','财报','营收','利润','亏损','暴雷','增持','减持','回购','并购','重组','上市','退市','分红','配股','定增','解禁','质押','爆仓','违约'];
+  const trivialKW=['快讯','播报','早报','午报','晚报','日报','一览','盘点','汇总','行情回顾','收盘评论'];
+  const titleStr=String(n.title);
+  const isTrivialOnly=trivialKW.some(k=>titleStr.includes(k))&&!policyKW.some(k=>t.includes(k))&&!marketKW.some(k=>t.includes(k))&&!fundKW.some(k=>t.includes(k))&&!techKW.some(k=>t.includes(k))&&!corpKW.some(k=>t.includes(k));
+  if(isTrivialOnly) return false;
+  if(n.multiSource&&n.sources&&n.sources.length>=2) return true;
+  const isImportant=policyKW.some(k=>t.includes(k))||marketKW.some(k=>t.includes(k))||fundKW.some(k=>t.includes(k))||techKW.some(k=>t.includes(k))||corpKW.some(k=>t.includes(k));
+  return isImportant;
+}
+
 // 事件聚类：识别同一事件并合并（升级版：事件ID + 关键词 + 时间窗）
 function generateEventId(newsItem){
   const kws=extractKeyWords(newsItem.title);
@@ -2751,7 +2770,7 @@ async function refreshNewsOnly(force){
     if(seen.has(k)) return false;
     seen.add(k);
     return true;
-  }).slice(0,30);
+  }).filter(isImportantNews).slice(0,12);
 
   // 只有在有新数据时才更新状态
   if(merged.length>0){
@@ -4024,8 +4043,10 @@ function ruleExplain(title,summary,newsItem){
     result.market='暂时没看到行情数据跟着动';
     result.judge='光看新闻没用，还得看资金跟不跟，继续观察';
   }
-  // 一句话总结
+  // 一句话大白话总结
   result.text=`${result.fact}。${result.judge}。`;
+  // 同时保留一句话版本用于简洁显示
+  result.oneLiner=`${result.fact}，${result.judge}`;
   return result;
 }
 
@@ -4048,7 +4069,7 @@ function renderNews(filter){
   const all=state.news.filter(n=>n.title&&String(n.title).trim()).map(n=>({...n, topic:newsTopic(n)}));
   let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
   // 保持时间排序（从新到旧），不做相关度排序
-  const list=filtered.slice(0,25);
+  const list=filtered.slice(0,10);
   const listEl=$('newsList');
   if(!listEl) return;
   if(!list.length){
@@ -4100,10 +4121,15 @@ function renderNews(filter){
           const aiFact=String(n.ai.fact||'').replace(/<[^>]+>/g,'');
           const aiMarket=String(n.ai.market||'').replace(/<[^>]+>/g,'');
           const aiJudge=String(n.ai.judge||'').replace(/<[^>]+>/g,'');
-          aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span><span class="ai-fact">【事实】</span>${safe(aiFact)} <span class="ai-market">【市场】</span>${safe(aiMarket)} <span class="ai-judge">【判断】</span>${safe(aiJudge)}</div>`;
+          const aiOne=String(n.ai.oneLiner||'').replace(/<[^>]+>/g,'');
+          if(aiOne){
+            aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiOne)}</div>`;
+          }else{
+            aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiFact)} ${safe(aiMarket)} ${safe(aiJudge)}</div>`;
+          }
         }else{
           const aiText=String(n.ai).replace(/<[^>]+>/g,'');
-          aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span><b>一句话</b> ${safe(aiText)}</div>`;
+          aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiText)}</div>`;
         }
       }
       // 摘要
@@ -4304,7 +4330,7 @@ async function explainNewsBatch(){
     const cached=state.newsAI[cacheKey];
     if(cached&&now-cached.time<AI_CACHE_MS){
       n.ai=cached.data; // 使用缓存
-    }else if(i<10){ // 只对前10条调用AI，省token
+    }else if(i<8){ // 只对前8条重要新闻调用AI，省token
       needAI.push({index:i, news:n});
       newsToFetch.push({
         id:i+1,
@@ -4322,33 +4348,38 @@ async function explainNewsBatch(){
     return;
   }
 
-  const prompt=`你是给普通老百姓讲财经新闻的人。用大白话，像跟邻居聊天一样，小学文化的人也能听懂。
+  const prompt=`你是给普通老百姓讲财经新闻的人。用最接地气的大白话，像跟邻居聊天一样，小学文化的人也能听懂。
 严禁编造、严禁把相关性说成因果、严禁凭标题断言资金流向。
 
-每条新闻输出【事实】【市场】【判断】三段：
-- 【事实】：用大白话把新闻标题和内容翻译一遍，别用"央行货币政策动作"这种官话，说"央行又降息了，钱变便宜了"这种。注意：如果新闻只说了涨价，就别说"抢筹"；如果只说了政策，就别说"资金看好"。
-- 【市场】：看看有没有行情和资金数据跟着动。没有就说"行情还没跟上，再等等看"。
-- 【判断】：从这条新闻看，对咱们普通老百姓持有的基金，是好事还是坏事？如果看不出来，就说"现在看不出来，等几天再看"。
+每条新闻只输出一句话解读，格式："大白话翻译 + 对老百姓基金的影响"。
+比如："央行又降息了，钱存银行利息更少了，对基金是好事"。
+比如："芯片被限制了，相关基金可能要跌，注意一下"。
+比如："美股涨了，但跟咱们基金关系不大，看看就行"。
 
-每条fact/market/judge各不超过30字。
-必须输出JSON数组，字段：id, fact, market, judge。
+要求：
+- 严禁用"央行货币政策操作""市场情绪修复""风险偏好提升"这种官话
+- 必须用"钱变多了/变少了""涨/跌""好事/坏事"这种大白话
+- 如果看不出影响就说"暂时看不出来，等几天再说"
+- 每条不超过50字
+
+必须输出JSON数组，字段：id, oneLiner。
 
 ${JSON.stringify(newsToFetch)}`;
 
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是给老百姓讲财经新闻的人。用大白话，像跟邻居聊天一样。证据不足就说"看不出来"，别装懂，别编行情和资金数据。'},
+      {role:'system',content:'你是给老百姓讲财经新闻的人。用最土的大白话说，像村口大爷聊天一样。小学文化也能听懂。证据不足就说看不出来，别装懂，别编行情和资金数据。'},
       {role:'user',content:prompt}
     ], getDSModel());
     
     const parsed=JSON.parse(r);
     const arr=Array.isArray(parsed)?parsed:(parsed.items||parsed.data||[]);
-    const map=new Map(arr.map(x=>[Number(x.id), {fact:String(x.fact||''), market:String(x.market||''), judge:String(x.judge||'')}]));
+    const map=new Map(arr.map(x=>[Number(x.id), {oneLiner:String(x.oneLiner||x.fact||''), fact:String(x.fact||''), market:String(x.market||''), judge:String(x.judge||'')}]));
     
     needAI.forEach((item,idx)=>{
       const aiData=map.get(idx+1);
-      if(aiData&&aiData.fact){
-        const result={fact:aiData.fact, market:aiData.market, judge:aiData.judge};
+      if(aiData&&(aiData.oneLiner||aiData.fact)){
+        const result={oneLiner:aiData.oneLiner, fact:aiData.fact, market:aiData.market, judge:aiData.judge};
         state.news[item.index].ai=result;
         // 写入缓存
         const cacheKey=newsAICacheKey(item.news);
