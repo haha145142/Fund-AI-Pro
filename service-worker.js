@@ -1,8 +1,8 @@
 // Fund AI Pro · Service Worker v5
 // 离线策略：缓存外壳，数据显示当前离线，绝不伪装实时数据。
-// UI增强：页面加载时注入视觉升级；新闻严禁后台自动轮询，必须由用户手动点击“更新”。
+// 新闻策略：严禁后台自动轮询；只有用户点击新闻“更新”按钮时才请求新闻接口。
 
-const CACHE_NAME = 'fund-ai-pro-v5';
+const CACHE_NAME = 'fund-ai-pro-v6';
 const CACHE_URLS = ['/', '/index.html', '/manifest.json'];
 
 const UI_PATCH = String.raw`
@@ -35,8 +35,6 @@ const UI_PATCH = String.raw`
 <script id="fund-ai-pro-ui-script-v5">
 (function(){
 'use strict';
-const nativeSetInterval=window.setInterval;
-window.setInterval=function(fn,delay){try{const src=typeof fn==='function'?Function.prototype.toString.call(fn):String(fn);if(/news|loadNews|fetchNews|refreshNews|renderNews/i.test(src)){console.info('[Fund AI Pro] 新闻自动轮询已关闭，请手动点击更新');return 0;}}catch(e){}return nativeSetInterval.apply(this,arguments);};
 const navIcons={
 '首页':'<path d="M3.5 10.8 12 4l8.5 6.8v8.1a1.6 1.6 0 0 1-1.6 1.6H5.1a1.6 1.6 0 0 1-1.6-1.6z"/><path d="M9.2 20.5v-5.6h5.6v5.6"/>',
 '行情':'<path d="M4 18V9m5 9V5m5 13v-7m5 7V3"/><path d="M3 20.5h18"/>',
@@ -70,7 +68,13 @@ async function injectUI(response){
     if(!type.includes('text/html'))return response;
     const html=await response.text();
     if(html.includes('fund-ai-pro-ui-v5'))return new Response(html,{status:response.status,statusText:response.statusText,headers:response.headers});
-    const patched=html.replace(/<\/body>/i,UI_PATCH+'\n</body>');
+    let patched=html;
+    // 新闻只允许用户手动点击按钮刷新：删除启动时的 fetchNews、前台切回刷新、60秒轮询。
+    patched=patched.replace(/\n\s*fetchNews\(\)\.catch\(\(\)=>\{\}\),/g,'');
+    patched=patched.replace(/\n\s*refreshNewsOnly\(true\)\.catch\(\(\)=>\{\}\);/g,'\n    \/\/ 新闻保持当前内容，等待用户手动点击更新');
+    patched=patched.replace(/\n\/\/ 新闻独立自动刷新：每60秒检查一次最新资讯，同时保留手动刷新按钮\n\n\/\/ 新闻每60秒自动刷新：统一 \/api\/news，总是按真实发布时间排序\n\nsetInterval\(\(\)=>\{if\(!document\.hidden\)refreshNewsOnly\(true\)\.catch\(\(\)=>\{\}\)\},60000\);/g,'\n\/\/ 新闻自动轮询已关闭：仅用户点击“更新”按钮时刷新。');
+    if(!patched.includes('manual news refresh only'))patched=patched.replace(/<div id="newsEvidence"/,'<div id="manualNewsHint" class="evidence-strip evidence-ok" style="margin-bottom:8px">🖱️ 新闻仅手动更新 · 不会在后台自动抓取</div>\n  <div id="newsEvidence"');
+    patched=patched.replace(/<\/body>/i,UI_PATCH+'\n</body>');
     const headers=new Headers(response.headers);headers.delete('content-length');headers.set('Cache-Control','no-cache, no-store, must-revalidate');
     return new Response(patched,{status:response.status,statusText:response.statusText,headers});
   }catch(e){return response;}
