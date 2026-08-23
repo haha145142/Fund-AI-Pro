@@ -2154,52 +2154,63 @@ async function fetchGlobal(){
 
 // 解析各种时间格式为北京时间戳(ms)
 function parseNewsTime(raw, source){
-  if(!raw) return 0;
+  if(raw===null||raw===undefined||raw==='') return 0;
+
   // 已经是数字时间戳（秒或毫秒）
   if(typeof raw==='number'){
+    if(!isFinite(raw)||raw<=0) return 0;
     return raw<1e12 ? raw*1000 : raw;
   }
+
   const s=String(raw).trim();
-  // 纯数字字符串
-  if(/^\d{10}$/.test(s)) return parseInt(s)*1000;
-  if(/^\d{13}$/.test(s)) return parseInt(s);
-  // 华尔街见闻格式："2024-01-15 14:30:00" 或 ISO
+  if(!s) return 0;
+
+  // 纯数字字符串：10位秒 / 13位毫秒
+  if(/^\d{10}$/.test(s)) return parseInt(s,10)*1000;
+  if(/^\d{13}$/.test(s)) return parseInt(s,10);
+
+  // 完整日期时间 / ISO
   if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}/.test(s)){
     const d=new Date(s.replace(' ','T'));
     if(!isNaN(d.getTime())) return d.getTime();
   }
-  // 东方财富格式："01-15 14:30" 或 "2024-01-15"
-  if(/^\d{2}-\d{2} \d{2}:\d{2}/.test(s)){
+
+  // MM-DD HH:mm 或 MM/DD HH:mm
+  let m=s.match(/^(\d{1,2})[-/](\d{1,2})[ T](\d{1,2}):(\d{2})/);
+  if(m){
     const now=new Date();
-    const year=now.getFullYear();
-    const d=new Date(year+'-'+s.replace(' ','T'));
-    if(!isNaN(d.getTime())) return d.getTime();
-  }
-  // "今天 14:30" 或 "刚刚"
-  if(/今天/.test(s)){
-    const m=s.match(/(\d{1,2}):(\d{2})/);
-    if(m){
-      const now=new Date();
-      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),parseInt(m[1]),parseInt(m[2]));
+    const d=new Date(now.getFullYear(),Number(m[1])-1,Number(m[2]),Number(m[3]),Number(m[4]),0,0);
+    if(!isNaN(d.getTime())){
+      // 如果解析出的时间明显晚于当前时间，按上一年处理
+      if(d.getTime()>Date.now()+5*60*1000) d.setFullYear(d.getFullYear()-1);
       return d.getTime();
     }
   }
-  if(/刚刚|分钟前|小时前/.test(s)){
-    const m1=s.match(/(\d+)分钟前/);
-    if(m1) return Date.now()-parseInt(m1[1])*60000;
-    const m2=s.match(/(\d+)小时前/);
-    if(m2) return Date.now()-parseInt(m2[1])*3600000;
-    return Date.now();
-  }
-  // 格式 "14:30" 只有时间，默认今天
-  if(/^\d{2}:\d{2}$/.test(s)){
+
+  // “今天 14:30”
+  m=s.match(/今天[ T]*(\d{1,2}):(\d{2})/);
+  if(m){
     const now=new Date();
-    const [h,m]=s.split(':').map(Number);
-    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m);
-    // 如果时间比当前晚，说明是昨天的
-    if(d.getTime()>Date.now()+60000) d.setDate(d.getDate()-1);
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),Number(m[1]),Number(m[2]),0,0);
     return d.getTime();
   }
+
+  // “X分钟前 / X小时前”属于相对时间，允许根据当前时间计算
+  m=s.match(/(\d+)\s*分钟前/);
+  if(m) return Date.now()-Number(m[1])*60000;
+  m=s.match(/(\d+)\s*小时前/);
+  if(m) return Date.now()-Number(m[1])*3600000;
+
+  // 单独的 HH:mm：只有明确是当天时间时才使用；不能再把缺失时间伪装成当前时间
+  m=s.match(/^(\d{1,2}):(\d{2})$/);
+  if(m){
+    const now=new Date();
+    const d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),Number(m[1]),Number(m[2]),0,0);
+    if(d.getTime()>Date.now()+5*60*1000) d.setDate(d.getDate()-1);
+    return d.getTime();
+  }
+
+  // “刚刚”没有精确发布时间，不能用当前时间冒充
   return 0;
 }
 
@@ -2316,7 +2327,7 @@ async function fetchTHS(){
           sources:['同花顺'],
           url:x.url||''
         };
-      }).filter(x=>x.title);
+      }).filter(x=>x.title&&x.timestamp>0);
     }catch(e){}
   }
   try{
@@ -4712,7 +4723,7 @@ function clusterNewsEvents(newsArray){
 
   // 解析新闻时间
   function parseNewsTime(n){
-    if(!n.time) return 0;
+    if(!n.time) return Date.now();
     const t=String(n.time);
     const m=t.match(/(\d{1,2}):(\d{2})/);
     if(m){
@@ -4721,7 +4732,7 @@ function clusterNewsEvents(newsArray){
       cn.setUTCHours(parseInt(m[1]),parseInt(m[2]),0,0);
       return cn.getTime()-8*60*60*1000;
     }
-    return 0;
+    return Date.now();
   }
 
   // 获取新闻涉及板块
