@@ -112,6 +112,52 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fc-combo{font-size:11px;color:var(--text-sec);margin-top:6px;padding:6px 8px;background:rgba(242,247,255,.6);border-radius:10px;line-height:1.6}
 .fc-combo b{color:var(--text)}
 
+/* ===== 持仓概览（支付宝/天天基金风格） ===== */
+.port-overview{padding:12px 0 6px}
+.port-overview-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px}
+.port-overview-pnl{display:flex;flex-direction:column}
+.port-pnl-label{font-size:11px;color:var(--text-sec);margin-bottom:2px}
+.port-pnl-amount{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.port-pnl-amount.up{color:var(--up)}
+.port-pnl-amount.down{color:var(--down)}
+.port-pnl-pct{font-size:14px;font-weight:600;margin-top:2px}
+.port-pnl-pct.up{color:var(--up)}
+.port-pnl-pct.down{color:var(--down)}
+.port-overview-meta{font-size:12px;color:var(--text-sec);padding-bottom:4px}
+.port-overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.port-metric{background:rgba(0,0,0,.025);border-radius:12px;padding:10px 8px;text-align:center}
+.port-metric-label{font-size:10px;color:var(--text-sec);margin-bottom:4px}
+.port-metric-value{font-size:16px;font-weight:700}
+/* 时间维度切换 */
+.port-time-tabs{display:flex;gap:4px;margin-bottom:8px}
+.port-time-tab{flex:1;padding:7px 0;border:none;border-radius:10px;background:rgba(0,0,0,.03);font-size:12px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .15s}
+.port-time-tab.active{background:linear-gradient(135deg,#0a84ff,#0064d4);color:#fff;box-shadow:0 2px 8px rgba(10,132,255,.25)}
+.port-time-gain{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:linear-gradient(135deg,rgba(245,248,255,.9),rgba(237,242,255,.8));margin-bottom:6px}
+.port-tg-label{font-size:12px;color:var(--text-sec);font-weight:600}
+.port-tg-value{font-size:20px;font-weight:800}
+.port-tg-value.up{color:var(--up)}
+.port-tg-value.down{color:var(--down)}
+/* 持仓占比条 */
+.fc-holding-bar{margin:8px 0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.02)}
+.fc-holding-pct-label{font-size:11px;color:var(--text-sec);margin-bottom:4px;display:flex;justify-content:space-between}
+.fc-holding-pct-label b{color:var(--text);font-size:13px}
+.fc-holding-track{height:6px;border-radius:3px;background:rgba(0,0,0,.06);overflow:hidden;margin-bottom:4px}
+.fc-holding-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#0a84ff,#5aa9f0);transition:width .3s}
+.fc-holding-cost{font-size:10px;color:var(--text-sec)}
+.fc-holding-cost b{font-size:11px}
+/* 时间维度收益 */
+.fc-time-gains{display:flex;gap:0;margin:8px 0;padding:0;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.04)}
+.fc-tg-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 2px;border-right:1px solid rgba(0,0,0,.04)}
+.fc-tg-item:last-child{border-right:none}
+.fc-tg-label{font-size:9px;color:var(--text-sec);margin-bottom:2px}
+.fc-tg-val{font-size:12px;font-weight:700}
+.fc-tg-val.up{color:var(--up)}
+.fc-tg-val.down{color:var(--down)}
+/* 盈亏对比标签 */
+.fc-hold-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.fc-hold-best{background:#fef2f2;color:#dc2626}
+.fc-hold-worst{background:#f0fdf4;color:#16a34a}
+
 /* ===== 为什么涨/跌 展开区 ===== */
 .fc-reason-wrap{margin-top:8px}
 .fc-reason-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:12px;border:1px solid rgba(130,175,225,.2);background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(245,250,255,.7));font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:var(--font);transition:all .15s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%)}
@@ -316,17 +362,9 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-title a{color:inherit;text-decoration:none}
 .news-summary{font-size:11px;color:#64748b;line-height:1.6;margin:4px 0 0 0}
 .news-ai-wrap{margin:6px 0 0 0}
-.news-ai{padding:8px 11px;border-radius:12px;background:linear-gradient(145deg,rgba(246,251,255,.98),rgba(237,246,255,.92));border-left:3px solid #5aa9f0;font-size:11.5px;line-height:1.7;color:#1e3a5f;font-weight:500;box-shadow:0 2px 8px rgba(10,132,255,.06);display:flex;align-items:center;justify-content:space-between;gap:6px}
+.news-ai{padding:8px 11px;border-radius:12px;background:linear-gradient(145deg,rgba(246,251,255,.98),rgba(237,246,255,.92));border-left:3px solid #5aa9f0;font-size:12px;line-height:1.7;color:#1e3a5f;font-weight:500;box-shadow:0 2px 8px rgba(10,132,255,.06)}
 .news-ai b{color:#0f172a}
-.news-ai .ai-tag{color:#0a84ff;font-weight:800;margin-right:2px;font-size:12px;flex-shrink:0}
-.ai-expand-btn{font-size:10px;color:#0a84ff;font-weight:600;cursor:pointer;flex-shrink:0;background:rgba(10,132,255,.08);padding:2px 8px;border-radius:8px;transition:background .15s}
-.ai-expand-btn:hover{background:rgba(10,132,255,.15)}
-.news-ai-detail{margin-top:4px;padding:10px 12px;border-radius:12px;background:linear-gradient(145deg,rgba(255,253,248,.98),rgba(255,248,238,.92));border:1px solid rgba(245,166,35,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
-.ai-detail-item{font-size:11.5px;line-height:1.75;margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed rgba(245,166,35,.15)}
-.ai-detail-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
-.ai-detail-label{font-size:10px;font-weight:700;color:#b27500;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
-.ai-detail-text{color:#3d2c1a;display:block;font-weight:500}
-.ai-detail-final{background:linear-gradient(135deg,rgba(245,166,35,.12),rgba(245,166,35,.06));padding:7px 10px;border-radius:10px;font-weight:600;color:#7c4e00;font-size:12px;line-height:1.6}
+.news-ai .ai-tag{color:#0a84ff;font-weight:800;margin-right:5px;font-size:13px}
 .news-feature{position:relative;padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(248,251,255,.95),rgba(237,246,255,.85));border:1px solid rgba(135,190,235,.4);margin-bottom:10px;box-shadow:0 12px 36px rgba(10,100,200,.08),inset 0 1.5px 0 rgba(255,255,255,.98);overflow:hidden}
 .news-feature::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);pointer-events:none;border-radius:18px 18px 0 0}
 .news-feature::after{content:'';position:absolute;top:6px;left:16px;right:50%;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.2));filter:blur(6px);pointer-events:none;border-radius:999px}
@@ -736,16 +774,44 @@ table td b{font-weight:700}
  <!-- 我的持仓 -->
  <div class="glass fade-in" id="portfolioCard">
   <div class="glass-title">💼 我的持仓 <small>盘中估·收盘以官方净值为准</small><span class="badge" id="portCount">0只</span></div>
-  <div class="portsum" id="portSummary" style="flex-direction:column;align-items:flex-start;gap:6px">
-   <div class="flex" style="gap:12px">
-    <span class="text-sec">持仓整体</span>
-    <span class="main" id="portTotalReturn">—</span>
-    <span class="ps" id="portDetail">等待添加持仓</span>
+  <!-- 整体账户核心指标 -->
+  <div class="port-overview" id="portSummary">
+   <div class="port-overview-top">
+    <div class="port-overview-pnl">
+     <span class="port-pnl-label">整体盈亏</span>
+     <span class="port-pnl-amount" id="portTotalReturn">—</span>
+     <span class="port-pnl-pct" id="portTotalPct">—</span>
+    </div>
+    <div class="port-overview-meta">
+     <span id="portDetail">等待添加持仓</span>
+    </div>
    </div>
-   <div class="flex" style="gap:16px;width:100%;justify-content:space-between">
-    <div><div class="text-xs text-sec">总账户资产</div><div class="fw-700" id="portTotalAssets">¥0</div></div>
-    <div><div class="text-xs text-sec">今日收益</div><div class="count" id="portTodayGain">—</div></div>
-    <div><div class="text-xs text-sec">持仓市值</div><div class="count" id="portValue">¥0</div></div>
+   <!-- 三列核心指标 -->
+   <div class="port-overview-grid">
+    <div class="port-metric">
+     <div class="port-metric-label">总成本</div>
+     <div class="port-metric-value" id="portTotalCost">¥0</div>
+    </div>
+    <div class="port-metric">
+     <div class="port-metric-label">总资产</div>
+     <div class="port-metric-value" id="portTotalAssets">¥0</div>
+    </div>
+    <div class="port-metric">
+     <div class="port-metric-label">持仓市值</div>
+     <div class="port-metric-value" id="portValue">¥0</div>
+    </div>
+   </div>
+   <!-- 时间维度收益切换 -->
+   <div class="port-time-tabs">
+    <button class="port-time-tab active" data-period="today">今日</button>
+    <button class="port-time-tab" data-period="week">本周</button>
+    <button class="port-time-tab" data-period="month">本月</button>
+    <button class="port-time-tab" data-period="year">今年</button>
+    <button class="port-time-tab" data-period="total">以来</button>
+   </div>
+   <div class="port-time-gain" id="portTimeGain">
+    <span class="port-tg-label">今日收益</span>
+    <span class="port-tg-value" id="portTodayGain">—</span>
    </div>
   </div>
   <div id="portfolioList"></div>
@@ -1043,10 +1109,6 @@ table td b{font-weight:700}
  <div class="glass fade-in">
   <div class="glass-title">🏥 组合体检 <small>自动分析·需添加持仓</small></div>
   <div id="comboContent"><div class="empty-state"><div class="icon">🏥</div>添加基金后自动分析组合健康度</div></div>
- </div>
- <div class="glass fade-in">
-  <div class="glass-title">📶 波段信号 · 趋势强弱 <small>综合指标</small></div>
-  <div id="bandContent2"></div>
  </div>
 </div><!-- /page-combo -->
 
@@ -2169,7 +2231,7 @@ function cleanHTML(text){
 async function fetchWSCN(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=wscn&limit=20',10000);
+      const j=await proxyFetchJSON('news?source=wscn&limit=30',10000);
       const raw=j?.items||[];
       const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
       if(arr.length) return arr;
@@ -2196,7 +2258,7 @@ async function fetchWSCN(){
 async function fetchTHS(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=ths&limit=40',10000);
+      const j=await proxyFetchJSON('news?source=ths&limit=60',10000);
       const list=j?.items||[];
       return list.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','同花顺');
@@ -2236,7 +2298,7 @@ async function fetchTHS(){
 async function fetchJin10News(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=jin10&limit=20',10000);
+      const j=await proxyFetchJSON('news?source=jin10&limit=30',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','金十数据');
@@ -2291,7 +2353,7 @@ async function fetchJin10News(){
 async function fetchOfficialNews(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=official&limit=15',10000);
+      const j=await proxyFetchJSON('news?source=official&limit=20',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','官方');
@@ -2318,7 +2380,7 @@ async function fetchOfficialNews(){
 async function fetchCLSNews(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=cls&limit=20',10000);
+      const j=await proxyFetchJSON('news?source=cls&limit=30',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','财联社');
@@ -2374,7 +2436,7 @@ async function fetchCLSNews(){
 async function fetchYicaiNews(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=yicai&limit=15',10000);
+      const j=await proxyFetchJSON('news?source=yicai&limit=25',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','第一财经');
@@ -2782,7 +2844,19 @@ async function refreshNewsOnly(force){
     if(seen.has(k)) return false;
     seen.add(k);
     return true;
-  }).slice(0,20);
+  });
+
+  // 硬核新闻过滤：只保留跟宏观经济、股市、热门行业相关的新闻，去掉娱乐八卦、广告、重复废话
+  merged=hardNewsFilter(merged);
+
+  // 按突发+时间排序，最多保留40条
+  merged.sort((a,b)=>{
+    const aBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(a.title)?1:0;
+    const bBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(b.title)?1:0;
+    if(aBreak!==bBreak) return bBreak-aBreak;
+    return b.timestamp-a.timestamp;
+  });
+  merged=merged.slice(0,40);
 
   // 只有在有新数据时才更新状态
   if(merged.length>0){
@@ -2826,6 +2900,23 @@ function updateNewsEvidence(){
     const sentTxt=state.sentimentOverall?` · 社区情绪：${state.sentimentOverall.labelText}`:'';
     el.textContent=`快讯：${t1.length?t1.join('·'):'—'} | 情绪：${t3.length?t3.join('·'):'—'}${sentTxt} · ${aiMode}AI`;
   }
+}
+
+// 硬核新闻过滤：只保留宏观经济、股市大盘、热门行业相关的新闻
+function hardNewsFilter(newsArr){
+  // 必选关键词（包含就保留）
+  const mustHave=/(降准|降息|加息|政策|国务院|证监会|央行|财政部|发改委|统计局|GDP|CPI|PPI|PMI|利率|汇率|货币|财政|减税|补贴|监管|股市|A股|大盘|指数|沪指|深指|创业板|科创板|北交所|基金|ETF|公募|私募|持仓|净值|半导体|芯片|AI|人工智能|算力|光模块|机器人|新能源|光伏|锂电|储能|医药|医疗|消费|地产|房地产|银行|黄金|原油|石油|铜|有色|煤炭|钢铁|美股|纳指|道指|标普|美联储|美债|美元|港股|恒生|南向|北向|业绩|财报|利润|营收|增持|减持|回购|分红|暴雷|亏损|退市|重组|停牌|涨价|降价|价格战|产能|供需|贸易|关税|制裁|出口|进口|中东|俄乌|地缘|战争|冲突|避险)/;
+  // 必删关键词（包含就过滤掉）
+  const mustKill=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐|八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|比赛|奥运|世界杯|体育|彩票|赌博|色情|低俗)/;
+  return newsArr.filter(n=>{
+    const title=cleanHTML(n.title||'');
+    const t=title.toLowerCase();
+    if(mustKill.test(t)) return false;
+    if(title.length<6||title.length>80) return false;
+    if(n.multiSource) return true;
+    if(/(突发|紧急|刚刚|重磅|快讯|速报)/.test(t)) return true;
+    return mustHave.test(t);
+  });
 }
 
 // 兼容旧函数名
@@ -3148,16 +3239,42 @@ function renderPortfolio(){
     if(!state.portfolio.length){
       listEl.innerHTML='<div class="empty-state"><div class="icon">📭</div>暂无持仓，添加基金开始追踪</div>';
       if(sumEl){
-        sumEl.querySelector('#portTotalReturn')&&($('portTotalReturn').textContent='—');
-        sumEl.querySelector('#portDetail')&&($('portDetail').textContent='等待添加持仓');
-        sumEl.querySelector('#portValue')&&($('portValue').textContent='¥0');
-        sumEl.querySelector('#portTodayGain')&&($('portTodayGain').textContent='—');
+        const r=sumEl.querySelector('#portTotalReturn'); if(r){r.textContent='—';r.className='port-pnl-amount';}
+        const pc=sumEl.querySelector('#portTotalPct'); if(pc){pc.textContent='—';pc.className='port-pnl-pct';}
+        const pd=sumEl.querySelector('#portDetail'); if(pd)pd.textContent='等待添加持仓';
+        const tc=sumEl.querySelector('#portTotalCost'); if(tc)tc.textContent='¥0';
+        const ta=sumEl.querySelector('#portTotalAssets'); if(ta)ta.textContent='¥0';
+        const pv=sumEl.querySelector('#portValue'); if(pv)pv.textContent='¥0';
+        const tg=sumEl.querySelector('#portTodayGain'); if(tg){tg.textContent='—';tg.className='port-tg-value';}
       }
       $('portCount')&&($('portCount').textContent='0只');
       $('portCount2')&&($('portCount2').textContent='0只');
       return;
     }
-    let totalValue=0,totalGain=0,totalCost=0,totalTodayGain=0,totalYesterdayGain=0,up=0,down=0;
+    let totalValue=0,totalGain=0,totalCost=0,totalTodayGain=0,totalYesterdayGain=0;
+    let totalWeekGain=0,totalMonthGain=0,totalYearGain=0,up=0,down=0;
+    // 预计算：总资产 + 盈亏对比标签（避免持仓占比/对比标签依赖尚未完成的循环累加）
+    let _preVal=0,_preTG=0;
+    const fundGains=[];
+    for(let k=0;k<state.portfolio.length;k++){
+      const p=state.portfolio[k];
+      const d=state.funds[p.code]||{};
+      const price=d.estimate??d.nav;
+      const hist=d.history||[];
+      const yest=hist.at(-2);
+      const tp=price??hist.at(-1);
+      if(Number.isFinite(price))_preVal+=price*p.shares;
+      if(Number.isFinite(tp)&&Number.isFinite(yest))_preTG+=(tp-yest)*p.shares;
+      const g=Number.isFinite(price)?(price-p.cost)*p.shares:null;
+      if(g!=null)fundGains.push({idx:k,gain:g});
+    }
+    const totalAssets=_preVal+(_preTG||0);
+    let maxGainIdx=-1,minGainIdx=-1;
+    if(fundGains.length>=2){
+      const _sorted=[...fundGains].sort((a,b)=>b.gain-a.gain);
+      maxGainIdx=_sorted[0].idx;
+      minGainIdx=_sorted[_sorted.length-1].idx;
+    }
     const html=state.portfolio.map((p,i)=>{
       const d=state.funds[p.code]||{};
       const price=d.estimate??d.nav;
@@ -3172,11 +3289,18 @@ function renderPortfolio(){
       const todayPrice=price??todayNav;
       const todayGain=(Number.isFinite(todayPrice)&&Number.isFinite(yestNav))?(todayPrice-yestNav)*p.shares:null;
       const yesterdayGain=(Number.isFinite(yestNav)&&Number.isFinite(prevNav))?(yestNav-prevNav)*p.shares:null;
+      // 计算各时间维度收益
+      const weekGain=(Number.isFinite(todayPrice)&&hist.length>=7)?(todayPrice-hist[hist.length-7])*p.shares:null;
+      const monthGain=(Number.isFinite(todayPrice)&&hist.length>=30)?(todayPrice-hist[hist.length-30])*p.shares:null;
+      const yearGain=(Number.isFinite(todayPrice)&&hist.length>=250)?(todayPrice-hist[hist.length-250])*p.shares:null;
       if(Number.isFinite(price))totalValue+=price*p.shares;
       totalCost+=cost;
       if(Number.isFinite(gain))totalGain+=gain;
       if(Number.isFinite(todayGain))totalTodayGain+=todayGain;
       if(Number.isFinite(yesterdayGain))totalYesterdayGain+=yesterdayGain;
+      if(Number.isFinite(weekGain))totalWeekGain+=weekGain;
+      if(Number.isFinite(monthGain))totalMonthGain+=monthGain;
+      if(Number.isFinite(yearGain))totalYearGain+=yearGain;
       if((d.pct??0)>=0)up++;else down++;
       const m=d.metrics;
       const sigs=[];
@@ -3209,6 +3333,15 @@ function renderPortfolio(){
           </div>
           <div class="fc-live-note">${d.live.warn?'模型分歧较大，可能因基金调仓或成分股异动导致，估值仅供参考':(d.live.routes.length<2?'可用估算模型较少，参考价值有限':'多模型交叉估算，结果仅供参考，不构成投资建议')}</div>
         </div>`:'';
+      // 持仓占比
+      const holdingValue=Number.isFinite(price)?price*p.shares:0;
+      const holdingPct=totalAssets>0?(holdingValue/totalAssets*100):0;
+      // 持有收益率
+      const holdReturnRate=(p.cost>0&&gain!=null)?(gain/(p.cost*p.shares)*100):null;
+      // 持仓成本
+      const holdCost=p.cost*p.shares;
+      // 盈亏对比标签
+      const holdLabel=(i===maxGainIdx&&fundGains.length>=2)?'<span class="fc-hold-tag fc-hold-best">全仓赚最多</span>':(i===minGainIdx&&fundGains.length>=2)?'<span class="fc-hold-tag fc-hold-worst">全仓亏最多</span>':'';
       return `<div class="fund-card fade-in">
         <div class="fc-head">
           <div>
@@ -3223,9 +3356,21 @@ function renderPortfolio(){
         ${liveHtml}
         <div class="fc-grid" style="grid-template-columns:repeat(4,1fr)">
           <div class="gi">持仓金额<b>${Number.isFinite(price)?'¥'+(price*p.shares).toFixed(0):'—'}</b></div>
-          <div class="gi">持有收益<b class="${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</b></div>
+          <div class="gi">持有收益<b class="${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</b>${holdLabel}</div>
           <div class="gi">今日收益<b class="${todayGain==null?'':(todayGain>=0?'up':'down')}">${todayGain==null?'—':(todayGain>=0?'+':'')+todayGain.toFixed(2)}</b></div>
           <div class="gi">昨日收益<b class="${yesterdayGain==null?'':(yesterdayGain>=0?'up':'down')}">${yesterdayGain==null?'—':(yesterdayGain>=0?'+':'')+yesterdayGain.toFixed(2)}</b></div>
+        </div>
+        <div class="fc-holding-bar">
+          <div class="fc-holding-pct-label">持仓占比 <b>${holdingPct.toFixed(1)}%</b></div>
+          <div class="fc-holding-track"><div class="fc-holding-fill" style="width:${Math.min(holdingPct,100)}%"></div></div>
+          <div class="fc-holding-cost">持仓成本 ¥${holdCost.toFixed(0)} · 持有收益率 <b class="${holdReturnRate==null?'':(holdReturnRate>=0?'up':'down')}">${holdReturnRate==null?'—':(holdReturnRate>=0?'+':'')+holdReturnRate.toFixed(2)+'%'}</b></div>
+        </div>
+        <div class="fc-time-gains" data-fund-idx="${i}">
+          <div class="fc-tg-item"><span class="fc-tg-label">今日</span><span class="fc-tg-val ${todayGain==null?'':(todayGain>=0?'up':'down')}">${todayGain==null?'—':(todayGain>=0?'+':'')+todayGain.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">本周</span><span class="fc-tg-val ${weekGain==null?'':(weekGain>=0?'up':'down')}">${weekGain==null?'—':(weekGain>=0?'+':'')+weekGain.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">本月</span><span class="fc-tg-val ${monthGain==null?'':(monthGain>=0?'up':'down')}">${monthGain==null?'—':(monthGain>=0?'+':'')+monthGain.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">今年</span><span class="fc-tg-val ${yearGain==null?'':(yearGain>=0?'up':'down')}">${yearGain==null?'—':(yearGain>=0?'+':'')+yearGain.toFixed(2)}</span></div>
+          <div class="fc-tg-item"><span class="fc-tg-label">以来</span><span class="fc-tg-val ${gain==null?'':(gain>=0?'up':'down')}">${gain==null?'—':(gain>=0?'+':'')+gain.toFixed(2)}</span></div>
         </div>
         ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
         ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
@@ -3282,6 +3427,12 @@ function renderPortfolio(){
       </div>`;
     }).join('');
     listEl.innerHTML=html;
+    // 初始化时间维度收益显示（默认今日）
+    listEl.querySelectorAll('.fc-time-gains').forEach(el=>{
+      el.querySelectorAll('.fc-tg-item').forEach((item,idx)=>{
+        item.style.display=idx===0?'flex':'none';
+      });
+    });
     // 绑定事件
     listEl.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
       const idx=+b.dataset.del;
@@ -3313,19 +3464,25 @@ function renderPortfolio(){
     });
     // 汇总
     const totalPct=totalCost>0?(totalGain/totalCost*100):null;
-    const totalAssets=totalValue+(totalTodayGain||0);
+    // 第一组：首页（支付宝/天天基金风格）
     if($('portTotalReturn')){
-      $('portTotalReturn').textContent=totalPct==null?'—':fmtPct(totalPct);
-      $('portTotalReturn').className='main '+(totalGain>=0?'up':'down');
+      $('portTotalReturn').textContent=totalGain==null?'—':(totalGain>=0?'+¥':'-¥')+Math.abs(totalGain).toFixed(2);
+      $('portTotalReturn').className='port-pnl-amount '+(totalGain>=0?'up':'down');
+    }
+    if($('portTotalPct')){
+      $('portTotalPct').textContent=totalPct==null?'—':(totalPct>=0?'+':'')+totalPct.toFixed(2)+'%';
+      $('portTotalPct').className='port-pnl-pct '+(totalGain>=0?'up':'down');
     }
     if($('portDetail'))$('portDetail').textContent=`${up}涨 ${down}跌 · 总成本 ¥${totalCost.toFixed(0)}`;
+    if($('portTotalCost'))$('portTotalCost').textContent='¥'+totalCost.toFixed(0);
+    if($('portTotalAssets'))$('portTotalAssets').textContent='¥'+totalAssets.toFixed(0);
     if($('portValue'))$('portValue').textContent='¥'+totalValue.toFixed(0);
     if($('portTodayGain')){
-      $('portTodayGain').textContent=totalTodayGain==null?'—':(totalTodayGain>=0?'+':'')+'¥'+totalTodayGain.toFixed(2);
-      $('portTodayGain').className='count '+(totalTodayGain>=0?'up':'down');
+      $('portTodayGain').textContent=totalTodayGain==null?'—':(totalTodayGain>=0?'+¥':'-¥')+Math.abs(totalTodayGain).toFixed(2);
+      $('portTodayGain').className='port-tg-value '+(totalTodayGain>=0?'up':'down');
     }
-    if($('portTotalAssets'))$('portTotalAssets').textContent='¥'+totalAssets.toFixed(0);
     if($('portCount'))$('portCount').textContent=state.portfolio.length+'只';
+    // 第二组：基金页（保持原样式）
     if($('portTotalReturn2')){
       $('portTotalReturn2').textContent=totalPct==null?'—':fmtPct(totalPct);
       $('portTotalReturn2').className='main '+(totalGain>=0?'up':'down');
@@ -3338,6 +3495,33 @@ function renderPortfolio(){
     }
     if($('portTotalAssets2'))$('portTotalAssets2').textContent='¥'+totalAssets.toFixed(0);
     if($('portCount2'))$('portCount2').textContent=state.portfolio.length+'只';
+    // 时间维度切换（仅首页有切换按钮）
+    if(sumEl.querySelector('.port-time-tab')){
+      const labels={today:'今日收益',week:'本周收益',month:'本月收益',year:'今年收益',total:'投资以来'};
+      const values={today:totalTodayGain,week:totalWeekGain,month:totalMonthGain,year:totalYearGain,total:totalGain};
+      const applyPeriod=(period)=>{
+        const labelEl=document.querySelector('.port-tg-label');
+        const gainEl=document.querySelector('#portTodayGain');
+        if(labelEl)labelEl.textContent=labels[period];
+        if(gainEl){
+          const v=values[period];
+          gainEl.textContent=v==null?'—':(v>=0?'+¥':'-¥')+Math.abs(v).toFixed(2);
+          gainEl.className='port-tg-value '+(v==null?'':(v>=0?'up':'down'));
+        }
+        document.querySelectorAll('.fc-time-gains').forEach(el=>{
+          el.querySelectorAll('.fc-tg-item').forEach((item,idx)=>{
+            item.style.display=['today','week','month','year','total'].indexOf(period)===idx?'flex':'none';
+          });
+        });
+      };
+      sumEl.querySelectorAll('.port-time-tab').forEach(tab=>{
+        tab.onclick=()=>{
+          sumEl.querySelectorAll('.port-time-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          applyPeriod(tab.dataset.period);
+        };
+      });
+    }
   };
   renderList($('portfolioList'),$('portSummary'));
   renderList($('portfolioList2'),$('portSummary2'));
@@ -3419,7 +3603,6 @@ function renderBand(){
     el.innerHTML=items;
   };
   renderInto($('bandContent'));
-  renderInto($('bandContent2'));
   $('bandTime')&&($('bandTime').textContent=dateTimeStr());
 }
 /* ============================================================
@@ -4033,169 +4216,85 @@ function newsTopic(n){
   return '市场';
 }
 
-// 邻居大叔版AI解读：四步唠嗑结构，小学文化能懂
+// 新闻大白话解读：一句话、20-30字、三年级小孩能听懂、绝不使用专业词
+// 禁止词（全部替换成大白话）：
+// 逢低布局→趁便宜买点；超跌反弹→跌多了涨一下；利空→坏消息；利好→好消息；
+// 资金面→大家手里的钱；板块轮动→风水轮流转；受益→跟着沾光；承压→要跌；
+// 回调→跌一点；配置→买点；布局→买点；企稳→不跌了；震荡→涨涨跌跌；
+// 反弹→往上涨一点；分化→有的涨有的跌；看多→觉得要涨；看空→觉得要跌；
+// 提振→让大家有信心；流动性→市场上的钱；估值→贵不贵
 function ruleExplain(title,summary,newsItem){
   const raw=cleanHTML(title)+' '+cleanHTML(summary);
-  const t=raw.toLowerCase();
-  let summaryLine='', impact='', why='', action='', final='';
+  const t=raw; // 不用toLowerCase，中文正则直接匹配
+  let line='';
 
-  // 地缘冲突
-  if(/中东|伊朗|以色列|加沙|以伊|美伊|霍尔木兹/.test(t)){
-    summaryLine='中东又打起来了，石油和黄金要涨价。';
-    impact='你买的黄金基金可能涨一点，能源股也可能跟着涨。';
-    why='因为一打仗，大家就怕石油供不上，就会抢着买黄金保值。';
-    action='手里有的可以拿着，没有的别追进去，打仗的消息来得快去得也快。';
-    final='总的来说，短期是好事，但别上头，见好就收。';
-  }else if(/俄乌|俄罗斯|乌克兰|普京|乌军|停火/.test(t)){
-    summaryLine='俄乌那边又有动静了，局势还没稳。';
-    impact='对你手里的国内基金影响不大，黄金军工可能晃一下。';
-    why='因为这俩国家离咱们远，主要影响欧洲和能源价格。';
-    action='不用特意操作，该怎么定投怎么定投。';
-    final='总的来说，背景噪音而已，不用紧张。';
-  }else if(/关税|贸易战|贸易磋商|贸易代表|加征|制裁/.test(t)){
-    summaryLine='又要加关税了，出口的东西不好卖了。';
-    impact='出口相关的股票和基金可能要跌，尤其是汽车、家电、金属。';
-    why='因为加了税，东西卖贵了，老外就不买了，公司赚的钱就少了。';
-    action='手里有出口类基金的可以减一点，没有的先别碰。';
-    final='总的来说，是个坏消息，先躲一躲再说。';
-  }else if(/降准|降息|lpr.{0,4}下调|宽松|释放流动性/.test(t)){
-    summaryLine='国家放水了，市场上的钱变多了。';
-    impact='股票和基金多半要涨，尤其是科技股，债券也会涨。';
-    why='就像菜市场突然多了很多买菜的人，菜价自然就上去了。';
-    action='手里的基金拿着别动，想加仓的可以慢慢加。';
-    final='总的来说，是好事，钱袋子要鼓一点了。';
-  }else if(/加息|升息|缩表|收紧|通胀超预期/.test(t)){
-    summaryLine='国家收水了，市场上的钱变少了。';
-    impact='股票和基金可能要跌，尤其是涨得高的科技股。';
-    why='就像菜市场买菜的人突然少了，菜卖不出去只能降价。';
-    action='先别急着加仓，等跌稳了再说。';
-    final='总的来说，是个坏消息，先管住手。';
-  }else if(/机器人|具身智能|人形机器人|大模型|deepseek/.test(t)){
-    summaryLine='机器人又出新技术了，大家都在聊。';
-    impact='科技股和机器人相关的基金可能涨一波。';
-    why='因为每次出新技术，大家就觉得以后能赚大钱，就抢着买。';
-    action='别追高，等回调了再考虑，这种消息炒得快凉得也快。';
-    final='总的来说，短期热闹，能不能长久还不一定。';
-  }else if(/算力|cpo|光模块|光通信|pcb|半导体|芯片|存储|人工智能/.test(t)){
-    summaryLine='AI和芯片又有利好，大家还在追。';
-    impact='半导体、算力、光模块这些基金可能继续涨。';
-    why='因为现在最热的就是AI，大家都觉得以后能赚大钱。';
-    action='手里有的拿着，没有的等跌一点再买，别追在山顶上。';
-    final='总的来说，是当前最火的方向，但涨多了也会回调。';
-  }else if(/黄金|金价|避险|央行购金/.test(t)){
-    summaryLine='黄金又涨了，大家都在买黄金避险。';
-    impact='你买的黄金基金要涨，黄金股也跟着涨。';
-    why='因为世道不稳的时候，大家觉得黄金最靠谱，就都去买。';
-    action='手里有的拿着，没有的别追太高，黄金不会一直涨。';
-    final='总的来说，是好事，但涨多了就别再加了。';
-  }else if(/原油|油价|石油|欧佩克|opec/.test(t)){
-    summaryLine='油价又变了，产油国在搞事情。';
-    impact='能源基金和石油相关股票会跟着动。';
-    why='因为石油是工业的血液，价格变了，很多行业的成本都变了。';
-    action='看看就行，别因为一天的涨跌就买卖。';
-    final='总的来说，影响有限，不用太当回事。';
+  if(/中东|伊朗|以色列|加沙|霍尔木兹/.test(t)){
+    line='中东又打仗了，石油黄金可能要涨，别乱追。';
+  }else if(/俄乌|俄罗斯|乌克兰|停火/.test(t)){
+    line='俄乌那边有动静，黄金可能晃一下，不用慌。';
+  }else if(/关税|贸易战|加征|制裁|贸易摩擦/.test(t)){
+    line='又要加税了，出口的股票可能跌，先躲躲。';
+  }else if(/降准|降息|LPR下调|放水|宽松/.test(t)){
+    line='国家把钱袋子松了松，市场上钱变多了，股票容易涨。';
+  }else if(/加息|升息|缩表|收紧|通胀/.test(t)){
+    line='国家把钱袋子收紧了，钱变少了，股票可能要跌。';
+  }else if(/机器人|人形机器人|具身智能|大模型|DeepSeek/.test(t)){
+    line='机器人又出新花样了，科技股会热闹一阵，别追高。';
+  }else if(/算力|CPO|光模块|光通信|半导体|芯片|存储|人工智能|AI/.test(t)){
+    line='AI和芯片又有好消息，相关股票可能涨，等便宜了再买。';
+  }else if(/黄金|金价|央行购金|避险/.test(t)){
+    line='黄金涨价了，大家都在买黄金保值，手里有的拿着。';
+  }else if(/原油|油价|石油|欧佩克|OPEC/.test(t)){
+    line='油价变了，能源股票跟着动，不用太当回事。';
   }else if(/新能源|光伏|锂电|储能|风电|氢能/.test(t)){
-    summaryLine='新能源出消息了，就看这次能不能真起来。';
-    impact='新能源基金可能涨一下，但能不能持续不好说。';
-    why='因为新能源跌了很久了，出个利好大家就想抄底，但每次都没起来。';
-    action='先别急着买，等连续涨几天再说，别抄底抄在半山腰。';
-    final='总的来说，先观察，别急着动手。';
-  }else if(/医药|制药|疫苗|创新药|药企|医疗/.test(t)){
-    summaryLine='医药有新消息，影响不大。';
-    impact='医药基金可能小涨小跌，不会有大动静。';
-    why='因为医药是个长期赛道，一天两天的消息改变不了什么。';
-    action='该怎么定投怎么定投，不用特意操作。';
-    final='总的来说，不用管它，正常拿着就行。';
+    line='新能源有消息，跌了很久了，别着急抄底，等真涨起来再说。';
+  }else if(/医药|制药|疫苗|创新药|医疗|集采/.test(t)){
+    line='医药有新消息，一天两天的消息不影响长期，正常拿着。';
   }else if(/地产|房地产|楼市|房贷|救市/.test(t)){
-    summaryLine='地产又出政策了，就看能不能救起来。';
-    impact='地产和银行基金可能涨一下，但别抱太大希望。';
-    why='因为房子现在没人买，出政策只能短期刺激一下。';
-    action='别重仓买地产基金，政策市不好做。';
-    final='总的来说，看看热闹就行，别当真。';
-  }else if(/基金经理|调仓|持仓|净值|etf|公募|重仓/.test(t)){
-    summaryLine='基金在换股票了，经理在调仓。';
-    impact='你买的基金可能涨跌幅跟以前不一样了。';
-    why='因为基金经理觉得有些股票不行了，要换成更有潜力的。';
-    action='去看看你买的基金最近换了啥，是不是还符合你的预期。';
-    final='总的来说，正常操作，不用慌，但要心里有数。';
-  }else if(/国务院|证监会|央行|财政部|发改委|监管|补贴/.test(t)){
-    summaryLine='国家又出政策了，要扶持或者管一管。';
-    impact='相关行业的基金可能涨，也可能跌，看政策是好是坏。';
-    why='因为国家政策是指挥棒，说让哪个行业好，哪个就容易涨。';
-    action='看看政策说的是啥，跟你手里的基金对不对得上。';
-    final='总的来说，跟着政策走没错，但别一上来就all in。';
-  }else if(/美股|纳指|标普|道指|美联储|美元|美债/.test(t)){
-    summaryLine='美国股市有动静，A股开盘会跟着晃一下。';
-    impact='你买的国内基金开盘可能涨也可能跌，但一般半天就回来了。';
-    why='因为美国是全球最大的股市，它一哆嗦，全世界都跟着抖。';
-    action='不用因为美股涨跌就买卖国内基金，影响不大。';
-    final='总的来说，就是开盘晃一下，不用大惊小怪。';
-  }else if(/港股|恒生|南向/.test(t)){
-    summaryLine='港股有波动，跟A股联动着来。';
-    impact='你买的港股基金涨跌会明显一点，国内基金影响不大。';
-    why='因为港股和A股是邻居，经常你涨我也涨，你跌我也跌。';
-    action='有港股基金的可以看看，没有的不用管。';
-    final='总的来说，影响有限，正常操作就行。';
-  }else if(/业绩.{0,6}预增|利润.{0,6}大增|营收.{0,6}大增|扭亏|预喜/.test(t)){
-    summaryLine='公司赚到钱了，而且赚得比预想的多。';
-    impact='这家公司的股票和相关基金大概率要涨。';
-    why='因为公司赚钱了，买它股票的人就能分到钱，大家就抢着买。';
-    action='手里有的可以拿着，看看下个季度还能不能继续赚。';
-    final='总的来说，是好事，说明公司真的在赚钱。';
-  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市/.test(t)){
-    summaryLine='公司出事了，亏了钱或者被查了。';
-    impact='这家公司的股票和相关基金大概率要跌。';
-    why='因为公司出事了，大家就怕血本无归，就抢着卖。';
-    action='赶紧看看你买的基金里有没有这只股票，有的话小心点。';
-    final='总的来说，是坏事，离远点别踩雷。';
-  }else if(/减持|套现|大股东/.test(t)){
-    summaryLine='大股东在卖股票，要套现走人。';
-    impact='这只股票短期可能要跌，因为卖的人多了。';
-    why='因为最了解公司的人都在卖，说明他们觉得股价够高了。';
-    action='手里有的可以减一点，没有的别买。';
-    final='总的来说，不是好事，小心点没坏处。';
-  }else if(/增持|回购|举牌/.test(t)){
-    summaryLine='有人在买股票，而且买了不少。';
-    impact='这只股票短期可能要涨，因为买的人多了。';
-    why='因为有人愿意花大价钱买，说明他们觉得以后还能涨。';
-    action='手里有的拿着，没有的可以看看但别追高。';
-    final='总的来说，是好事，但也别全信，跟着看看就行。';
+    line='房子又出政策了，能不能救起来不好说，别重仓买地产。';
+  }else if(/消费|白酒|食品|零售|旅游|出行/.test(t)){
+    line='消费有新消息，大家花钱多不多直接影响这些股票。';
+  }else if(/银行|券商|保险|金融/.test(t)){
+    line='银行券商有消息，金融股票跟着动，跟政策走。';
+  }else if(/基金经理|调仓|换经理|限购|大额申购/.test(t)){
+    line='你买的基金有变动，赶紧去看看是不是换了经理。';
+  }else if(/国务院|证监会|央行|财政部|发改委|政策|补贴|监管/.test(t)){
+    line='国家出政策了，相关行业会有动静，跟着政策走。';
+  }else if(/美股|纳指|标普|道指|美联储|美债|美元/.test(t)){
+    line='美国股市有动静，A股开盘可能晃一下，半天就回来。';
+  }else if(/港股|恒生|南向|港股通/.test(t)){
+    line='港股在动，有港股基金的看看，没有的不用管。';
+  }else if(/北向|外资|沪股通|深股通/.test(t)){
+    line='外国钱在买或者卖A股，跟着看看风向就行。';
+  }else if(/业绩预增|利润大增|营收大增|扭亏|赚钱了/.test(t)){
+    line='这家公司真赚到钱了，股票可能涨，看看能不能持续。';
+  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市|被查/.test(t)){
+    line='这家公司出事了，股票可能跌，看看你有没有买。';
+  }else if(/减持|套现|大股东卖/.test(t)){
+    line='大老板在卖自己公司的股票，短期可能要跌，小心点。';
+  }else if(/增持|回购|大股东买|举牌/.test(t)){
+    line='有人在大量买这只股票，短期可能涨，跟着看看。';
   }else if(/涨价|提价|价格上涨/.test(t)){
-    summaryLine='东西涨价了，卖东西的公司赚得更多了。';
-    impact='卖这个东西的公司股票可能涨。';
-    why='因为东西卖贵了，成本没变，赚的钱就多了。';
-    action='看看就行，别因为一个涨价消息就冲进去买。';
-    final='总的来说，是好事，但要看能不能持续涨价。';
-  }else if(/降价|跌价|价格战/.test(t)){
-    summaryLine='东西降价了，还打得很凶。';
-    impact='卖这个东西的公司股票可能跌。';
-    why='因为东西卖便宜了，赚的钱就少了，甚至可能亏钱。';
-    action='手里有相关基金的可以减一点，没有的先别碰。';
-    final='总的来说，不是好事，打价格战没赢家。';
+    line='东西涨价了，卖东西的公司赚更多，股票可能涨。';
+  }else if(/降价|跌价|价格战|打折/.test(t)){
+    line='东西在打折卖，公司赚得少了，股票可能跌。';
+  }else if(/IPO|新股|打新|上市/.test(t)){
+    line='有新公司要上市了，对市场影响不大，看看就行。';
+  }else if(/成交量|放量|缩量|成交/.test(t)){
+    line='今天买股票卖股票的人变多了或少了，看大家热情高不高。';
   }else{
     const kws=extractKeyWords(title);
     if(kws.length>=1){
-      summaryLine=kws[0]+'出消息了，具体影响还不好说。';
-      impact='对你的钱袋子影响不大，先观察观察。';
-      why='因为一条消息说了不算，得看有没有人真金白银买进去。';
-      action='先别动，等看清楚了再说。';
-      final='总的来说，先看看，别急着动手。';
+      line=kws[0]+'有新消息，就看大家买不买账，先看看别急。';
     }else{
-      summaryLine='这条消息不太重要，影响有限。';
-      impact='对你的基金和股票基本没影响。';
-      why='因为这种消息太多了，市场根本不当回事。';
-      action='该干嘛干嘛，不用管它。';
-      final='总的来说，就是个小消息，不用放心上。';
+      line='这条消息不太重要，对你的钱袋子没什么影响。';
     }
   }
 
   return {
-    summary: summaryLine,
-    impact: impact,
-    why: why,
-    action: action,
-    final: final,
-    text: summaryLine
+    summary: line,
+    text: line,
+    impact: '', why: '', action: '', final: ''
   };
 }
 
@@ -4363,7 +4462,7 @@ function renderNews(filter){
     .filter(n=>n.resonanceInfo.resonance);
   let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
   // 保持时间排序（从新到旧），不做相关度排序
-  const list=filtered.slice(0,30);
+  const list=filtered.slice(0,40);
   const listEl=$('newsList');
   if(!listEl) return;
   if(!list.length){
@@ -4401,23 +4500,10 @@ function renderNews(filter){
       // AI解读（邻居大叔四步版）
       let aiHtml='';
       if(n.ai){
-        const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai), impact:'', why:'', action:'', final:'', text:String(n.ai)};
-        const summaryLine=aiObj.summary||aiObj.text||'';
-        const hasDetail=aiObj.impact||aiObj.why||aiObj.action||aiObj.final;
-        if(summaryLine){
-          aiHtml=`<div class="news-ai-wrap">
-            <div class="news-ai">
-              <span class="ai-tag">🤖</span>${safe(cleanHTML(summaryLine))}
-              ${hasDetail?`<span class="ai-expand-btn" data-ai-expand="${i}">展开 ▼</span>`:''}
-            </div>
-            ${hasDetail?`
-            <div class="news-ai-detail" data-ai-detail="${i}" style="display:none">
-              ${aiObj.impact?`<div class="ai-detail-item"><span class="ai-detail-label">对你有啥影响</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.impact))}</span></div>`:''}
-              ${aiObj.why?`<div class="ai-detail-item"><span class="ai-detail-label">为啥重要</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.why))}</span></div>`:''}
-              ${aiObj.action?`<div class="ai-detail-item"><span class="ai-detail-label">该怎么办</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.action))}</span></div>`:''}
-              ${aiObj.final?`<div class="ai-detail-item ai-detail-final">${safe(cleanHTML(aiObj.final))}</div>`:''}
-            </div>`:''}
-          </div>`;
+        const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai), text:String(n.ai)};
+        const line=aiObj.summary||aiObj.text||'';
+        if(line){
+          aiHtml=`<div class="news-ai"><span class="ai-tag">🤖</span>${safe(cleanHTML(line))}</div>`;
         }
       }
       // 摘要
@@ -4535,8 +4621,8 @@ function renderNews(filter){
     // 渲染所有事件（前5个展开，第6个以后折叠）
     const [heroEvent,...restEvents]=events;
     let html=renderEvent(heroEvent,0,true);
-    html+=restEvents.slice(0,9).map((ev,i)=>{
-      const isExpanded=i<4; // 第2-5个事件（索引1-4）也展开
+    html+=restEvents.slice(0,11).map((ev,i)=>{
+      const isExpanded=i<7; // 前8个事件默认展开（头条+第2-8个）
       const evHtml=renderEvent(ev,i+1,false);
       if(isExpanded){
         return evHtml.replace('class="news-event"','class="news-event open"').replace('展开 ▼','收起 ▲');
@@ -4555,19 +4641,6 @@ function renderNews(filter){
         if(toggle){
           toggle.textContent=eventEl.classList.contains('open')?'收起 ▲':'展开 ▼';
         }
-      });
-    });
-
-    // 绑定AI解读展开/收起
-    listEl.querySelectorAll('[data-ai-expand]').forEach(btn=>{
-      btn.addEventListener('click',(e)=>{
-        e.stopPropagation();
-        const idx=btn.dataset.aiExpand;
-        const detail=listEl.querySelector(`[data-ai-detail="${idx}"]`);
-        if(!detail) return;
-        const isOpen=detail.style.display!=='none';
-        detail.style.display=isOpen?'none':'block';
-        btn.textContent=isOpen?'展开 ▼':'收起 ▲';
       });
     });
   }
@@ -4746,32 +4819,26 @@ async function explainNewsBatch(){
     return;
   }
 
-  const prompt=`你扮演一个给普通老百姓讲财经的邻居大叔。说话要像聊天一样自然，不许用任何专业术语。
-不许说"流动性""估值""戴维斯双击""非农就业""承压""受益""共振""提振""边际""仓位"这些词。
-如果非要解释概念，必须用生活中的例子打比方，比如拿买菜、发工资、开小店来比喻。
+  const prompt=`你是一个给小学三年级小孩讲财经新闻的人。要求极其简单：
 
-每条新闻按下面这个格式写，一共5段：
+1. 每条新闻只写一句话，20到30个字。
+2. 绝对不能用这些词：逢低布局、右侧配置、超跌反弹、利空、利好、资金面、板块轮动、受益、承压、回调、配置、布局、企稳、震荡、反弹、分化、看多、看空、提振、流动性、估值、共振、边际、仓位。
+3. 用生活里的大白话，像跟奶奶聊天一样。
+4. 直接说结果：谁可能涨、谁可能跌、该怎么办，别绕弯子。
+5. 用"可能""多半"，别说死。
 
-1. 一句话总结：先用一句大白话说清楚这条新闻到底讲了啥事，就像跟朋友在饭桌上随口说那样。
-2. 对我有啥影响：告诉我这件事对我的股票账户、买的基金、每个月的钱袋子，到底是好事还是坏事。说清楚就行，不用绕弯子。
-3. 为什么重要：用一个最简单的理由说明为啥这事值得我关心。
-4. 我该怎么办：给我一个具体、能操作的建议。
-5. 最后一句总结：用一句话把整件事对我的钱包意味着什么说清楚。
+举例：
+"国家放水了"→"国家把钱袋子松了松，市场上钱变多了，股票容易涨。"
+"逢低布局"→"等便宜了再买点。"
+"资金面紧张"→"大家手里的钱变紧了，买股票的人少了。"
 
-要求：
-- 每段话不超过3句话。
-- 全部用短句子，像平时唠嗑一样。
-- 禁止用括号、星号、表情符号。
-- 用"可能""多半""说不定"，别说死。
-- 如果新闻太复杂，就挑最重要的一两点说，其他不讲。宁可少说，不能把人讲晕。
-
-必须输出JSON数组，每条的字段：id, summary, impact, why, action, final
+必须输出JSON数组，每条字段：id, text
 
 ${JSON.stringify(newsToFetch)}`;
 
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是一个邻居大叔，给老百姓用大白话讲财经新闻。不用专业词，用生活比喻，每条分5段：一句话总结、对我有啥影响、为什么重要、该怎么办、最后总结。'},
+      {role:'system',content:'你给小学三年级小孩讲财经新闻。每条只写一句大白话（20-30字），绝对不用专业词，像跟奶奶聊天。字段：id, text。'},
       {role:'user',content:prompt}
     ], getDSModel());
     
@@ -4779,11 +4846,8 @@ ${JSON.stringify(newsToFetch)}`;
     const arr=Array.isArray(parsed)?parsed:(parsed.items||parsed.data||[]);
     const map=new Map(arr.map(x=>[Number(x.id), {
       summary: String(x.summary||x.text||'').trim(),
-      impact: String(x.impact||'').trim(),
-      why: String(x.why||'').trim(),
-      action: String(x.action||'').trim(),
-      final: String(x.final||'').trim(),
-      text: String(x.summary||x.text||'').trim()
+      text: String(x.summary||x.text||'').trim(),
+      impact: '', why: '', action: '', final: ''
     }]));
     
     needAI.forEach((item,idx)=>{
