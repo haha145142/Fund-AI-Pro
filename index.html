@@ -114,20 +114,20 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 
 /* ===== 持仓概览（支付宝/天天基金风格） ===== */
 .port-overview{padding:12px 0 6px;position:relative;z-index:1}
-.port-overview-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px;position:relative;z-index:2;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.85)}
-.port-overview-pnl{display:flex;flex-direction:column}
-.port-pnl-label{font-size:12px;color:#334155;margin-bottom:2px;font-weight:600}
-.port-pnl-amount{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.port-overview-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;position:relative;z-index:2;padding:14px 16px;border-radius:14px;background:#f8fafc}
+.port-overview-pnl{display:flex;flex-direction:column;gap:2px}
+.port-pnl-label{font-size:12px;color:#64748b;margin-bottom:2px;font-weight:500}
+.port-pnl-amount{font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
 .port-pnl-amount.up{color:var(--up)}
 .port-pnl-amount.down{color:var(--down)}
-.port-pnl-pct{font-size:14px;font-weight:600;margin-top:2px}
+.port-pnl-pct{font-size:15px;font-weight:700;margin-top:2px}
 .port-pnl-pct.up{color:var(--up)}
 .port-pnl-pct.down{color:var(--down)}
-.port-overview-meta{font-size:13px;color:#334155;padding-bottom:4px;font-weight:500}
-.port-overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;position:relative;z-index:2}
-.port-metric{background:rgba(0,0,0,.025);border-radius:12px;padding:10px 8px;text-align:center}
-.port-metric-label{font-size:11px;color:#334155;margin-bottom:4px;font-weight:500}
-.port-metric-value{font-size:16px;font-weight:700;color:#0f172a}
+.port-overview-meta{font-size:11px;color:#94a3b8;padding-bottom:4px;font-weight:400;text-align:right;line-height:1.5}
+.port-overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;position:relative;z-index:2}
+.port-metric{background:#f8fafc;border-radius:12px;padding:10px 14px}
+.port-metric-label{font-size:11px;color:#94a3b8;margin-bottom:4px;font-weight:500}
+.port-metric-value{font-size:18px;font-weight:700;color:#0f172a}
 /* 时间维度切换 */
 .port-time-tabs{display:flex;gap:4px;margin-bottom:8px;position:relative;z-index:2}
 .port-time-tab{flex:1;padding:7px 0;border:none;border-radius:10px;background:rgba(255,255,255,.6);font-size:11px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .15s}
@@ -393,6 +393,8 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-refresh-btn.spin svg{animation:spin .8s linear infinite}
 
 .news-source.official{color:#b45309;background:#fffbeb;border:1px solid #fde68a}
+.news-source.em{color:#c1810a;background:#fff8e8;border:1px solid #fde68a}
+.news-source.sina{color:#c026d3;background:#fdf4ff;border:1px solid #f5d0fe}
 .news-source.multi-source{color:#047857;background:#ecfdf5;border:1px solid #a7f3d0}
 .news-source.single-source{color:#92400e;background:#fffbeb;border:1px solid #fde68a}
 
@@ -801,12 +803,8 @@ table td b{font-weight:700}
      <span id="portDetail">等待添加持仓</span>
     </div>
    </div>
-   <!-- 三列核心指标 -->
+   <!-- 两列核心指标（去掉总成本，避免重复） -->
    <div class="port-overview-grid">
-    <div class="port-metric">
-     <div class="port-metric-label">总成本</div>
-     <div class="port-metric-value" id="portTotalCost">¥0</div>
-    </div>
     <div class="port-metric">
      <div class="port-metric-label">总资产</div>
      <div class="port-metric-value" id="portTotalAssets">¥0</div>
@@ -2545,6 +2543,111 @@ async function fetchYicaiNews(){
   return [];
 }
 
+/* =============== 新增实时新闻源（提升及时性） =============== */
+
+// 东方财富 7x24 实时快讯（比 column=350 更及时，专门抓快讯流）
+async function fetchEastmoneyFlash(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=emflash&limit=30',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','东方财富');
+        return{
+          title:cleanHTML(x.title||''),
+          summary:cleanHTML(x.summary||x.content||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'东方财富',
+          sources:['东方财富'],
+          url:x.url||'',
+          tier:1
+        };
+      }).filter(x=>x.title);
+    }catch(e){}
+  }
+  // 东方财富 7x24 快讯流（支持 CORS）
+  try{
+    const r=await fetch('https://np-listapi.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=30&type=0&_='+Date.now(),{
+      cache:'no-store',
+      headers:{'Accept':'application/json'}
+    });
+    if(r.ok){
+      const j=await r.json();
+      const list=j?.data?.fastList||j?.data?.list||[];
+      if(Array.isArray(list)&&list.length){
+        return list.filter(x=>x.title||x.content).map(x=>{
+          const ts=x.showTime?new Date(x.showTime).getTime():(x.ctime?parseInt(x.ctime)*1000:Date.now());
+          const title=cleanHTML(x.title||'');
+          const content=cleanHTML(x.content||x.digest||'');
+          return{
+            title:title||content.slice(0,50),
+            summary:content.slice(0,150),
+            time:formatNewsTime(ts),
+            timestamp:ts,
+            source:'东方财富',
+            sources:['东方财富'],
+            url:x.url_unique||x.url||'',
+            tier:1
+          };
+        }).filter(x=>x.title);
+      }
+    }
+  }catch(e){}
+  return [];
+}
+
+// 新浪财经滚动新闻（7x24 实时滚动）
+async function fetchSinaNews(){
+  if(USE_PROXY){
+    try{
+      const j=await proxyFetchJSON('news?source=sina&limit=30',10000);
+      const raw=j?.items||[];
+      return raw.map(x=>{
+        const ts=parseNewsTime(x.time||x.ctime||'','新浪财经');
+        return{
+          title:cleanHTML(x.title||''),
+          summary:cleanHTML(x.summary||''),
+          time:formatNewsTime(ts),
+          timestamp:ts,
+          source:'新浪财经',
+          sources:['新浪财经'],
+          url:x.url||'',
+          tier:1
+        };
+      }).filter(x=>x.title);
+    }catch(e){}
+  }
+  // 新浪财经滚动新闻 API（支持 CORS）
+  try{
+    const r=await fetch('https://feed.mix.sina.com.cn/api/roll/get?pageid=153&lid=2516&k=&num=30&page=1&_='+Date.now(),{
+      cache:'no-store',
+      headers:{'Accept':'application/json'}
+    });
+    if(r.ok){
+      const j=await r.json();
+      const list=j?.data||[];
+      if(Array.isArray(list)&&list.length){
+        return list.filter(x=>x.title).map(x=>{
+          const ts=x.ctime?parseInt(x.ctime)*1000:(x.create_time?new Date(x.create_time).getTime():Date.now());
+          return{
+            title:cleanHTML(x.title||''),
+            summary:cleanHTML(x.intro||x.summary||''),
+            time:formatNewsTime(ts),
+            timestamp:ts,
+            source:'新浪财经',
+            sources:['新浪财经'],
+            url:x.url||'',
+            tier:1,
+            category:x.category||''
+          };
+        }).filter(x=>x.title);
+      }
+    }
+  }catch(e){}
+  return [];
+}
+
 /* =============== 第三级：市场情绪 =============== */
 
 // 东方财富股吧热度
@@ -2829,34 +2932,33 @@ function checkMarketResonance(newsItem){
   return {resonance:false, evidence:'暂未形成资金共振', from:null, sectors:sectorData};
 }
 
-// 新闻独立刷新函数（15分钟一次，独立于整体刷新）
+// 新闻手动刷新函数（纯手动，无缓存，无自动刷新）
 async function refreshNewsOnly(force){
   if(state._newsLoading) return;
-  const now=Date.now();
-  // 非强制刷新且距离上次不足5分钟则跳过（从15分钟缩短到5分钟）
-  if(!force&&state.newsLastFetch&&now-state.newsLastFetch<300000){
-    return;
-  }
   state._newsLoading=true;
   const btn=$('newsRefreshBtn');
   if(btn) btn.classList.add('spin');
-  console.log('[新闻刷新] 开始刷新，USE_PROXY='+USE_PROXY+'，force='+force);
+  // 每次刷新清空AI缓存，确保用最新新闻重新生成解读
+  state.newsAI={};
+  console.log('[新闻刷新] 开始手动刷新，USE_PROXY='+USE_PROXY);
 
   try{
-  // 优先来源：财联社、金十数据、华尔街见闻、同花顺iFinD、第一财经
+  // 优先来源：财联社、金十数据、华尔街见闻、同花顺iFinD、第一财经、东方财富7x24快讯、新浪财经
   // 全部并行抓取，互不影响（每个加8秒超时保护）
   const withTimeout=(p,ms=8000)=>Promise.race([
     p,
     new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))
   ]);
   const results=await Promise.allSettled([
-    // Tier 1: 快讯（优先级：财联社 > 金十 > 华尔街见闻 > 同花顺 > 第一财经）
+    // Tier 1: 快讯（优先级：财联社 > 金十 > 华尔街见闻 > 同花顺 > 第一财经 > 东方财富7x24 > 新浪财经）
     withTimeout(fetchCLSNews()),
     withTimeout(fetchJin10News()),
     withTimeout(fetchWSCN()),
     withTimeout(fetchTHS()),
     withTimeout(fetchYicaiNews()),
     withTimeout(fetchOfficialNews()),
+    withTimeout(fetchEastmoneyFlash()),
+    withTimeout(fetchSinaNews()),
     // Tier 2: 深度解读（财联社 + 第一财经的深度文章）
     // 已在 Tier 1 中获取，这里直接复用
     // Tier 3: 市场情绪
@@ -2870,9 +2972,11 @@ async function refreshNewsOnly(force){
   const ths=results[3].status==='fulfilled'?results[3].value:[];
   const yicai=results[4].status==='fulfilled'?results[4].value:[];
   const off=results[5].status==='fulfilled'?results[5].value:[];
+  const emflash=results[6].status==='fulfilled'?results[6].value:[];
+  const sina=results[7].status==='fulfilled'?results[7].value:[];
   // Tier 3 results
-  const guba=results[6].status==='fulfilled'?results[6].value:[];
-  const thsForum=results[7].status==='fulfilled'?results[7].value:[];
+  const guba=results[8].status==='fulfilled'?results[8].value:[];
+  const thsForum=results[9].status==='fulfilled'?results[9].value:[];
 
   // 保存二级深度数据（财联社 + 第一财经的深度文章）
   state.newsDeep=[...cls,...yicai].filter(x=>x.title).sort((a,b)=>b.timestamp-a.timestamp);
@@ -2886,9 +2990,9 @@ async function refreshNewsOnly(force){
   state.source.guba=guba.length?'东方财富股吧':'不可用';
   state.source.thsForum=thsForum.length?'同花顺社区':'不可用';
 
-  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off].filter(x=>x.title&&x.timestamp);
-  state.newsSources={cls,jin10,wscn,ths,yicai,off};
-  console.log('[新闻刷新] 抓取结果: 财联社='+cls.length+' 金十='+jin10.length+' 华尔街见闻='+wscn.length+' 同花顺='+ths.length+' 第一财经='+yicai.length+' 官方='+off.length+' 总计='+all.length);
+  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off,...emflash,...sina].filter(x=>x.title&&x.timestamp);
+  state.newsSources={cls,jin10,wscn,ths,yicai,off,emflash,sina};
+  console.log('[新闻刷新] 抓取结果: 财联社='+cls.length+' 金十='+jin10.length+' 华尔街见闻='+wscn.length+' 同花顺='+ths.length+' 第一财经='+yicai.length+' 东方财富='+off.length+' 东财7x24='+emflash.length+' 新浪='+sina.length+' 总计='+all.length);
 
   if(all.length===0){
     // 全部失败：保留上一批数据，显示错误提示
@@ -2919,9 +3023,14 @@ async function refreshNewsOnly(force){
   merged=hardNewsFilter(merged);
 
   // 按突发+时间排序，最多保留40条
+  // 严格按时间排序：同时间段内突发新闻优先，但绝不让昨天的突发新闻排到今天的普通新闻前面
   merged.sort((a,b)=>{
     const aBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(a.title)?1:0;
     const bBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(b.title)?1:0;
+    // 先按时间差判断：如果相差超过2小时，直接按时间排
+    const diff=Math.abs(b.timestamp-a.timestamp);
+    if(diff>7200000) return b.timestamp-a.timestamp;
+    // 2小时内：突发新闻优先
     if(aBreak!==bBreak) return bBreak-aBreak;
     return b.timestamp-a.timestamp;
   });
@@ -2941,6 +3050,8 @@ async function refreshNewsOnly(force){
   state.source.ths=ths.length?'同花顺':'不可用';
   state.source.jin10=jin10.length?'金十数据':'不可用';
   state.source.yicai=yicai.length?'第一财经':'不可用';
+  state.source.emflash=emflash.length?'东方财富7x24':'不可用';
+  state.source.sina=sina.length?'新浪财经':'不可用';
 
   renderNews();
   updateNewsEvidence();
@@ -2969,6 +3080,8 @@ function updateNewsEvidence(){
   if(state.source.wscn&&state.source.wscn!=='不可用') t1.push('华尔街见闻');
   if(state.source.ths&&state.source.ths!=='不可用') t1.push('同花顺');
   if(state.source.yicai&&state.source.yicai!=='不可用') t1.push('第一财经');
+  if(state.source.emflash&&state.source.emflash!=='不可用') t1.push('东方财富7x24');
+  if(state.source.sina&&state.source.sina!=='不可用') t1.push('新浪财经');
   const t3=[];
   if(state.source.guba&&state.source.guba!=='不可用') t3.push('股吧');
   if(state.source.thsForum&&state.source.thsForum!=='不可用') t3.push('同花顺社区');
@@ -2984,14 +3097,14 @@ function updateNewsEvidence(){
 // 硬核新闻过滤：只保留宏观经济、股市大盘、热门行业相关的新闻
 function hardNewsFilter(newsArr){
   // 必选关键词（包含就保留）
-  const mustHave=/(降准|降息|加息|政策|国务院|证监会|央行|财政部|发改委|统计局|GDP|CPI|PPI|PMI|利率|汇率|货币|财政|减税|补贴|监管|股市|A股|大盘|指数|沪指|深指|创业板|科创板|北交所|基金|ETF|公募|私募|持仓|净值|半导体|芯片|AI|人工智能|算力|光模块|机器人|新能源|光伏|锂电|储能|医药|医疗|消费|地产|房地产|银行|黄金|原油|石油|铜|有色|煤炭|钢铁|美股|纳指|道指|标普|美联储|美债|美元|港股|恒生|南向|北向|业绩|财报|利润|营收|增持|减持|回购|分红|暴雷|亏损|退市|重组|停牌|涨价|降价|价格战|产能|供需|贸易|关税|制裁|出口|进口|中东|俄乌|地缘|战争|冲突|避险)/;
+  const mustHave=/(降准|降息|加息|政策|国务院|证监会|央行|财政部|发改委|统计局|GDP|CPI|PPI|PMI|利率|汇率|货币|财政|减税|补贴|监管|股市|A股|大盘|指数|沪指|深指|创业板|科创板|北交所|基金|ETF|公募|私募|持仓|净值|半导体|芯片|AI|人工智能|算力|光模块|机器人|新能源|光伏|锂电|储能|医药|医疗|消费|地产|房地产|银行|黄金|原油|石油|铜|有色|煤炭|钢铁|美股|纳指|道指|标普|美联储|美债|美元|港股|恒生|南向|北向|业绩|财报|利润|营收|增持|减持|回购|分红|暴雷|亏损|退市|重组|停牌|涨价|降价|价格战|产能|供需|贸易|关税|制裁|出口|进口|中东|俄乌|地缘|战争|冲突|避险|涨停|跌停|牛市|熊市|抄底|抛售|崩盘|熔断|申购|赎回|新股|打新|中签|解禁|定增|并购|收购|举牌|质押|爆仓|强平|合约|期货|期权|杠杆|做空|做多|成交|缩量|放量|外资|流入|流出|主力|游资|机构|社融|M2|通缩|通胀|就业|失业|非农|议息|缩表|扩表|国债|地方债|城投|违约|信用|评级|上调|下调|目标价|研报|盈利|预增|预减|扭亏|戴帽|摘帽|ST)/;
   // 必删关键词（包含就过滤掉）
   const mustKill=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐|八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|比赛|奥运|世界杯|体育|彩票|赌博|色情|低俗)/;
   return newsArr.filter(n=>{
     const title=cleanHTML(n.title||'');
     const t=title.toLowerCase();
     if(mustKill.test(t)) return false;
-    if(title.length<6||title.length>80) return false;
+    if(title.length<4||title.length>80) return false;
     if(n.multiSource) return true;
     if(/(突发|紧急|刚刚|重磅|快讯|速报)/.test(t)) return true;
     return mustHave.test(t);
@@ -3565,7 +3678,7 @@ function renderPortfolio(){
       $('portTotalPct').textContent=totalPct==null?'—':(totalPct>=0?'+':'')+totalPct.toFixed(2)+'%';
       $('portTotalPct').className='port-pnl-pct '+(totalGain>=0?'up':'down');
     }
-    if($('portDetail'))$('portDetail').textContent=`${up}涨 ${down}跌 · 总成本 ¥${totalCost.toFixed(0)}`;
+    if($('portDetail'))$('portDetail').innerHTML=`${up}涨 ${down}跌<br>成本 ¥${totalCost.toFixed(0)}`;
     if($('portTotalCost'))$('portTotalCost').textContent='¥'+totalCost.toFixed(0);
     if($('portTotalAssets'))$('portTotalAssets').textContent='¥'+totalAssets.toFixed(0);
     if($('portValue'))$('portValue').textContent='¥'+totalValue.toFixed(0);
@@ -4524,6 +4637,8 @@ function sourceClass(source){
   if(source.includes('华尔街见闻')) return 'wscn';
   if(source.includes('同花顺')) return 'ths';
   if(source.includes('第一财经')) return 'yicai';
+  if(source.includes('东方财富')) return 'em';
+  if(source.includes('新浪')) return 'sina';
   if(source.includes('官方')||source.includes('证监会')) return 'official';
   return 'cls';
 }
@@ -4931,15 +5046,11 @@ async function explainNewsBatch(){
     return;
   }
 
-  // 找出需要AI解读的新闻（不在缓存中或缓存过期）
+  // 找出需要AI解读的新闻（无缓存，每次刷新重新生成）
   const needAI=[];
   const newsToFetch=[];
   state.news.forEach((n,i)=>{
-    const cacheKey=newsAICacheKey(n);
-    const cached=state.newsAI[cacheKey];
-    if(cached&&now-cached.time<AI_CACHE_MS){
-      n.ai=cached.data; // 使用缓存
-    }else if(i<10){ // 只对前10条调用AI，省token
+    if(i<10){ // 只对前10条调用AI，省token
       needAI.push({index:i, news:n});
       newsToFetch.push({
         id:i+1,
@@ -4952,7 +5063,7 @@ async function explainNewsBatch(){
   });
 
   if(!newsToFetch.length){
-    setDSStatus('DeepSeek 已连接：使用缓存的 AI 解读。',true);
+    setDSStatus('DeepSeek 已连接：暂无需要解读的新闻。',true);
     renderNews();
     return;
   }
@@ -5623,16 +5734,11 @@ document.addEventListener('visibilitychange',()=>{
     state.lastUpdate=new Date();
     evidenceAI();
     updateSourceStatus();
-    refreshNewsOnly(false); // 新闻按5分钟规则判断是否刷新
+    // 新闻不自动刷新，只手动刷新
   }
 });
 
-// 新闻独立自动刷新（5分钟）
-setInterval(()=>{
-  if(!document.hidden){
-    refreshNewsOnly(false);
-  }
-},300000);
+// 新闻不自动刷新，只通过手动点击刷新按钮
 
 // 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
 setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
