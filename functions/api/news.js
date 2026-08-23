@@ -1,4 +1,4 @@
-// Cloudflare Pages Function: 新闻代理（实时版 v3）
+// Cloudflare Pages Function: 新闻代理（实时版 v4 · 多源修正版）
 // 路径：/api/news
 //
 // 设计目标：
@@ -168,40 +168,36 @@ export async function onRequestGet(context) {
   // Tier 3：华尔街见闻
   // ------------------------------------------------------------
   const fetchWSCN = async () => {
-    const target =
-      `https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${limit}&_=${Date.now()}`;
-
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://wallstreetcn.com/',
-      },
-    });
-
-    const json = await response.json();
-    const items = json?.data?.items || json?.data?.day_items || [];
-
-    return items
-      .map((x) =>
-        normalize({
-          title: x.title || x.resource?.title,
-          summary:
-            x.summary ||
-            x.brief ||
-            x.content_text ||
-            x.resource?.content_text,
-          timestamp:
-            x.display_time ||
-            x.publish_time ||
-            x.created_at ||
-            x.ctime,
-          sourceName: '华尔街见闻',
-          tier: 3,
-          url: x.uri || x.resource?.uri || '',
-          id: x.id || x.resource?.id || '',
-        }),
-      )
-      .filter(Boolean);
+    // 华尔街见闻当前常用 live 接口；旧 awtmt 域名保留为回退。
+    const targets = [
+      `https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${limit}&_=${Date.now()}`,
+      `https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=${limit}&_=${Date.now()}`,
+    ];
+    for (const target of targets) {
+      try {
+        const response = await fetchText(target, {
+          headers: { ...commonHeaders, Referer: 'https://wallstreetcn.com/' },
+        });
+        const json = await response.json();
+        const items = json?.data?.items || json?.data?.day_items || [];
+        const rows = (Array.isArray(items) ? items : [])
+          .map((x) => normalize({
+            title: x.title || x.resource?.title || x.content_text,
+            summary: x.summary || x.brief || x.content_text || x.resource?.content_text,
+            timestamp: x.display_time || x.publish_time || x.created_at || x.ctime || x.time,
+            sourceName: '华尔街见闻',
+            tier: 3,
+            url: x.uri || x.resource?.uri || '',
+            id: x.id || x.resource?.id || '',
+          }))
+          .filter(Boolean)
+          .filter((x) => x.timestamp > 0);
+        if (rows.length) return rows;
+      } catch (error) {
+        console.log('[news:wscn] endpoint failed', error?.message || error);
+      }
+    }
+    return [];
   };
 
   // ------------------------------------------------------------
@@ -661,34 +657,39 @@ export async function onRequestGet(context) {
   // 这是比搜索结果更适合“最新快讯”的接口。
   // ------------------------------------------------------------
   const fetchEMFlash = async () => {
-    const target =
-      `https://np-listapi.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&type=0&_=${Date.now()}`;
-
-    const response = await fetchText(target, {
-      headers: {
-        ...commonHeaders,
-        Referer: 'https://kuaixun.eastmoney.com/',
-      },
-    });
-
-    const json = await response.json();
-    const list = json?.data?.fastList || json?.data?.list || [];
-
-    return (Array.isArray(list) ? list : [])
-      .map((x) =>
-        normalize({
-          title: x.title || x.content,
-          summary: x.content || x.digest || x.summary || '',
-          timestamp: x.showTime || x.ctime || x.publishTime || x.time,
-          sourceName: '东方财富',
-          tier: 4,
-          url: x.url_unique || x.url || '',
-          id: x.id || x.newsId || '',
-        }),
-      )
-      .filter(Boolean)
-      .filter((x) => x.timestamp > 0)
-      .slice(0, limit);
+    // 东方财富 7x24 快讯；np-weblist 为当前常用域名，req_trace 可降低 403。
+    const trace = (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`);
+    const targets = [
+      `https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&req_trace=${encodeURIComponent(trace)}`,
+      `https://np-listapi.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=${limit}&type=0&req_trace=${encodeURIComponent(trace)}`,
+    ];
+    for (const target of targets) {
+      try {
+        const response = await fetchText(target, {
+          headers: { ...commonHeaders, Referer: 'https://kuaixun.eastmoney.com/' },
+        });
+        const json = await response.json();
+        const list = json?.data?.fastNewsList || json?.data?.fastList ||
+          json?.data?.list || (Array.isArray(json?.data) ? json.data : []);
+        const rows = (Array.isArray(list) ? list : [])
+          .map((x) => normalize({
+            title: x.title || x.content || x.summary,
+            summary: x.summary || x.content || x.digest || x.brief || '',
+            timestamp: x.showTime || x.pubTime || x.ctime || x.publishTime || x.time || x.timestamp,
+            sourceName: '东方财富7x24',
+            tier: 4,
+            url: x.url_unique || x.url || x.link || '',
+            id: x.id || x.newsId || x.news_id || '',
+          }))
+          .filter(Boolean)
+          .filter((x) => x.timestamp > 0)
+          .slice(0, limit);
+        if (rows.length) return rows;
+      } catch (error) {
+        console.log('[news:emflash] endpoint failed', error?.message || error);
+      }
+    }
+    return [];
   };
 
   // ------------------------------------------------------------
@@ -872,12 +873,19 @@ export async function onRequestGet(context) {
   const lists = await Promise.all(tasks);
   const merged = mergeNews(lists);
 
+  const fetchedAt = Date.now();
   const latestTimestamp = merged.length ? Number(merged[0].timestamp || 0) : 0;
+  const latestAgeMinutes = latestTimestamp
+    ? Math.max(0, Math.floor((fetchedAt - latestTimestamp) / 60000))
+    : null;
+
   const responseBody = {
     items: merged,
     count: merged.length,
-    fetchedAt: Date.now(),
+    fetchedAt,
     latestTimestamp,
+    latestAgeMinutes,
+    realtime: latestAgeMinutes != null && latestAgeMinutes <= 30,
     cache: 'no-store',
     sources: [
       ...new Set(merged.flatMap((x) => x.sources || [x.source])),
