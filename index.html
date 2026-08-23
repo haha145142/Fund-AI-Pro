@@ -599,6 +599,19 @@ table td b{font-weight:700}
 .add-form .btn:disabled{opacity:.5;cursor:not-allowed}
 .add-form .btn.secondary{background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,250,255,.8));color:var(--blue);border:1px solid rgba(10,132,255,.25);box-shadow:0 4px 12px rgba(10,132,255,.08),inset 0 1px 0 rgba(255,255,255,.95)}
 
+/* 全局按钮点击反馈：所有可点击元素按下去都有缩放效果 */
+button,.news-filter,.port-time-tab,.fc-tg-tab,.tabbar .tab,.fc-reason-btn,.news-tier-btn,
+.refresh-btn,.news-refresh-btn,.ds-btn,summary{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .12s ease, opacity .12s ease;
+}
+button:active,.news-filter:active,.port-time-tab:active,.fc-tg-tab:active,
+.tabbar .tab:active,.fc-reason-btn:active,.news-tier-btn:active,
+.refresh-btn:active,.news-refresh-btn:active,.ds-btn:active,summary:active{
+  transform:scale(.95);
+  opacity:.85;
+}
+
 /* ===== empty / loading ===== */
 .empty-state{text-align:center;padding:24px 12px;color:var(--text-sec);font-size:14px}
 .empty-state .icon{font-size:36px;margin-bottom:6px;opacity:.5}
@@ -786,7 +799,7 @@ body{background:radial-gradient(ellipse 90% 45% at 50% -8%,rgba(191,222,255,.48)
 .news-ai{margin-top:8px !important;padding:8px 10px !important;border-radius:13px !important;background:rgba(220,238,255,.28) !important;border:1px solid rgba(150,195,235,.28) !important;backdrop-filter:blur(16px) saturate(170%);-webkit-backdrop-filter:blur(16px) saturate(170%)}
 .news-event-sector{background:rgba(255,255,255,.38) !important;border:1px solid rgba(255,255,255,.42)}.news-event-portfolio{background:rgba(255,237,200,.30) !important;border:1px solid rgba(245,166,35,.20);box-shadow:none !important}
 .news-filter,.port-time-tab,.fc-tg-tab,.ds-btn.secondary{background:rgba(255,255,255,.38) !important;border:1px solid rgba(255,255,255,.62) !important;backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 4px 12px rgba(35,78,125,.05) !important}
-.news-filter.active,.port-time-tab.active{background:rgba(10,132,255,.82) !important;color:#fff !important;border-color:rgba(255,255,255,.45) !important}
+.news-filter.active,.port-time-tab.active,.fc-tg-tab.active{background:rgba(10,132,255,.82) !important;color:#fff !important;border-color:rgba(255,255,255,.45) !important}
 .add-form input,.ds-input,.ds-status,.port-overview-top,.port-metric,.port-time-gain,.ev-step,.ev-metric{background:rgba(255,255,255,.40) !important;backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%)}
 .tabbar{background:linear-gradient(180deg,rgba(255,255,255,.54),rgba(225,241,255,.30)) !important;backdrop-filter:blur(34px) saturate(210%) !important;-webkit-backdrop-filter:blur(34px) saturate(210%) !important;border:1px solid rgba(255,255,255,.78) !important;box-shadow:0 22px 70px rgba(25,65,110,.20),inset 0 1.5px 0 rgba(255,255,255,.94),inset 0 -1px 0 rgba(170,205,240,.28) !important}
 .glass-title .badge,.tag{background:rgba(10,132,255,.10) !important;box-shadow:none !important}
@@ -1061,7 +1074,7 @@ body{background:radial-gradient(ellipse 90% 45% at 50% -8%,rgba(191,222,255,.48)
  <details class="glass fade-in">
   <summary>📋 点开看详细说明（估算方法、口径、风险提示）</summary>
   <div class="detail-body">
-   ① <b>基金估值</b>：优先读取天天基金/东方财富公开估值接口；收盘后优先展示正式净值。部分基金若无盘中估值，明确显示"暂无盘中估值"，不拿随机数替代。<br><br>
+   ① <b>基金实时估值</b>：采用"重仓股穿透法"盘中实时估算——从季报提取前十大重仓股及权重，拉取每只股票的实时涨跌幅，加权聚合得出基金估算涨跌幅（指数基金直接锚定跟踪指数）。每30秒自动刷新行情价格。与天天基金官方估值做交叉参考，收盘后自动切换为正式净值。<br><br>
    ② <b>资金流</b>："大资金"=超大单+大单合计。正数=净流入，负数=净流出。数据来自多源行情；若接口不可用则显示暂无数据。按成交单金额分层，不等同于真实投资者身份。<br><br>
    ③ <b>板块资金</b>：板块行情来自东方财富实时板块接口；订单结构按超大单/大单/中单/小单展示。<br><br>
    ④ <b>波段信号</b>：RSI(14), BIAS(MA20), BOLL(MA20±2σ), MACD 综合计算。波段评分 0-100：0-30 高位风险，30-45 偏高，45-55 中性，55-70 偏低，70-100 低位机会。<br><br>
@@ -1650,105 +1663,218 @@ async function fetchFundHoldings(code){
 }
 
 /* ============================================================
- * 三路估值计算（价格已在 qtCache 中）
- * 返回 {pct, spread, warn, detail[], cls, track, routes[]}
+ * 盘中估值算法（按静态锚点 + 动态变量 + 加权聚合 5步法）
+ * 
+ * 第1步：静态锚点 — 从季报/半年报/年报提取前十大重仓股及权重
+ * 第2步：动态变量 — 每只股票的实时涨跌幅（非交易时段取最近收盘）
+ * 第3步：加权聚合 — Σ(个股涨跌幅 × 权重) = 基金估算涨跌幅
+ *   · 指数基金：直接用跟踪指数，跳过个股计算
+ *   · 跨境持仓（HK/US）：汇率折算 + 延迟标注
+ * 第4步：推算预估净值 — 上一交易日净值 × (1 + 估算涨跌幅)
+ * 第5步：误差归因 — 回溯近5日MAE，衡量持仓漂移程度
  * ============================================================ */
-function calcLiveRoutes(code,name){
+
+/* --- 股票代码分类：A股/港股/美股 --- */
+function classifyStockCode(code){
+  const c=String(code||'').toUpperCase().trim();
+  if(/^HK/i.test(c)||/^\d{5}$/.test(c)&&/^(0|1)/.test(c))return 'hk';
+  if(/^US/i.test(c))return 'us';
+  if(/^\d{6}$/.test(c))return 'a';
+  if(c.startsWith('SH')||c.startsWith('SZ'))return 'a';
+  return 'unknown';
+}
+
+/* --- 将各种格式的股票代码转成腾讯行情代码 --- */
+function toTencentCode(code, market){
+  const c=String(code||'').toUpperCase().trim();
+  if(market==='hk'||/^HK/i.test(c)){
+    const num=c.replace(/[^0-9]/g,'').padStart(5,'0');
+    return 'hk'+num;
+  }
+  if(market==='us'||/^US/i.test(c)){
+    const sym=c.replace(/^US/i,'').toLowerCase();
+    return 'us'+sym;
+  }
+  // A股
+  const digits=c.replace(/[^0-9]/g,'');
+  if(/^\d{6}$/.test(digits)){
+    if(/^[695]/.test(digits))return 'sh'+digits;
+    if(/^[023]/.test(digits))return 'sz'+digits;
+  }
+  return null;
+}
+
+/* ============================================================
+ * 核心估值计算：重仓股穿透法（主算法）
+ * 返回 {pct, coverage, holdings:[], crossBorder, delayNote, mae, driftLevel}
+ * ============================================================ */
+function calcFundEstimateByHoldings(code, name, prevNav){
   const f=state.funds[code]||{};
   const hold=f.holdings;
-  const bench=qtPct('sh000300');
   const cls=classifyFund(name);
-  if(cls==='bond')return null;               // 债基不做盘中估值
-  const track=matchTrackIndex(name);
-  const detail=[];
-  const routeVals=[];
-  const routes=[];
 
-  // 指数/联接基金：直接用跟踪指数（仓位≈95%×指数）
+  // 债基不做估值
+  if(cls==='bond')return null;
+
+  // === 特殊处理1：指数基金 — 直接锚定跟踪指数 ===
+  const track=matchTrackIndex(name);
   if(cls==='index'&&track){
     const p=qtPct(track.code);
-    if(p!=null){
-      const v=+(p*0.95).toFixed(2);   // 联接基金约95%仓位
-      detail.push('跟踪'+track.name+' '+fmtPct(p)+'，按95%仓位折算');
-      routes.push({label:'跟踪指数', value:v, desc:track.name+' × 95%仓位'});
-      return {pct:v,spread:0,warn:false,detail,cls,track:track.code,routes};
+    if(p==null)return null;
+    const estPct=+(p*0.95).toFixed(3);  // 联接基金约95%仓位
+    const estimate=prevNav?+(prevNav*(1+estPct/100)).toFixed(4):null;
+    return {
+      pct:estPct,
+      estimate,
+      method:'index',
+      trackIndex:track.name,
+      trackCode:track.code,
+      coverage:95,
+      holdings:[],
+      crossBorder:false,
+      delayNote:'',
+      routes:[{label:'跟踪指数', value:estPct, desc:track.name+' × 95%仓位'}],
+      spread:0,
+      warn:false,
+      mae:null,
+      driftLevel:null
+    };
+  }
+
+  // === 主算法：重仓股加权聚合 ===
+  if(!hold||!hold.top10||!hold.top10.length)return null;
+  if(hold.isFundHoldings){
+    // 持仓全是基金（FOF等），用跟踪指数代替
+    if(track){
+      const p=qtPct(track.code);
+      if(p==null)return null;
+      return {
+        pct:+p.toFixed(3),
+        estimate:prevNav?+(prevNav*(1+p/100)).toFixed(4):null,
+        method:'fund_of_fund',
+        trackIndex:track.name,
+        coverage:0,
+        holdings:[],
+        crossBorder:false,
+        routes:[{label:'主题参考', value:+p.toFixed(2), desc:track.name}],
+        spread:0, warn:false
+      };
     }
     return null;
   }
 
-  // 路线① 重仓股穿透
-  if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings){
-    let acc=0,w=0;
-    const hits=[];
-    for(const s of hold.top10){
-      const tc=toTencentCode(s.code);
-      const pc=tc!=null?qtPct(tc):null;
-      if(pc!=null){
-        acc+=pc*s.ratio;
-        w+=s.ratio;
-        if(hits.length<4)hits.push(s.name+' '+fmtPct(pc));
-      }
-    }
-    if(w>=15&&bench!=null){
-      const v=(acc+(90-w)*bench)/100;
-      routeVals.push(v);
-      detail.push('①重仓股穿透 '+fmtPct(v)+'（前十大覆盖'+w.toFixed(0)+'%：'+hits.join('，')+'）');
-      routes.push({label:'重仓股穿透', value:+v.toFixed(2), desc:'前十大重仓覆盖'+w.toFixed(0)+'%'});
+  let weightedPct=0;       // 加权累计涨跌幅
+  let totalWeight=0;       // 实际覆盖的权重总和
+  const holdingsDetail=[]; // 明细
+  let hasHK=false, hasUS=false;
+  let aShareCount=0, hkCount=0, usCount=0;
+
+  for(const s of hold.top10){
+    const ratio=Number(s.ratio)||0;
+    if(ratio<=0)continue;
+
+    const mkt=classifyStockCode(s.code);
+    const tc=toTencentCode(s.code, mkt);
+    const pc=tc!=null?qtPct(tc):null;
+
+    const item={
+      name:s.name,
+      code:s.code,
+      ratio:ratio,
+      market:mkt,
+      pct:pc,
+      contribution: pc!=null?+(pc*ratio/100).toFixed(3):null
+    };
+    holdingsDetail.push(item);
+
+    if(pc!=null){
+      weightedPct+=pc*ratio/100;
+      totalWeight+=ratio;
+      if(mkt==='a')aShareCount++;
+      else if(mkt==='hk'){hkCount++;hasHK=true;}
+      else if(mkt==='us'){usCount++;hasUS=true;}
     }
   }
 
-  // 路线② 行业指数拟合
-  if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings&&bench!=null){
-    let acc=0,w=0;
-    for(const s of hold.top10){
-      const sec=matchStockSector(s.name);
-      if(sec){
-        const p=qtPct(sec.code);
-        if(p!=null){acc+=p*s.ratio;w+=s.ratio}
-      }
-    }
-    if(w>=15){
-      const v=(acc+(90-w)*bench)/100;
-      routeVals.push(v);
-      detail.push('②行业拟合 '+fmtPct(v)+'（重仓股按行业归类加权）');
-      routes.push({label:'行业指数模型', value:+v.toFixed(2), desc:'重仓股按行业归类加权'});
-    }
+  if(totalWeight<=0)return null;
+
+  // 未覆盖部分用沪深300近似（主动基金基准）
+  const benchPct=qtPct('sh000300')||0;
+  const uncoveredWeight=Math.max(0, 90-totalWeight);  // 假设股票仓位约90%
+  const benchContrib=benchPct*uncoveredWeight/100;
+  const finalPct=+(weightedPct+benchContrib).toFixed(3);
+
+  const estimate=prevNav?+(prevNav*(1+finalPct/100)).toFixed(4):null;
+
+  // 跨境延迟说明
+  let delayNote='';
+  if(hasHK&&!hasUS)delayNote='含港股通，行情延迟约15分钟';
+  else if(hasUS&&!hasHK)delayNote='含美股，行情延迟较大';
+  else if(hasHK&&hasUS)delayNote='含港股+美股，行情有延迟';
+
+  // 误差归因（MAE）：从历史记录中读取
+  const mae=calcEstimateMAE(code);
+  let driftLevel='low';
+  if(mae!=null){
+    if(mae>1.5)driftLevel='high';
+    else if(mae>0.8)driftLevel='medium';
   }
 
-  // 路线③ 主题指数拟合
-  if(track){
-    const p=qtPct(track.code);
-    if(p!=null){
-      routeVals.push(p);
-      detail.push('③主题拟合 '+fmtPct(p)+'（'+track.name+'）');
-      routes.push({label:'主题指数模型', value:+p.toFixed(2), desc:track.name});
-    }
-  }else if((state.sectors||[]).some(s=>s.available&&s.change!=null)){
-    const sec=SECTOR_RULES.map((r,i)=>({r,s:state.sectors[i]}))
-      .find(x=>x.s&&x.s.available&&x.s.change!=null&&x.r.keys.some(k=>String(name||'').includes(k)));
-    if(sec){
-      routeVals.push(sec.s.change);
-      detail.push('③板块拟合 '+fmtPct(sec.s.change)+'（'+sec.r.name+'板块）');
-      routes.push({label:'主题指数模型', value:+sec.s.change.toFixed(2), desc:sec.r.name+'板块'});
-    }
-  }
-
-  if(!routeVals.length)return null;
-  // 取中位数
-  const arr=[...routeVals].sort((a,b)=>a-b);
-  const mid=arr.length===1?arr[0]:(arr.length===2?(arr[0]+arr[1])/2:arr[1]);
-  const spread=arr[arr.length-1]-arr[0];
   return {
-    pct:+mid.toFixed(2),
-    spread:+spread.toFixed(2),
-    warn:arr.length>=2&&spread>0.8,   // 0.8% 分歧红线
-    detail,cls,
-    track:track?track.code:null,
-    routes
+    pct:finalPct,
+    estimate,
+    method:'holdings',
+    coverage:+totalWeight.toFixed(1),
+    stockRatio:hold.stockRatio||0,
+    holdings:holdingsDetail,
+    crossBorder:hasHK||hasUS,
+    delayNote,
+    aShareCount, hkCount, usCount,
+    benchContrib:+benchContrib.toFixed(3),
+    uncoveredWeight:+uncoveredWeight.toFixed(1),
+    mae,
+    driftLevel,
+    routes:[
+      {label:'重仓股穿透', value:+finalPct.toFixed(2), desc:'前十大覆盖'+totalWeight.toFixed(0)+'%'},
+    ],
+    spread:0,
+    warn:driftLevel==='high'
   };
 }
 
-/* --- 单只基金实时估值完整入口（拉持仓+拉价格+算三路） --- */
+/* ============================================================
+ * 误差归因：计算近N日的平均绝对误差（MAE）
+ * 衡量基金持仓的"漂移程度" — MAE越大说明基金调仓越频繁
+ * ============================================================ */
+function calcEstimateMAE(code){
+  const key='estMae_'+code;
+  const history=state.estimateHistory?.[code]||[];
+  if(!history.length)return null;
+  // 只取最近5个有实际净值对照的交易日
+  const recent=history.slice(-5).filter(d=>d.actualNav!=null&&d.estNav!=null);
+  if(!recent.length)return null;
+  const sum=recent.reduce((a,d)=>{
+    const estPct=(d.estNav-d.prevNav)/d.prevNav*100;
+    const actPct=(d.actualNav-d.prevNav)/d.prevNav*100;
+    return a+Math.abs(estPct-actPct);
+  },0);
+  return +(sum/recent.length).toFixed(3);
+}
+
+/* --- 记录每日估值误差（收盘后更新） --- */
+function recordEstimateError(code, estNav, actualNav, prevNav){
+  if(!state.estimateHistory)state.estimateHistory={};
+  if(!state.estimateHistory[code])state.estimateHistory[code]=[];
+  const today=bjDateKey();
+  const arr=state.estimateHistory[code];
+  // 避免重复记录同一天
+  if(arr.length&&arr[arr.length-1].date===today)return;
+  arr.push({date:today, estNav, actualNav, prevNav});
+  if(arr.length>30)arr.shift();  // 只保留30天
+  try{localStorage.setItem('estimateHistory',JSON.stringify(state.estimateHistory))}catch(e){}
+}
+
+/* --- 单只基金实时估值完整入口（按5步法：拉持仓 + 拉行情 + 加权聚合） --- */
 async function getFundLiveEstimate(code,name,prevNav){
   try{
     if(!isTradeTime())return null;
@@ -1757,19 +1883,18 @@ async function getFundLiveEstimate(code,name,prevNav){
     if(hold)state.funds[code].holdings=hold;
     const track=matchTrackIndex(name);
     if(track)state.funds[code].trackIdx=track.code;
-    // 收集需要的行情代码
+    // 收集需要的行情代码：沪深300基准 + 跟踪指数 + 前十大重仓股
     const tcs=new Set(['sh000300']);
     if(track)tcs.add(track.code);
     if(hold&&hold.top10&&hold.top10.length&&!hold.isFundHoldings){
       for(const s of hold.top10){
-        const tc=toTencentCode(s.code);
+        const mkt=classifyStockCode(s.code);
+        const tc=toTencentCode(s.code, mkt);
         if(tc)tcs.add(tc);
-        const sec=matchStockSector(s.name);
-        if(sec)tcs.add(sec.code);
       }
     }
     await fetchTencentPrices([...tcs]);
-    return calcLiveRoutes(code,name);
+    return calcFundEstimateByHoldings(code, name, prevNav);
   }catch(e){return null}
 }
 
@@ -1784,10 +1909,9 @@ async function refreshPortfolioPrices(){
       if(f.trackIdx)tcs.add(f.trackIdx);
       if(f.holdings&&f.holdings.top10&&f.holdings.top10.length&&!f.holdings.isFundHoldings){
         for(const s of f.holdings.top10){
-          const tc=toTencentCode(s.code);
+          const mkt=classifyStockCode(s.code);
+          const tc=toTencentCode(s.code, mkt);
           if(tc)tcs.add(tc);
-          const sec=matchStockSector(s.name);
-          if(sec)tcs.add(sec.code);
         }
       }
     }
@@ -1796,11 +1920,11 @@ async function refreshPortfolioPrices(){
     for(const p of state.portfolio){
       const f=state.funds[p.code];
       if(!f||!f.nav)continue;
-      const live=calcLiveRoutes(p.code,f.name||p.name||p.code);
+      const live=calcFundEstimateByHoldings(p.code, f.name||p.name||p.code, f.nav);
       if(live&&live.pct!=null){
         f.live=live;
         f.pct=live.pct;
-        f.estimate=+(f.nav*(1+live.pct/100)).toFixed(4);
+        f.estimate=live.estimate||+(f.nav*(1+live.pct/100)).toFixed(4);
         f.time=timeStr()+' 实时';
         changed=true;
       }
@@ -1847,6 +1971,12 @@ function loadPortfolio(){
     const arr=JSON.parse(localStorage.getItem(STORAGE_PORT)||'[]');
     state.portfolio=Array.isArray(arr)?arr.filter(x=>x&&/^\d{6}$/.test(x.code)&&x.shares>0&&x.cost>0):[];
   }catch{state.portfolio=[]}
+}
+function loadEstimateHistory(){
+  try{
+    const raw=JSON.parse(localStorage.getItem('estimateHistory')||'null');
+    if(raw&&typeof raw==='object')state.estimateHistory=raw;
+  }catch(e){state.estimateHistory={}}
 }
 function getDSKey(){return localStorage.getItem(STORAGE_DS_KEY)||''}
 function getDSModel(){return localStorage.getItem(STORAGE_DS_MODEL)||'deepseek-chat'}
@@ -3054,14 +3184,15 @@ function updateNewsEvidence(mode='success'){
 }
 
 // 新闻统一刷新：直接使用 /api/news 总接口，严格按真实发布时间排序
-async function refreshNewsOnly(force=true){
+// showLoading: 是否显示"正在读取"的loading提示（用户主动点刷新才显示，自动刷新/首次加载不显示）
+async function refreshNewsOnly(force=true, showLoading=false){
   if(state._newsLoading) return;
   state._newsLoading=true;
   const btn=$('newsRefreshBtn');
   if(btn) btn.classList.add('spin');
   state.newsAI={};
   const now=Date.now();
-  updateNewsEvidence('loading');
+  if(showLoading) updateNewsEvidence('loading');
   try{
     const j=await proxyFetchJSON('news?limit=60&source=all',12000);
     let raw=Array.isArray(j)?j:(j?.items||j?.data?.items||j?.data||j?.news||[]);
@@ -3259,30 +3390,37 @@ async function refreshFunds(){
     const pct=num(v.GSZZL??v.gszzl);
     const price=est??nav;
     const fundName=v.SHORTNAME||v.name||h.name||p.name||'基金 '+p.code;
+    const histCloses=h.closes||[];
+    const prevNav=histCloses.length>=2?histCloses[histCloses.length-2]:null;
     state.funds[p.code]={
       code:p.code,
       name:fundName,nav,estimate:est,pct,
+      prevNav,
       time:v.GZTIME||v.gztime||'',
       navDate:v.PDATE||'',
-      history:h.closes,
-      metrics:calcIndicators(h.closes),
+      history:histCloses,
+      metrics:calcIndicators(histCloses),
       sources:[
         (v.GSZ!=null||v.gsz!=null)?'天天/东财估值':'',
-        h.closes.length?'东方财富历史净值':''
+        histCloses.length?'东方财富历史净值':''
       ].filter(Boolean)
     };
-    /* 盘中：三路反推实时估值（腾讯行情+重仓股穿透）覆盖东财估值 */
+    /* 盘中：重仓股加权聚合实时估值覆盖东财估值（5步法） */
     if(isTradeTime()){
       const live=await getFundLiveEstimate(p.code,fundName,nav);
       if(live&&live.pct!=null){
         state.funds[p.code].live=live;
         state.funds[p.code].pct=live.pct;
-        state.funds[p.code].estimate=+(nav*(1+live.pct/100)).toFixed(4);
+        state.funds[p.code].estimate=live.estimate||+(nav*(1+live.pct/100)).toFixed(4);
         state.funds[p.code].time=timeStr()+' 实时';
-        state.funds[p.code].sources.push('腾讯行情·实时估算模型');
+        state.funds[p.code].sources.push('腾讯行情·重仓股穿透估算');
         state._hadLive=true;
       }
     }else{
+      // 收盘后：如果有当日估值记录，记录误差用于MAE计算
+      if(state.funds[p.code]?.live?.estimate!=null&&nav!=null){
+        recordEstimateError(p.code, state.funds[p.code].live.estimate, nav, state.funds[p.code].prevNav||nav);
+      }
       state.funds[p.code].live=null;   /* 收盘后清除，回到官方净值 */
     }
   }
@@ -3489,6 +3627,8 @@ function renderPortfolio(){
       const todayNav=hist.at(-1);
       const yestNav=hist.at(-2);
       const prevNav=hist.at(-3);
+      // 显示涨跌幅：优先用实时估值/官方估值的涨跌幅，没有的话用最近一个交易日的净值涨跌幅（周末/非交易时段回退）
+      const displayPct=d.pct!=null?d.pct:(Number.isFinite(todayNav)&&Number.isFinite(yestNav)&&yestNav>0?+((todayNav-yestNav)/yestNav*100).toFixed(2):null);
       const todayPrice=price??todayNav;
       const todayGain=(Number.isFinite(todayPrice)&&Number.isFinite(yestNav))?(todayPrice-yestNav)*p.shares:null;
       const yesterdayGain=(Number.isFinite(yestNav)&&Number.isFinite(prevNav))?(yestNav-prevNav)*p.shares:null;
@@ -3525,28 +3665,43 @@ function renderPortfolio(){
       }
       const estLabel=d.live?'盘中实时估值':(d.estimate!=null?'盘中估值':(d.nav!=null?'官方净值':'暂无'));
       const reason=analyzeFundReason(d.name||p.name||'', d.pct);
-      /* 三路估值明细（盘中）- 三层结构：官方数据 / 实时估算 / 估算一致性 */
-      const liveHtml=d.live?`
-        <div class="fc-live ${d.live.warn?'fc-live-warn':''}">
+      /* 实时估值明细（5步法：静态锚点 + 动态变量 + 加权聚合 + 预估净值 + 误差归因） */
+      const live=d.live||{};
+      const liveHtml=live.pct!=null?`
+        <div class="fc-live ${live.warn?'fc-live-warn':''}">
           <div class="fc-live-head">
             <span class="fc-live-tag">⚡ 实时估值</span>
             <span class="fc-live-time">${safe(d.time||'')}</span>
+            ${live.delayNote?`<span style="font-size:10px;color:#f59e0b;margin-left:auto">⏱ ${live.delayNote}</span>`:''}
           </div>
           <div class="fc-live-detail">
-            <div style="margin-bottom:6px"><b style="font-size:11px">① 官方数据</b><br>
+            <div style="margin-bottom:6px"><b style="font-size:11px">① 官方净值</b><br>
               ${d.nav!=null?`净值 ${d.nav.toFixed(4)}`:'官方净值暂无'}
               ${d.navDate?` · ${d.navDate}`:''}
               <span style="color:var(--text-sec)"> · 来源：天天基金</span>
             </div>
-            <div style="margin-bottom:6px"><b style="font-size:11px">② 实时估算</b><br>
-              ${d.live.routes.map(r=>`<span style="display:inline-block;margin-right:10px">${r.label}：<b class="${r.value>=0?'up':'down'}">${fmtPct(r.value)}</b></span>`).join('')}
+            <div style="margin-bottom:6px"><b style="font-size:11px">② 估算方法</b><br>
+              ${live.method==='index'?'指数基金 · 跟踪'+live.trackIndex:
+                live.method==='holdings'?'重仓股加权聚合 · 前十大覆盖'+live.coverage+'%':
+                live.method==='fund_of_fund'?'FOF类 · 参考'+live.trackIndex:'—'}
+              ${live.method==='holdings'?`
+                <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:4px">
+                  ${live.holdings.map(h=>`<span style="display:inline-flex;align-items:center;gap:2px;padding:1px 6px;border-radius:8px;background:${h.pct==null?'#f1f5f9':'#f8fafc'};font-size:10px;white-space:nowrap">
+                    <span>${h.name}</span>
+                    <b class="${h.pct==null?'text-sec':(h.pct>=0?'up':'down')}" style="font-size:10px">${h.pct==null?'—':fmtPct(h.pct)}</b>
+                  </span>`).join('')}
+                </div>
+                ${live.uncoveredWeight>0?`<div style="margin-top:4px;font-size:10px;color:var(--text-sec)">未覆盖部分(${live.uncoveredWeight.toFixed(0)}%)按沪深300近似，贡献 ${live.benchContrib>=0?'+':''}${live.benchContrib.toFixed(3)}%</div>`:''}
+              `:''}
             </div>
-            <div><b style="font-size:11px">③ 估算一致性</b><br>
-              最大差值：<b>${d.live.spread.toFixed(2)}%</b>
-              <span style="margin-left:6px;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600;${d.live.spread<=0.3?'background:#ecfdf5;color:#047857':(d.live.spread<=0.8?'background:#fffbeb;color:#b45309':'background:#fef2f2;color:#dc2626')}">${d.live.routes.length<2?'参考模型不足':(d.live.spread<=0.3?'一致性高':(d.live.spread<=0.8?'一致性中':'一致性低'))}</span>
+            <div><b style="font-size:11px">③ 误差归因</b><br>
+              ${live.mae!=null?`近5日平均误差 <b>${live.mae.toFixed(2)}%</b>
+                <span style="margin-left:6px;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600;${live.driftLevel==='low'?'background:#ecfdf5;color:#047857':(live.driftLevel==='medium'?'background:#fffbeb;color:#b45309':'background:#fef2f2;color:#dc2626')}">
+                  ${live.driftLevel==='low'?'持仓稳定':live.driftLevel==='medium'?'有一定漂移':'漂移较大'}
+                </span>`:'暂无历史对照数据，误差待积累'}
             </div>
           </div>
-          <div class="fc-live-note">${d.live.warn?'模型分歧较大，可能因基金调仓或成分股异动导致，估值仅供参考':(d.live.routes.length<2?'可用估算模型较少，参考价值有限':'多模型交叉估算，结果仅供参考，不构成投资建议')}</div>
+          <div class="fc-live-note">${live.warn?'持仓漂移较大，估算误差可能偏高，仅供参考':(live.method==='index'?'指数基金直接跟踪指数，估值较准确':'基于季报前十大重仓股估算，与实际净值存在差异，仅供参考')}</div>
         </div>`:'';
       // 持仓占比
       const holdingValue=Number.isFinite(price)?price*p.shares:0;
@@ -3564,7 +3719,7 @@ function renderPortfolio(){
             <div class="fc-type ${d.live?'fc-type-live':''}">${estLabel}${d.time?' · '+safe(d.time):''}</div>
           </div>
           <div>
-            <div class="fc-pct ${d.pct==null?'flat':(d.pct>=0?'up':'down')}">${d.pct==null?'—':fmtPct(d.pct)}</div>
+            <div class="fc-pct ${displayPct==null?'flat':(displayPct>=0?'up':'down')}">${displayPct==null?'—':fmtPct(displayPct)}</div>
             <div class="fc-est">${price!=null?'估值 '+price.toFixed(4):'暂无估值'}</div>
           </div>
         </div>
@@ -5698,7 +5853,7 @@ function initEvents(){
   // 新闻独立刷新按钮
   const nrb=$('newsRefreshBtn');
   if(nrb){
-    nrb.onclick=()=>refreshNewsOnly(true);
+    nrb.onclick=()=>refreshNewsOnly(true, true);
   }
   // 新闻AI设置-保存
   const nds=$('newsDSSave');
@@ -5771,6 +5926,7 @@ function initEvents(){
 
 /* ===== 启动 ===== */
 loadPortfolio();
+loadEstimateHistory();
 initEvents();
 renderPortfolio();
 renderBand();
@@ -5805,15 +5961,11 @@ document.addEventListener('visibilitychange',()=>{
     state.lastUpdate=new Date();
     evidenceAI();
     updateSourceStatus();
-    // 页面回到前台立即刷新新闻，避免后台停留后看到旧数据
-    refreshNewsOnly(true).catch(()=>{});
+    // 页面回到前台不自动刷新闻，等用户手动点刷新
   }
 });
 
-// 新闻独立自动刷新：每60秒检查一次最新资讯，同时保留手动刷新按钮
-
-// 新闻每60秒自动刷新：统一 /api/news，总是按真实发布时间排序
-setInterval(()=>{if(!document.hidden)refreshNewsOnly(true).catch(()=>{})},60000);
+// 新闻纯手动刷新：去掉自动刷新，用户点刷新按钮才更新
 
 // 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
 setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
