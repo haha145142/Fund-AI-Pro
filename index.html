@@ -38,26 +38,32 @@
  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;max-width:820px;margin:0 auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
-body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transparent 35%),linear-gradient(180deg,#F8FBFF 0%,#F5F7FB 55%,#F8FAFD 100%)!important;padding:0 12px calc(82px + var(--safe-bottom)) 12px}
+body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transparent 35%),linear-gradient(180deg,#F8FBFF 0%,#F5F7FB 55%,#F8FAFD 100%)!important;padding:0 12px calc(96px + var(--safe-bottom)) 12px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(10,132,255,.25);border-radius:8px}
 
-/* ===== glass card ===== */
-.glass{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(247,251,255,.70));backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-radius:var(--radius);border:var(--card-border);box-shadow:0 14px 42px rgba(30,70,120,.07),inset 0 1px rgba(255,255,255,.96);padding:18px 16px;margin-bottom:14px;transition:opacity .2s ease,transform .2s ease}
+/* ===== glass card (liquid glass enhanced) ===== */
+.glass{position:relative;background:linear-gradient(145deg,rgba(255,255,255,.92) 0%,rgba(245,250,255,.76) 50%,rgba(252,254,255,.88) 100%);backdrop-filter:blur(32px) saturate(200%) brightness(1.04);-webkit-backdrop-filter:blur(32px) saturate(200%) brightness(1.04);border-radius:var(--radius);border:1.2px solid rgba(150,195,240,.32);box-shadow:0 20px 56px rgba(20,60,110,.10),0 4px 16px rgba(20,60,110,.04),inset 0 2px 0 rgba(255,255,255,.99),inset 0 -1.5px 0 rgba(200,220,245,.4);padding:18px 16px;margin-bottom:14px;transition:opacity .22s ease,transform .22s ease,box-shadow .22s ease;overflow:hidden}
+.glass::before{content:'';position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(180deg,rgba(255,255,255,.78) 0%,rgba(255,255,255,.08) 100%);pointer-events:none;border-radius:var(--radius) var(--radius) 0 0}
+.glass::after{content:'';position:absolute;top:7px;left:20%;right:25%;height:12px;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.35),rgba(255,255,255,.85));filter:blur(7px);pointer-events:none;border-radius:999px}
+.glass:hover{transform:translateY(-1.5px);box-shadow:0 28px 72px rgba(20,60,110,.13),0 6px 20px rgba(20,60,110,.06),inset 0 2px 0 rgba(255,255,255,.99),inset 0 -1.5px 0 rgba(200,220,245,.4)}
 .glass-sm{border-radius:var(--radius-sm);padding:14px 14px}
-.glass-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;letter-spacing:-.2px;flex-wrap:wrap}
+.glass-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;letter-spacing:-.2px;flex-wrap:wrap;position:relative;z-index:1}
 .glass-title small{font-size:11px;font-weight:400;color:var(--text-sec);margin-left:4px}
-.glass-title .badge{font-size:10px;font-weight:500;color:var(--blue);background:var(--blue-light);border-radius:20px;padding:1px 10px;margin-left:auto}
+.glass-title .badge{font-size:10px;font-weight:600;color:var(--blue);background:linear-gradient(135deg,rgba(10,132,255,.12),rgba(88,86,214,.10));border-radius:20px;padding:2px 10px;margin-left:auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
 
-/* ===== header ===== */
-.header{padding:20px 18px 16px;background:linear-gradient(145deg,#F7FAFF 0%,#EDF5FF 60%,#E6F2FF 100%);border-radius:var(--radius);margin-bottom:14px;border:1px solid rgba(180,210,240,.3);position:relative;overflow:hidden}
-.header::after{content:'';position:absolute;top:-40%;right:-10%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(10,132,255,.06) 0%,transparent 70%);pointer-events:none}
+/* ===== header (liquid glass enhanced) ===== */
+.header{padding:20px 18px 16px;background:linear-gradient(145deg,rgba(248,252,255,.95) 0%,rgba(237,246,255,.86) 45%,rgba(228,242,255,.92) 100%);backdrop-filter:blur(32px) saturate(200%) brightness(1.05);-webkit-backdrop-filter:blur(32px) saturate(200%) brightness(1.05);border-radius:var(--radius);margin-bottom:14px;border:1.2px solid rgba(160,200,245,.4);box-shadow:0 24px 64px rgba(20,80,150,.12),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -1.5px 0 rgba(190,215,245,.5);position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:65%;background:linear-gradient(180deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.06) 100%);pointer-events:none;border-radius:var(--radius) var(--radius) 0 0}
+.header::after{content:'';position:absolute;top:-55%;right:-12%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(10,132,255,.16) 0%,rgba(88,86,214,.08) 45%,transparent 75%);pointer-events:none;filter:blur(4px)}
+.header > *{position:relative;z-index:1}
 .header .top-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .header h1{font-size:22px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;color:var(--text)}
 .header h1 span{font-weight:400;font-size:13px;color:var(--text-sec);letter-spacing:0;margin-left:4px}
 .header .sub{font-size:13px;color:var(--text-sec);margin-top:2px;letter-spacing:-.1px}
-.refresh-btn{background:rgba(255,255,255,.72);border:1px solid rgba(120,160,210,.2);color:#263449;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 7px 18px rgba(40,60,90,.10),inset 0 1px 0 rgba(255,255,255,.96);transition:transform .2s}
+.refresh-btn{background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(245,250,255,.72));border:1px solid rgba(140,180,225,.25);color:#263449;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(20px) saturate(170%);-webkit-backdrop-filter:blur(20px) saturate(170%);box-shadow:0 8px 22px rgba(40,60,90,.12),inset 0 1.5px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.5);transition:transform .2s ease,box-shadow .2s ease}
+.refresh-btn:hover{box-shadow:0 12px 28px rgba(40,60,90,.15),inset 0 1.5px 0 rgba(255,255,255,.95)}
 .refresh-btn:active{transform:scale(.92)}
 .refresh-btn.spin svg{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -105,6 +111,25 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .fund-card .fc-actions button.del{color:#e06b6b;border-color:rgba(224,107,107,.2)}
 .fc-combo{font-size:11px;color:var(--text-sec);margin-top:6px;padding:6px 8px;background:rgba(242,247,255,.6);border-radius:10px;line-height:1.6}
 .fc-combo b{color:var(--text)}
+
+/* ===== 为什么涨/跌 展开区 ===== */
+.fc-reason-wrap{margin-top:8px}
+.fc-reason-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:12px;border:1px solid rgba(130,175,225,.2);background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(245,250,255,.7));font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:var(--font);transition:all .15s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%)}
+.fc-reason-btn:hover{border-color:rgba(10,132,255,.3);background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(240,247,255,.78));box-shadow:0 4px 12px rgba(10,132,255,.08),inset 0 1px 0 rgba(255,255,255,.92)}
+.fc-reason-btn:active{transform:scale(.98)}
+.fc-reason-arrow{font-size:10px;color:var(--text-sec);transition:transform .2s}
+.fc-reason-body{margin-top:8px;padding:10px 12px;border-radius:12px;background:linear-gradient(135deg,rgba(242,247,255,.7),rgba(255,250,245,.6));border:1px solid rgba(120,160,210,.15)}
+.fc-reason-ai{padding-bottom:8px;margin-bottom:8px;border-bottom:1px dashed rgba(120,160,210,.18)}
+.fc-reason-drive{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.fc-reason-drive .drive-label{font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:2px 8px;border-radius:10px}
+.fc-reason-drive .drive-type{font-size:13px;font-weight:700;color:var(--text)}
+.fc-reason-desc{font-size:11px;color:var(--text-sec);line-height:1.5}
+.fc-reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fc-reason-item{display:flex;gap:6px;align-items:flex-start}
+.fc-reason-item .ri-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.fc-reason-item .ri-title{font-size:10px;color:var(--text-sec);font-weight:600}
+.fc-reason-item .ri-text{font-size:11px;color:var(--text);line-height:1.4;margin-top:1px}
+.fc-reason-note{font-size:10px;color:var(--text-sec);margin-top:8px;padding-top:6px;border-top:1px dashed rgba(120,160,210,.15);text-align:center}
 
 /* ===== 三路实时估值卡片 ===== */
 .fc-type-live{color:#e64545;font-weight:700}
@@ -154,16 +179,16 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 
 /* ===== 高级液态毛玻璃板块卡片（增强版） ===== */
 .sect-pro{display:flex;flex-direction:column;gap:14px;padding:2px}
-.sc-pro{position:relative;border-radius:26px;padding:20px 18px;background:linear-gradient(145deg,rgba(255,255,255,.88) 0%,rgba(247,252,255,.72) 40%,rgba(255,255,255,.82) 100%);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1.2px solid rgba(140,185,230,.28);box-shadow:0 16px 48px rgba(20,60,110,.10),0 2px 8px rgba(20,60,110,.04),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5);overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
-.sc-pro::before{content:'';position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(180deg,rgba(255,255,255,.75) 0%,rgba(255,255,255,.08) 100%);pointer-events:none;border-radius:26px 26px 0 0;z-index:1}
-.sc-pro::after{content:'';position:absolute;top:8px;left:16px;right:45%;height:12px;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.3));filter:blur(8px);pointer-events:none;border-radius:999px;z-index:1}
+.sc-pro{position:relative;border-radius:26px;padding:20px 18px;background:linear-gradient(145deg,rgba(255,255,255,.92) 0%,rgba(245,251,255,.78) 40%,rgba(252,254,255,.86) 100%);backdrop-filter:blur(36px) saturate(200%) brightness(1.04);-webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04);border:1.4px solid rgba(150,195,240,.36);box-shadow:0 22px 64px rgba(20,60,110,.13),0 6px 20px rgba(20,60,110,.06),inset 0 2px 0 rgba(255,255,255,.99),inset 0 -1.5px 0 rgba(200,220,245,.45);overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease}
+.sc-pro::before{content:'';position:absolute;top:0;left:0;right:0;height:65%;background:linear-gradient(180deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.08) 100%);pointer-events:none;border-radius:26px 26px 0 0;z-index:1}
+.sc-pro::after{content:'';position:absolute;top:9px;left:20%;right:30%;height:14px;background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.4),rgba(255,255,255,.9));filter:blur(8px);pointer-events:none;border-radius:999px;z-index:1}
 /* 流光边框效果 */
-.sc-pro .border-glow{position:absolute;inset:-1.2px;border-radius:27px;pointer-events:none;z-index:0;overflow:hidden;opacity:.6}
-.sc-pro .border-glow::before{content:'';position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(120,180,255,.35) 60deg,transparent 120deg,rgba(255,180,180,.25) 200deg,transparent 260deg,rgba(180,220,255,.3) 320deg,transparent 360deg);animation:borderRotate 6s linear infinite}
+.sc-pro .border-glow{position:absolute;inset:-1.4px;border-radius:27px;pointer-events:none;z-index:0;overflow:hidden;opacity:.7}
+.sc-pro .border-glow::before{content:'';position:absolute;inset:-50%;background:conic-gradient(from 0deg,transparent 0deg,rgba(120,180,255,.45) 60deg,transparent 120deg,rgba(255,180,180,.3) 200deg,transparent 260deg,rgba(180,220,255,.38) 320deg,transparent 360deg);animation:borderRotate 6s linear infinite}
 @keyframes borderRotate{to{transform:rotate(360deg)}}
-.sc-pro .border-glow::after{content:'';position:absolute;inset:1.2px;border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.88) 0%,rgba(247,252,255,.72) 40%,rgba(255,255,255,.82) 100%);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%)}
-.sc-pro:hover{transform:translateY(-2px);box-shadow:0 22px 56px rgba(20,60,110,.13),0 4px 12px rgba(20,60,110,.06),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5)}
-.sc-pro:hover .border-glow{opacity:.9}
+.sc-pro .border-glow::after{content:'';position:absolute;inset:1.4px;border-radius:25px;background:linear-gradient(145deg,rgba(255,255,255,.92) 0%,rgba(245,251,255,.78) 40%,rgba(252,254,255,.86) 100%);backdrop-filter:blur(36px) saturate(200%) brightness(1.04);-webkit-backdrop-filter:blur(36px) saturate(200%) brightness(1.04)}
+.sc-pro:hover{transform:translateY(-2.5px);box-shadow:0 30px 76px rgba(20,60,110,.16),0 8px 24px rgba(20,60,110,.08),inset 0 2px 0 rgba(255,255,255,.99),inset 0 -1.5px 0 rgba(200,220,245,.45)}
+.sc-pro:hover .border-glow{opacity:1}
 .sc-pro:active{transform:scale(.985)}
 .sc-pro .sc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;position:relative;z-index:2}
 .sc-pro .sc-head .names{flex:1;min-width:0}
@@ -251,6 +276,24 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .combo-meter .bar .m{position:absolute;top:-3px;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--text);transform:translateX(-50%)}
 .combo-meter .lbl{font-size:12px;font-weight:700;min-width:50px;text-align:right}
 
+/* ===== 组合体检液态玻璃卡片 ===== */
+.combo-glass-card{position:relative;border-radius:16px;padding:12px 10px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,250,255,.76));border:1px solid rgba(140,185,230,.25);box-shadow:0 6px 20px rgba(20,60,110,.06),inset 0 1.5px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(200,220,245,.35);backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);text-align:center;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.combo-glass-card::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,0));pointer-events:none;border-radius:16px 16px 0 0}
+.combo-glass-card:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(20,60,110,.09),inset 0 1.5px 0 rgba(255,255,255,.96)}
+.cgc-label{font-size:11px;color:var(--text-sec);font-weight:500;margin-bottom:4px;position:relative;z-index:1}
+.cgc-value{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px;position:relative;z-index:1;line-height:1.2}
+.cgc-sub{font-size:10px;color:var(--text-sec);margin-top:3px;position:relative;z-index:1}
+.combo-advice-card{position:relative;margin-top:12px;padding:14px 16px;border-radius:18px;background:linear-gradient(145deg,rgba(238,248,255,.95),rgba(228,242,255,.86));border:1px solid rgba(10,132,255,.25);box-shadow:0 8px 28px rgba(10,132,255,.10),inset 0 1.5px 0 rgba(255,255,255,.98);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);overflow:hidden;line-height:1.7}
+.combo-advice-card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,0));pointer-events:none;border-radius:18px 18px 0 0}
+.combo-advice-card > *{position:relative;z-index:1}
+
+/* 持仓重合度液态玻璃卡片 */
+.combo-overlap-card{position:relative;margin-top:16px;padding:16px 15px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,250,255,.76));border:1px solid rgba(140,185,230,.25);box-shadow:0 8px 28px rgba(20,60,110,.07),inset 0 1.5px 0 rgba(255,255,255,.96),inset 0 -1px 0 rgba(200,220,245,.35);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);overflow:hidden}
+.combo-overlap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,0));pointer-events:none;border-radius:20px 20px 0 0}
+.combo-bar-item{position:relative;z-index:1;padding:8px 10px;background:rgba(255,255,255,.5);border-radius:12px;border:1px solid rgba(140,185,230,.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.combo-risk-warn{position:relative;z-index:1;margin-top:10px;padding:10px 12px;background:linear-gradient(135deg,rgba(254,242,242,.95),rgba(255,241,241,.9));border:1px solid rgba(217,74,74,.25);border-radius:12px;font-size:12px;line-height:1.7;color:#b91c1c;box-shadow:0 4px 14px rgba(217,74,74,.08),inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.combo-stock-overlap{position:relative;z-index:1;padding:8px 12px;background:linear-gradient(135deg,rgba(255,248,240,.9),rgba(255,244,230,.8));border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;margin-bottom:5px;box-shadow:0 2px 8px rgba(245,158,11,.06),inset 0 1px 0 rgba(255,255,255,.9)}
+
 /* ===== news ===== */
 .news-list{display:flex;flex-direction:column;gap:0}
 .news-item{padding:11px 2px;border-bottom:1px solid rgba(100,130,170,.10)}
@@ -264,18 +307,35 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-source.yicai{color:#7c3aed;background:#f5f0ff;border:1px solid #e6dcff}
 .news-source.ths{color:#ea580c;background:#fff4ec;border:1px solid #ffe0cc}
 .news-topic{font-size:9px;color:#64748b;background:#f5f7fa;border-radius:6px;padding:2px 5px}
+.news-tier{font-size:9px;border-radius:6px;padding:1px 6px;font-weight:600;letter-spacing:.3px}
+.news-tier.tier1{color:#047857;background:#ecfdf5;border:1px solid #a7f3d0}
+.news-tier.tier2{color:#b45309;background:#fffbeb;border:1px solid #fde68a}
+.news-tier.tier3{color:#4338ca;background:#eef2ff;border:1px solid #c7d2fe}
+.news-breaking{font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:6px;padding:1px 6px;letter-spacing:.3px;box-shadow:0 2px 8px rgba(220,38,38,.25)}
 .news-title{font-size:13px;line-height:1.55;font-weight:650}
 .news-title a{color:inherit;text-decoration:none}
 .news-summary{font-size:11px;color:#64748b;line-height:1.6;margin:4px 0 0 0}
-.news-ai{margin:6px 0 0 0;padding:8px 12px;border-radius:12px;background:rgba(246,250,255,.92);border-left:3px solid #7db9f2;font-size:12.5px;line-height:1.7;color:#334155;font-weight:500}
+.news-ai-wrap{margin:6px 0 0 0}
+.news-ai{padding:8px 11px;border-radius:12px;background:linear-gradient(145deg,rgba(246,251,255,.98),rgba(237,246,255,.92));border-left:3px solid #5aa9f0;font-size:11.5px;line-height:1.7;color:#1e3a5f;font-weight:500;box-shadow:0 2px 8px rgba(10,132,255,.06);display:flex;align-items:center;justify-content:space-between;gap:6px}
 .news-ai b{color:#0f172a}
-.news-ai .ai-tag{color:#0a84ff;font-weight:700;margin-right:4px}
-.news-feature{padding:12px;border-radius:17px;background:linear-gradient(145deg,#f8fbff,#edf6ff);border:1px solid rgba(135,190,235,.35);margin-bottom:8px;box-shadow:inset 0 1px rgba(255,255,255,.95)}
-.news-feature .news-title{font-size:14px;font-weight:800}
+.news-ai .ai-tag{color:#0a84ff;font-weight:800;margin-right:2px;font-size:12px;flex-shrink:0}
+.ai-expand-btn{font-size:10px;color:#0a84ff;font-weight:600;cursor:pointer;flex-shrink:0;background:rgba(10,132,255,.08);padding:2px 8px;border-radius:8px;transition:background .15s}
+.ai-expand-btn:hover{background:rgba(10,132,255,.15)}
+.news-ai-detail{margin-top:4px;padding:10px 12px;border-radius:12px;background:linear-gradient(145deg,rgba(255,253,248,.98),rgba(255,248,238,.92));border:1px solid rgba(245,166,35,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+.ai-detail-item{font-size:11.5px;line-height:1.75;margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed rgba(245,166,35,.15)}
+.ai-detail-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.ai-detail-label{font-size:10px;font-weight:700;color:#b27500;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.ai-detail-text{color:#3d2c1a;display:block;font-weight:500}
+.ai-detail-final{background:linear-gradient(135deg,rgba(245,166,35,.12),rgba(245,166,35,.06));padding:7px 10px;border-radius:10px;font-weight:600;color:#7c4e00;font-size:12px;line-height:1.6}
+.news-feature{position:relative;padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(248,251,255,.95),rgba(237,246,255,.85));border:1px solid rgba(135,190,235,.4);margin-bottom:10px;box-shadow:0 12px 36px rgba(10,100,200,.08),inset 0 1.5px 0 rgba(255,255,255,.98);overflow:hidden}
+.news-feature::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);pointer-events:none;border-radius:18px 18px 0 0}
+.news-feature::after{content:'';position:absolute;top:6px;left:16px;right:50%;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.2));filter:blur(6px);pointer-events:none;border-radius:999px}
+.news-feature .news-title{font-size:14px;font-weight:800;position:relative;z-index:1}
 .news-filters{display:flex;gap:6px;overflow:auto;padding:1px 0 8px;scrollbar-width:none}
 .news-filters::-webkit-scrollbar{display:none}
-.news-filter{flex:0 0 auto;border:1px solid rgba(155,185,220,.35);background:rgba(255,255,255,.72);color:#64748b;border-radius:999px;padding:5px 10px;font-size:10px;cursor:pointer;font-family:var(--font)}
-.news-filter.active{color:#0a72ea;background:#edf6ff;border-color:#b9dcff;font-weight:700}
+.news-filter{flex:0 0 auto;border:1px solid rgba(155,185,220,.3);background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(245,250,255,.68));color:#64748b;border-radius:999px;padding:5px 12px;font-size:11px;cursor:pointer;font-family:var(--font);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 2px 8px rgba(40,60,90,.05),inset 0 1px 0 rgba(255,255,255,.9);transition:all .15s ease;font-weight:500}
+.news-filter:hover{color:#334155;border-color:rgba(130,170,220,.35)}
+.news-filter.active{color:#0a72ea;background:linear-gradient(145deg,rgba(237,246,255,.95),rgba(220,238,255,.88));border-color:rgba(10,132,255,.35);font-weight:700;box-shadow:0 4px 12px rgba(10,132,255,.12),inset 0 1px 0 rgba(255,255,255,.95)}
 .news-impact{font-size:10px;margin-top:4px}
 .news-impact.pos{color:var(--up)}
 .news-impact.neg{color:var(--down)}
@@ -323,6 +383,22 @@ body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transpa
 .news-ai-setting .ai-setting-status{font-size:10px;color:var(--text-sec);line-height:1.6}
 .news-ai-setting .ai-setting-status.ok{color:#047857}
 .news-ai-setting .ai-setting-status.err{color:var(--up)}
+/* = AI综合解读卡片 = */
+.ai-summary{margin:14px 0 0 0;overflow:hidden}
+.ai-summary-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:0 2px}
+.ai-summary-icon{font-size:18px}
+.ai-summary-title{font-size:13px;font-weight:700;color:var(--text)}
+.ai-summary-model{font-size:9px;color:var(--text-sec);margin-left:auto;background:rgba(202,168,98,.12);padding:2px 7px;border-radius:6px}
+.ai-summary-card{background:linear-gradient(135deg,#fffdf5,#fef9e7);border-radius:14px;border:1px solid rgba(202,168,98,.2);border-left:3px solid #c9a852;padding:12px 14px}
+.ai-summary-section{margin-bottom:12px}
+.ai-summary-section:last-child{margin-bottom:0}
+.ai-summary-mini-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:4px}
+.ai-summary-mini-chain .mini-step{background:rgba(255,255,255,.6);border-radius:10px;padding:6px 4px;text-align:center;border:1px solid rgba(202,168,98,.15)}
+.ai-summary-mini-chain .mini-icon{font-size:14px;display:block;margin-bottom:2px}
+.ai-summary-mini-chain .mini-label{font-size:9px;color:var(--text-sec);display:block;margin-bottom:2px}
+.ai-summary-mini-chain .mini-val{font-size:11px;font-weight:700;color:var(--text);display:block;line-height:1.3}
+.ai-summary-label{font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.ai-summary-content{font-size:11px;color:var(--text-sec);line-height:1.75;padding-left:0}
 
 .news-error-strip{font-size:11px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:8px 11px;margin-bottom:8px;line-height:1.6;display:flex;align-items:center;gap:6px}
 
@@ -409,8 +485,10 @@ details .detail-body b{color:var(--text)}
 .fact-block b{color:var(--text)}
 
 /* ===== AI 资金博弈卡片 ===== */
-.ai-flow-card{position:relative;border-radius:18px;padding:14px 14px;margin:10px 0;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,251,255,.75));border:1px solid rgba(120,170,220,.18);box-shadow:0 10px 30px rgba(20,60,110,.06),inset 0 1px 0 rgba(255,255,255,.95);overflow:hidden}
-.ai-flow-card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:18px 18px 0 0}
+.ai-flow-card{position:relative;border-radius:18px;padding:14px 14px;margin:10px 0;background:linear-gradient(145deg,rgba(255,255,255,.92) 0%,rgba(245,251,255,.78) 50%,rgba(255,255,255,.86) 100%);backdrop-filter:blur(24px) saturate(170%);-webkit-backdrop-filter:blur(24px) saturate(170%);border:1px solid rgba(130,175,225,.22);box-shadow:0 14px 40px rgba(20,60,110,.07),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.4);overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.ai-flow-card::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:18px 18px 0 0}
+.ai-flow-card::after{content:'';position:absolute;top:5px;left:14px;right:50%;height:9px;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.15));filter:blur(5px);pointer-events:none;border-radius:999px}
+.ai-flow-card:hover{transform:translateY(-1px);box-shadow:0 20px 50px rgba(20,60,110,.10),inset 0 1.5px 0 rgba(255,255,255,.98)}
 .ai-flow-card .ai-flow-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;position:relative;z-index:1;display:flex;align-items:center;gap:6px}
 .ai-flow-card .ai-flow-body{font-size:12.5px;line-height:1.8;color:var(--text-sec);position:relative;z-index:1}
 .ai-flow-card .ai-flow-body b{color:var(--text)}
@@ -418,10 +496,13 @@ details .detail-body b{color:var(--text)}
 .ai-flow-card .ai-flow-item.up{color:var(--up)}
 .ai-flow-card .ai-flow-item.down{color:var(--down)}
 .ai-flow-card .ai-flow-item b{color:var(--text)}
-.ai-flow-card.judge{background:linear-gradient(145deg,#FFF9F9,#FFF5F5);border-color:rgba(217,74,74,.15)}
-.ai-flow-card.concl{background:linear-gradient(145deg,#F3FBFF,#EAF6FF);border-color:rgba(10,132,255,.18)}
+.ai-flow-card.judge{background:linear-gradient(145deg,rgba(255,249,249,.92),rgba(255,245,245,.82));border-color:rgba(217,74,74,.2)}
+.ai-flow-card.judge::before{background:linear-gradient(180deg,rgba(255,240,240,.6) 0%,rgba(255,245,245,0) 100%)}
+.ai-flow-card.concl{background:linear-gradient(145deg,rgba(243,251,255,.92),rgba(234,246,255,.82));border-color:rgba(10,132,255,.22)}
+.ai-flow-card.concl::before{background:linear-gradient(180deg,rgba(230,243,255,.65) 0%,rgba(243,251,255,0) 100%)}
 .ai-flow-card.concl .ai-flow-body{color:var(--text);font-weight:500}
-.ai-flow-card.weekend{background:linear-gradient(145deg,#FFFDF5,#FFF8E8);border-color:rgba(245,166,35,.2)}
+.ai-flow-card.weekend{background:linear-gradient(145deg,rgba(255,253,245,.92),rgba(255,248,232,.82));border-color:rgba(245,166,35,.25)}
+.ai-flow-card.weekend::before{background:linear-gradient(180deg,rgba(255,248,225,.6) 0%,rgba(255,253,245,0) 100%)}
 .ai-flow-card.weekend .ai-flow-title{color:#b27500}
 
 /* ===== table ===== */
@@ -444,38 +525,29 @@ table td b{font-weight:700}
 /* ===== okline ===== */
 .okline{font-size:12px;color:var(--down);background:var(--down-bg);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:14px;border:1px solid rgba(26,155,106,.15);line-height:1.7}
 
-/* ===== bottom tab — iOS 26 Liquid Glass Keyboard ===== */
-
-.tabbar::before{content:'';position:absolute;inset:0;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 50%,rgba(255,255,255,.08) 100%);pointer-events:none;z-index:0}
-
-.tabbar .tab::before{content:'';position:absolute;inset:0;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.3) 100%);opacity:.8;transition:opacity .25s;z-index:-1}
-.tabbar .tab::after{content:'';position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -1px 2px rgba(0,0,0,.04);z-index:-1}
-
-.tabbar .tab .ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:all .3s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.06))}
-
-
-.tabbar .tab-item.active::before{background:linear-gradient(180deg,rgba(10,132,255,.15) 0%,rgba(10,132,255,.05) 50%,rgba(255,255,255,.4) 100%);opacity:1}
-.tabbar .tab-item.active .ico{transform:scale(1.12) translateY(-1px)}
-.tabbar .tab-item.active .ico svg{stroke:#0A84FF;filter:drop-shadow(0 2px 6px rgba(10,132,255,.35))}
-.tabbar .tab-item.active .lb{font-weight:700;transform:translateY(-1px)}
-.tabbar .tab:active{transform:scale(.92);transition:transform .1s}
-@media(max-width:480px){
- 
- 
- 
- .tabbar .tab .ico svg{width:18px;height:18px}
- 
-}
+/* ===== bottom tab (liquid glass dock) ===== */
+.tabbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:560px;background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(244,249,255,.66));backdrop-filter:blur(44px) saturate(220%) brightness(1.06);-webkit-backdrop-filter:blur(44px) saturate(220%) brightness(1.06);border-radius:32px;border:1.2px solid rgba(255,255,255,.8);box-shadow:0 24px 72px rgba(20,60,110,.20),0 8px 28px rgba(20,60,110,.08),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -1.5px 0 rgba(200,220,245,.5);display:flex;justify-content:space-around;padding:7px 6px;z-index:999;padding-bottom:calc(7px + var(--safe-bottom));overflow:hidden}
+.tabbar::before{content:'';position:absolute;top:0;left:0;right:0;height:60%;background:linear-gradient(180deg,rgba(255,255,255,.65) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:32px 32px 0 0}
+.tabbar::after{content:'';position:absolute;top:6px;left:18%;right:18%;height:11px;background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.3),rgba(255,255,255,.88));filter:blur(5px);pointer-events:none;border-radius:999px}
+.tabbar .tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 12px;border-radius:20px;background:transparent;border:none;font-size:10px;font-weight:500;color:#64748B;transition:transform .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease;cursor:pointer;font-family:var(--font);min-width:48px;position:relative;min-height:48px;z-index:1}
+.tabbar .tab .ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+.tabbar .tab .ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:all .2s;filter:drop-shadow(0 2px 4px rgba(10,132,255,.15))}
+.tabbar .tab .lb{color:inherit}
+.tabbar .tab.active{color:#0A84FF;background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(226,241,255,.88));box-shadow:inset 0 2px 0 rgba(255,255,255,.99),0 8px 24px rgba(10,132,255,.22),inset 0 -1px 0 rgba(200,225,255,.5)}
+.tabbar .tab.active .ico svg{stroke:#0A84FF;transform:scale(1.08)}
+.tabbar .tab.active:after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:#0A84FF;box-shadow:0 0 12px rgba(10,132,255,.6)}
+.tabbar .tab:active{transform:scale(.92)}
 
 /* ===== add form ===== */
 .add-form{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px;align-items:center}
 .add-form input{flex:1;min-width:80px;padding:9px 12px;border-radius:14px;border:1px solid rgba(120,160,210,.2);background:rgba(255,255,255,.7);font-size:13px;font-family:var(--font);outline:none;transition:border .2s;color:var(--text)}
 .add-form input:focus{border-color:var(--blue);background:rgba(255,255,255,.9)}
 .add-form input::placeholder{color:var(--text-light)}
-.add-form .btn{padding:9px 16px;border-radius:14px;border:none;background:linear-gradient(180deg,#1687ff,#0a72ea);color:#fff;font-weight:600;font-size:13px;cursor:pointer;transition:transform .15s;font-family:var(--font);white-space:nowrap;box-shadow:0 8px 20px rgba(10,132,255,.18)}
+.add-form .btn{padding:9px 16px;border-radius:14px;border:none;background:linear-gradient(180deg,#2e91ff,#0a72ea);color:#fff;font-weight:600;font-size:13px;cursor:pointer;transition:transform .15s,box-shadow .15s;font-family:var(--font);white-space:nowrap;box-shadow:0 8px 22px rgba(10,132,255,.22),inset 0 1px 0 rgba(255,255,255,.25)}
+.add-form .btn:hover{box-shadow:0 12px 28px rgba(10,132,255,.28),inset 0 1px 0 rgba(255,255,255,.3)}
 .add-form .btn:active{transform:scale(.96)}
 .add-form .btn:disabled{opacity:.5;cursor:not-allowed}
-.add-form .btn.secondary{background:rgba(255,255,255,.82);color:var(--blue);border:1px solid rgba(10,132,255,.22);box-shadow:none}
+.add-form .btn.secondary{background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(245,250,255,.8));color:var(--blue);border:1px solid rgba(10,132,255,.25);box-shadow:0 4px 12px rgba(10,132,255,.08),inset 0 1px 0 rgba(255,255,255,.95)}
 
 /* ===== empty / loading ===== */
 .empty-state{text-align:center;padding:24px 12px;color:var(--text-sec);font-size:14px}
@@ -490,6 +562,79 @@ table td b{font-weight:700}
 .ai-panel .ai-section h4{font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px}
 .ai-panel .ai-section .body{font-size:12.5px;color:var(--text-sec);line-height:1.8;padding:6px 10px;background:rgba(242,247,255,.5);border-radius:10px}
 .ai-panel .ai-section .body b{color:var(--text)}
+
+/* ===== AI页面7步证据链（阿里版风格） ===== */
+.ai-evidence-chain{display:flex;flex-direction:column;gap:10px;margin:2px 0 6px 0}
+.ai-evidence-step{position:relative;border-radius:18px;padding:14px 15px;background:linear-gradient(145deg,rgba(255,255,255,.92) 0%,rgba(247,252,255,.78) 50%,rgba(255,255,255,.86) 100%);border:1.2px solid rgba(140,185,230,.28);box-shadow:0 8px 28px rgba(20,60,110,.07),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5);transition:all .22s cubic-bezier(.2,.8,.2,1);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);overflow:hidden}
+.ai-evidence-step::before{content:'';position:absolute;top:0;left:0;right:0;height:55%;background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.06) 100%);pointer-events:none;border-radius:18px 18px 0 0}
+.ai-evidence-step::after{content:'';position:absolute;top:7px;left:18px;right:50%;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.95),rgba(255,255,255,.25));filter:blur(6px);pointer-events:none;border-radius:999px}
+.ai-evidence-step:hover{transform:translateY(-1.5px);box-shadow:0 14px 38px rgba(20,60,110,.10),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(255,255,255,.5)}
+.ai-es-head{display:flex;align-items:center;gap:7px;margin-bottom:8px;position:relative;z-index:1}
+.ai-es-num{font-size:15px;font-weight:800;color:var(--blue);min-width:20px;text-shadow:0 1px 6px rgba(10,132,255,.18)}
+.ai-es-icon{font-size:16px}
+.ai-es-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.ai-es-body{font-size:12.5px;line-height:1.8;color:var(--text-sec);padding-left:27px;position:relative;z-index:1}
+.ai-es-body b{color:var(--text);font-weight:700}
+.ai-es-evidence{font-size:11px;color:var(--text-sec);margin-top:6px;padding-left:27px;position:relative;z-index:1;display:flex;align-items:center;gap:5px;opacity:.85}
+.ai-es-evidence::before{content:'🔍';font-size:10px}
+.ai-evidence-step.judge{background:linear-gradient(145deg,rgba(238,248,255,.95) 0%,rgba(228,242,255,.86) 50%,rgba(235,247,255,.92) 100%);border-color:rgba(10,132,255,.36);box-shadow:0 12px 36px rgba(10,132,255,.14),inset 0 2px 0 rgba(255,255,255,.99),inset 0 -1px 0 rgba(255,255,255,.55)}
+.ai-evidence-step.judge::before{background:linear-gradient(180deg,rgba(220,240,255,.75) 0%,rgba(238,248,255,0) 100%)}
+.ai-evidence-step.judge .ai-es-num{color:#0a84ff;text-shadow:0 1px 8px rgba(10,132,255,.25)}
+.ai-evidence-step.judge .ai-es-title{color:#0a84ff}
+.ai-evidence-step.judge .ai-es-body{font-weight:600;color:var(--text)}
+
+/* ===== 7步证据链 ===== */
+.evidence-chain{margin:4px 0 12px 0}
+.ev-step{position:relative;margin-bottom:10px;border-radius:14px;padding:11px 13px;background:linear-gradient(145deg,rgba(248,251,255,.8),rgba(243,248,255,.7));border:1px solid rgba(130,175,225,.18);box-shadow:0 4px 14px rgba(20,60,110,.04),inset 0 1px 0 rgba(255,255,255,.9);transition:all .2s ease;backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);overflow:hidden}
+.ev-step::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:14px 14px 0 0}
+.ev-step:hover{background:linear-gradient(145deg,rgba(242,247,255,.9),rgba(237,245,255,.82));box-shadow:0 8px 22px rgba(20,60,110,.07),inset 0 1px 0 rgba(255,255,255,.95)}
+.ev-step-head{display:flex;align-items:center;gap:6px;margin-bottom:6px;position:relative;z-index:1}
+.ev-step-head .ev-num{font-size:14px;font-weight:800;color:var(--blue);min-width:18px;text-shadow:0 1px 4px rgba(10,132,255,.15)}
+.ev-step-head .ev-icon{font-size:15px}
+.ev-step-head .ev-title{font-size:13px;font-weight:700;color:var(--text)}
+.ev-step-body{font-size:12px;line-height:1.75;color:var(--text-sec);padding-left:24px;position:relative;z-index:1}
+.ev-step-body b{color:var(--text)}
+.ev-step.ev-final{background:linear-gradient(145deg,rgba(243,251,255,.92),rgba(234,246,255,.82));border-color:rgba(10,132,255,.28);box-shadow:0 6px 20px rgba(10,132,255,.10),inset 0 1.5px 0 rgba(255,255,255,.98)}
+.ev-step.ev-final::before{background:linear-gradient(180deg,rgba(230,243,255,.6) 0%,rgba(243,251,255,0) 100%)}
+.ev-step.ev-final .ev-step-head .ev-num{color:#0a84ff}
+.ev-step.ev-final .ev-step-body{font-weight:600;color:var(--text)}
+.evidence-detail{margin-top:8px;border-radius:14px;background:linear-gradient(145deg,rgba(255,253,245,.92),rgba(255,248,232,.82));border:1px solid rgba(245,166,35,.25);box-shadow:0 6px 20px rgba(245,166,35,.08),inset 0 1px 0 rgba(255,255,255,.95);overflow:hidden;backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%)}
+.evidence-detail summary{padding:10px 14px;font-size:12px;font-weight:700;color:#b27500;cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.evidence-detail summary::-webkit-details-marker{display:none}
+.evidence-detail summary::before{content:'▼';font-size:9px;transition:transform .2s}
+.evidence-detail[open] summary::before{transform:rotate(180deg)}
+.evidence-detail-body{padding:0 14px 12px 14px;position:relative;z-index:1}
+.ev-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.ev-metric{background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(255,250,240,.75));border-radius:12px;padding:8px 10px;text-align:center;border:1px solid rgba(245,166,35,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.95);transition:transform .15s ease}
+.ev-metric:hover{transform:translateY(-1px)}
+.evm-icon{font-size:16px;display:block;margin-bottom:2px}
+.evm-label{font-size:10px;color:var(--text-sec);display:block;margin-bottom:2px;font-weight:500}
+.evm-val{font-size:12px;font-weight:700;color:var(--text);display:block}
+.ev-judge{font-size:12px;color:var(--text-sec);text-align:center;padding-top:8px;border-top:1px dashed rgba(245,166,35,.3)}
+.ev-judge-val{font-weight:800;color:#b27500;font-size:13px;text-shadow:0 1px 4px rgba(245,166,35,.15)}
+
+/* ===== 新闻事件聚类 ===== */
+.news-event{position:relative;margin-bottom:12px;border-radius:16px;border:1px solid rgba(130,175,225,.18);overflow:hidden;background:linear-gradient(145deg,rgba(248,251,255,.7),rgba(245,249,255,.6));backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);box-shadow:0 8px 24px rgba(20,60,110,.05),inset 0 1px 0 rgba(255,255,255,.9);transition:box-shadow .2s ease}
+.news-event::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:16px 16px 0 0}
+.news-event.hero{background:linear-gradient(145deg,rgba(240,248,255,.9),rgba(230,242,255,.82));border-color:rgba(10,132,255,.3);box-shadow:0 14px 40px rgba(10,100,200,.10),inset 0 1.5px 0 rgba(255,255,255,.98)}
+.news-event.hero::before{background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);height:60%}
+.news-event:hover{box-shadow:0 14px 38px rgba(20,60,110,.08),inset 0 1px 0 rgba(255,255,255,.92)}
+.news-event-head{padding:10px 12px;cursor:pointer;position:relative;z-index:1}
+.news-event-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.news-event-title .event-tag{font-size:10px;padding:2px 8px;border-radius:8px;background:linear-gradient(135deg,rgba(10,132,255,.14),rgba(88,86,214,.12));color:#0a84ff;font-weight:700;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.news-event-meta{font-size:10px;color:var(--text-sec);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.news-event-meta .multi-src{color:#047857;font-weight:700}
+.news-event-sectors{margin-top:6px;display:flex;gap:4px;flex-wrap:wrap}
+.news-event-sector{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.04);color:var(--text-sec);font-weight:500}
+.news-event-sector.up{background:linear-gradient(135deg,rgba(220,38,38,.1),rgba(220,38,38,.06));color:#dc2626;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.news-event-sector.down{background:linear-gradient(135deg,rgba(21,128,61,.1),rgba(21,128,61,.06));color:#16a34a;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.news-event-flow{margin-top:4px;font-size:11px;color:var(--text-sec);font-weight:500}
+.news-event-flow b{color:var(--up);font-weight:700}
+.news-event-portfolio{margin-top:4px;font-size:10px;color:#b45309;padding:5px 10px;background:linear-gradient(135deg,rgba(180,83,9,.1),rgba(245,158,11,.08));border-radius:10px;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.news-event-body{padding:0 12px 10px 12px;display:none;position:relative;z-index:1}
+.news-event.hero .news-event-body,
+.news-event.open .news-event-body{display:block}
+.news-event-toggle{margin-left:auto;font-size:10px;color:var(--text-sec);font-weight:500}
 
 /* ===== misc ===== */
 .flex{display:flex;align-items:center;gap:6px}
@@ -508,340 +653,6 @@ table td b{font-weight:700}
 .tag{font-size:10px;border-radius:4px;padding:1px 6px;background:rgba(0,0,0,.04);color:var(--text-sec)}
 .toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;z-index:99999;box-shadow:0 2px 8px rgba(0,0,0,.3);max-width:90vw;text-align:center;line-height:1.5;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
-/* ===== iOS 26 Liquid Glass Tab Bar — Redesigned ===== */
-.liquid-glass-tab{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:9999;
-  display:flex;justify-content:space-around;align-items:center;
-  width:min(420px,calc(100% - 24px));
-  height:62px;padding:8px 8px;
-  margin-bottom:calc(6px + var(--safe-bottom));
-  background:rgba(255,255,255,0.55);
-  backdrop-filter:blur(40px) saturate(180%) brightness(1.08);
-  -webkit-backdrop-filter:blur(40px) saturate(180%) brightness(1.08);
-  border:0.5px solid rgba(255,255,255,0.65);
-  border-radius:22px;
-  box-shadow:
-    0 8px 32px rgba(0,0,0,0.12),
-    0 2px 8px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.8),
-    inset 0 -0.5px 0 rgba(0,0,0,0.04);
-}
-/* Top gloss highlight */
-.liquid-glass-tab::before{
-  content:'';position:absolute;top:0;left:12px;right:12px;height:40%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.35),transparent);
-  border-radius:20px 20px 0 0;pointer-events:none;
-}
-/* Subtle outer glow */
-.liquid-glass-tab::after{
-  content:'';position:absolute;inset:-1px;border-radius:23px;
-  background:linear-gradient(135deg,rgba(255,255,255,0.3),transparent 40%,rgba(120,160,210,0.08));
-  pointer-events:none;z-index:-1;
-}
-.liquid-glass-tab .tab-item{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex:1;height:46px;cursor:pointer;
-  color:rgba(60,60,67,0.5);font-size:9px;font-weight:600;
-  transition:all .3s cubic-bezier(.4,0,.2,1);
-  border-radius:16px;position:relative;
-  gap:3px;
-  background:transparent;border:none;outline:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.liquid-glass-tab .tab-item .tab-icon{
-  width:22px;height:22px;display:flex;align-items:center;justify-content:center;
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
-}
-.liquid-glass-tab .tab-item .tab-icon svg{
-  width:20px;height:20px;
-}
-.liquid-glass-tab .tab-item .tab-label{
-  letter-spacing:0.3px;font-size:9px;line-height:1;
-}
-.liquid-glass-tab .tab-item.active{
-  color:#007AFF;
-  background:rgba(0,122,255,0.10);
-  box-shadow:inset 0 0 10px rgba(0,122,255,0.04);
-}
-.liquid-glass-tab .tab-item.active .tab-icon{
-  transform:scale(1.08) translateY(-1px);
-}
-.liquid-glass-tab .tab-item.active .tab-icon svg{
-  filter:drop-shadow(0 1px 3px rgba(0,122,255,0.25));
-}
-.liquid-glass-tab .tab-item:active{
-  transform:scale(0.94);
-  background:rgba(0,0,0,0.04);
-}
-@media(prefers-color-scheme:dark){
-  .liquid-glass-tab{
-    background:rgba(30,30,32,0.60);
-    backdrop-filter:blur(40px) saturate(160%) brightness(0.95);
-    -webkit-backdrop-filter:blur(40px) saturate(160%) brightness(0.95);
-    border:0.5px solid rgba(255,255,255,0.15);
-    box-shadow:0 8px 32px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.12);
-  }
-  .liquid-glass-tab::before{
-    background:linear-gradient(180deg,rgba(255,255,255,0.10),transparent);
-  }
-  .liquid-glass-tab .tab-item{color:rgba(235,235,245,0.45);}
-  .liquid-glass-tab .tab-item.active{color:#0A84FF;background:rgba(10,132,255,0.14);}
-  .liquid-glass-tab .tab-item:active{background:rgba(255,255,255,0.06);}
-}
-/* ===== Official/Estimate Split ===== */
-.est-section{margin:8px 0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.03);}
-@media(prefers-color-scheme:dark){.est-section{background:rgba(255,255,255,0.05);}}
-.est-section-title{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px;}
-.est-official{border-left:3px solid #34C759;}
-.est-estimate{border-left:3px solid #FF9500;}
-.est-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:13px;}
-.est-label{color:var(--muted);font-size:12px;}
-.est-value{font-weight:600;font-variant-numeric:tabular-nums;}
-.consistency-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;font-size:11px;font-weight:600;}
-.consistency-high{background:rgba(52,199,89,0.12);color:#34C759;}
-.consistency-mid{background:rgba(255,149,0,0.12);color:#FF9500;}
-.consistency-low{background:rgba(255,59,48,0.12);color:#FF3B30;}
-/* ===== AI 7-Step Evidence Chain ===== */
-.ai-step{margin:6px 0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,0.02);border-left:3px solid #007AFF;}
-@media(prefers-color-scheme:dark){.ai-step{background:rgba(255,255,255,0.04);}}
-.ai-step-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;}
-.ai-step-body{font-size:13px;line-height:1.6;}
-.ai-step-evidence{font-size:11px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:0.5px solid rgba(0,0,0,0.06);display:flex;flex-wrap:wrap;gap:8px;}
-@media(prefers-color-scheme:dark){.ai-step-evidence{border-top-color:rgba(255,255,255,0.08);}}
-.ai-step-verdict{border-left-color:#34C759;background:rgba(52,199,89,0.06);padding:10px 12px;border-radius:10px;margin:8px 0;}
-.ai-step-empty{color:var(--muted);font-style:italic;font-size:12px;}
-/* ===== Event Cluster Card ===== */
-.event-cluster-card{border:1px solid rgba(0,122,255,0.15);border-radius:14px;padding:12px;margin:8px 0;background:linear-gradient(135deg,rgba(0,122,255,0.04),rgba(88,86,214,0.04));}
-.event-cluster-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
-.event-cluster-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:#007AFF;color:#fff;}
-.event-cluster-sources{font-size:11px;color:var(--muted);margin-left:auto;}
-.event-cluster-impact{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}
-.event-cluster-impact span{font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(0,0,0,0.05);}
-@media(prefers-color-scheme:dark){.event-cluster-impact span{background:rgba(255,255,255,0.08);}}
-.event-cluster-fund{font-size:11px;color:#FF9500;margin-top:4px;}
-
-
-/* ===== iOS 26 Liquid Glass Tab Bar ===== */
-.liquid-glass-tab{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:9999;
-  display:flex;justify-content:space-around;align-items:center;
-  width:min(380px,calc(100% - 24px));
-  height:64px;padding:8px 6px;
-  margin-bottom:calc(8px + var(--safe-bottom));
-  /* Liquid glass base */
-  background:
-    linear-gradient(180deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0.12) 50%,rgba(255,255,255,0.08) 100%);
-  backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
-  -webkit-backdrop-filter:blur(60px) saturate(200%) brightness(1.1);
-  border:0.5px solid rgba(255,255,255,0.5);
-  border-radius:28px;
-  box-shadow:
-    0 12px 40px rgba(0,0,0,0.10),
-    0 2px 12px rgba(0,0,0,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    inset 0 -0.5px 0 rgba(0,0,0,0.03),
-    inset 0.5px 0 0 rgba(255,255,255,0.3),
-    inset -0.5px 0 0 rgba(255,255,255,0.2);
-}
-/* Top gloss highlight - the "liquid" shine */
-.liquid-glass-tab::before{
-  content:'';position:absolute;top:0;left:14px;right:14px;height:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.45) 0%,rgba(255,255,255,0.08) 60%,transparent 100%);
-  border-radius:27px 27px 0 0;pointer-events:none;
-}
-/* Outer glow ring */
-.liquid-glass-tab::after{
-  content:'';position:absolute;inset:-1.5px;border-radius:29.5px;
-  background:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,rgba(200,220,255,0.1) 30%,transparent 50%,rgba(255,255,255,0.15) 80%,rgba(200,220,255,0.08) 100%);
-  pointer-events:none;z-index:-1;
-}
-.liquid-glass-tab .tab-item{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  flex:1;height:48px;cursor:pointer;
-  color:rgba(60,60,67,0.45);font-size:9px;font-weight:600;
-  transition:all .35s cubic-bezier(.4,0,.2,1);
-  border-radius:18px;position:relative;
-  gap:3px;
-  background:transparent;border:none;outline:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.liquid-glass-tab .tab-item .tab-icon{
-  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-  transition:transform .35s cubic-bezier(.4,0,.2,1),filter .35s ease;
-}
-.liquid-glass-tab .tab-item .tab-icon svg{
-  width:21px;height:21px;stroke-width:1.8;
-}
-.liquid-glass-tab .tab-item .tab-label{
-  letter-spacing:0.3px;font-size:9px;line-height:1;font-weight:600;
-}
-.liquid-glass-tab .tab-item.active{
-  color:#007AFF;
-  background:linear-gradient(180deg,rgba(0,122,255,0.12) 0%,rgba(0,122,255,0.06) 100%);
-  box-shadow:
-    inset 0 0 12px rgba(0,122,255,0.06),
-    inset 0 0.5px 0 rgba(255,255,255,0.5);
-}
-.liquid-glass-tab .tab-item.active .tab-icon{
-  transform:scale(1.1) translateY(-1px);
-}
-.liquid-glass-tab .tab-item.active .tab-icon svg{
-  filter:drop-shadow(0 1px 4px rgba(0,122,255,0.3));
-  stroke-width:2;
-}
-.liquid-glass-tab .tab-item:active{
-  transform:scale(0.92);
-  background:rgba(0,0,0,0.03);
-}
-@media(prefers-color-scheme:dark){
-  .liquid-glass-tab{
-    background:
-      linear-gradient(180deg,rgba(40,40,44,0.35) 0%,rgba(28,28,30,0.25) 50%,rgba(28,28,30,0.15) 100%);
-    backdrop-filter:blur(60px) saturate(160%) brightness(0.95);
-    -webkit-backdrop-filter:blur(60px) saturate(160%) brightness(0.95);
-    border:0.5px solid rgba(255,255,255,0.18);
-    box-shadow:
-      0 12px 40px rgba(0,0,0,0.35),
-      0 2px 12px rgba(0,0,0,0.15),
-      inset 0 1px 0 rgba(255,255,255,0.15);
-  }
-  .liquid-glass-tab::before{
-    background:linear-gradient(180deg,rgba(255,255,255,0.12) 0%,rgba(255,255,255,0.03) 60%,transparent 100%);
-  }
-  .liquid-glass-tab::after{
-    background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 50%,rgba(255,255,255,0.06) 100%);
-  }
-  .liquid-glass-tab .tab-item{color:rgba(235,235,245,0.4);}
-  .liquid-glass-tab .tab-item.active{
-    color:#0A84FF;
-    background:linear-gradient(180deg,rgba(10,132,255,0.16) 0%,rgba(10,132,255,0.08) 100%);
-  }
-  .liquid-glass-tab .tab-item:active{background:rgba(255,255,255,0.06);}
-}
-
-/* ===== Official/Estimate Split ===== */
-.est-section{margin:8px 0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,0.03);}
-@media(prefers-color-scheme:dark){.est-section{background:rgba(255,255,255,0.05);}}
-.est-section-title{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px;}
-.est-official{border-left:3px solid #34C759;}
-.est-estimate{border-left:3px solid #FF9500;}
-.est-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:13px;}
-.est-label{color:var(--muted);font-size:12px;}
-.est-value{font-weight:600;font-variant-numeric:tabular-nums;}
-.consistency-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:8px;font-size:11px;font-weight:600;}
-.consistency-high{background:rgba(52,199,89,0.12);color:#34C759;}
-.consistency-mid{background:rgba(255,149,0,0.12);color:#FF9500;}
-.consistency-low{background:rgba(255,59,48,0.12);color:#FF3B30;}
-/* ===== AI 7-Step Evidence Chain ===== */
-.ai-step{margin:6px 0;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,0.02);border-left:3px solid #007AFF;}
-@media(prefers-color-scheme:dark){.ai-step{background:rgba(255,255,255,0.04);}}
-.ai-step-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px;}
-.ai-step-body{font-size:13px;line-height:1.6;}
-.ai-step-evidence{font-size:11px;color:var(--muted);margin-top:4px;padding-top:4px;border-top:0.5px solid rgba(0,0,0,0.06);display:flex;flex-wrap:wrap;gap:8px;}
-@media(prefers-color-scheme:dark){.ai-step-evidence{border-top-color:rgba(255,255,255,0.08);}}
-.ai-step-verdict{border-left-color:#34C759;background:rgba(52,199,89,0.06);padding:10px 12px;border-radius:10px;margin:8px 0;}
-.ai-step-empty{color:var(--muted);font-style:italic;font-size:12px;}
-/* ===== Event Cluster Card ===== */
-.event-cluster-card{border:1px solid rgba(0,122,255,0.15);border-radius:14px;padding:12px;margin:8px 0;background:linear-gradient(135deg,rgba(0,122,255,0.04),rgba(88,86,214,0.04));}
-.event-cluster-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
-.event-cluster-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;background:#007AFF;color:#fff;}
-.event-cluster-sources{font-size:11px;color:var(--muted);margin-left:auto;}
-.event-cluster-impact{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}
-.event-cluster-impact span{font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(0,0,0,0.05);}
-@media(prefers-color-scheme:dark){.event-cluster-impact span{background:rgba(255,255,255,0.08);}}
-.event-cluster-fund{font-size:11px;color:#FF9500;margin-top:4px;}
-
-
-/* ===== iOS 26 Liquid Glass Tab Bar ===== */
-
-.tabbar::before{content:'';position:absolute;inset:0;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.25) 0%,transparent 50%,rgba(255,255,255,.08) 100%);pointer-events:none;z-index:0}
-
-.tabbar .tab::before{content:'';position:absolute;inset:0;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.3) 100%);opacity:.8;transition:opacity .25s;z-index:-1}
-.tabbar .tab::after{content:'';position:absolute;inset:0;border-radius:18px;box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -1px 2px rgba(0,0,0,.04);z-index:-1}
-
-.tabbar .tab .ico svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:all .3s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.06))}
-
-
-.tabbar .tab-item.active::before{background:linear-gradient(180deg,rgba(10,132,255,.15) 0%,rgba(10,132,255,.05) 50%,rgba(255,255,255,.4) 100%);opacity:1}
-.tabbar .tab-item.active .ico{transform:scale(1.12) translateY(-1px)}
-.tabbar .tab-item.active .ico svg{stroke:#0A84FF;filter:drop-shadow(0 2px 6px rgba(10,132,255,.35))}
-.tabbar .tab-item.active .lb{font-weight:700;transform:translateY(-1px)}
-.tabbar .tab:active{transform:scale(.92);transition:transform .1s}
-
-/* ===== Data Credibility: Estimation Consistency ===== */
-.fc-live-official{margin-top:6px;padding:8px 10px;border-radius:10px;background:rgba(242,247,255,.6);border:1px solid rgba(120,160,210,.12)}
-.fc-live-official .fc-official-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-sec)}
-.fc-live-official .fc-official-row b{color:var(--text);font-weight:600}
-.fc-live-estimate{margin-top:6px;padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,rgba(255,244,240,.5),rgba(255,250,244,.5));border:1px solid rgba(230,69,69,.1)}
-.fc-live-estimate .fc-est-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:3px 0}
-.fc-live-estimate .fc-est-row .fc-est-label{color:var(--text-sec)}
-.fc-live-estimate .fc-est-row .fc-est-val{font-weight:700;font-variant-numeric:tabular-nums}
-.fc-live-estimate .fc-est-row .fc-est-val.up{color:var(--up)}
-.fc-live-estimate .fc-est-row .fc-est-val.down{color:var(--down)}
-.fc-consistency{margin-top:6px;padding:6px 10px;border-radius:8px;display:flex;align-items:center;gap:6px;font-size:10px}
-.fc-consistency.high{background:rgba(26,155,106,.08);color:var(--down)}
-.fc-consistency.mid{background:rgba(245,158,11,.08);color:#b25c00}
-.fc-consistency.low{background:rgba(217,74,74,.08);color:var(--up)}
-
-/* ===== Fund Card: Why Up/Down ===== */
-.fc-why{margin-top:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,rgba(245,250,255,.7),rgba(240,246,255,.6));border:1px solid rgba(120,170,220,.12)}
-.fc-why-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:4px}
-.fc-why-factors{display:flex;flex-direction:column;gap:3px}
-.fc-why-factor{font-size:10.5px;color:var(--text-sec);display:flex;align-items:center;gap:4px;line-height:1.5}
-.fc-why-factor b{font-weight:600}
-.fc-why-factor .arrow-up{color:var(--up)}
-.fc-why-factor .arrow-down{color:var(--down)}
-.fc-why-judge{font-size:10.5px;margin-top:4px;padding-top:4px;border-top:1px dashed rgba(120,160,210,.12);color:var(--text);font-weight:500}
-
-/* ===== News Event Card ===== */
-.news-event-card{padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(245,251,255,.78));border:1px solid rgba(120,170,220,.22);box-shadow:0 10px 30px rgba(20,60,110,.06),inset 0 1px rgba(255,255,255,.95);margin-bottom:10px;overflow:hidden}
-.news-event-tag{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:linear-gradient(135deg,#0a84ff,#0560d4);padding:3px 10px;border-radius:10px;margin-bottom:6px}
-.news-event-tag.policy{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
-.news-event-tag.tech{background:linear-gradient(135deg,#0a84ff,#0284c7)}
-.news-event-tag.market{background:linear-gradient(135deg,#059669,#047857)}
-.news-event-tag.global{background:linear-gradient(135deg,#d97706,#b45309)}
-.news-event-meta{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.news-event-sources{font-size:10px;color:#047857;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:2px 8px;font-weight:600}
-.news-event-impact{margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(242,247,255,.6);font-size:11px;line-height:1.7}
-.news-event-impact .impact-label{font-weight:700;color:var(--text);margin-bottom:2px}
-.news-event-impact .impact-sectors{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
-.news-event-impact .impact-sector{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:600}
-.news-event-impact .impact-sector.up{background:rgba(217,74,74,.1);color:var(--up)}
-.news-event-impact .impact-sector.down{background:rgba(26,155,106,.1);color:var(--down)}
-.news-event-fund-alert{margin-top:6px;padding:6px 10px;border-radius:8px;background:rgba(217,74,74,.06);border:1px solid rgba(217,74,74,.1);font-size:10.5px;color:#9b3434}
-
-/* ===== Combo Overlap ===== */
-.combo-overlap{margin-top:12px;padding:12px;border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(246,251,255,.66));border:1px solid rgba(120,170,220,.15)}
-.combo-overlap-title{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:4px}
-.combo-overlap-bar{height:20px;border-radius:10px;background:rgba(0,0,0,.04);overflow:hidden;margin-bottom:6px;display:flex}
-.combo-overlap-bar .seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;transition:width .3s}
-.combo-overlap-legend{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;color:var(--text-sec)}
-.combo-overlap-legend .dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle}
-.combo-overlap-detail{margin-top:8px;font-size:11px;line-height:1.7;color:var(--text-sec)}
-.combo-overlap-detail b{color:var(--text)}
-.combo-overlap-warning{margin-top:6px;padding:6px 10px;border-radius:8px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.15);font-size:10.5px;color:#b25c00}
-
-/* ===== Band Signal Pro ===== */
-.band-signal-pro{margin-top:6px;padding:6px 10px;border-radius:10px;background:rgba(242,247,255,.5);font-size:10.5px;line-height:1.6}
-.band-signal-pro .signal-strength{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-.band-signal-pro .signal-bar{flex:1;height:5px;border-radius:3px;background:rgba(0,0,0,.06);overflow:hidden}
-.band-signal-pro .signal-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#f59e0b,#0a84ff)}
-.band-signal-pro .confirm-conditions{font-size:10px;color:var(--text-sec)}
-.band-signal-pro .signal-validity{margin-top:4px;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:600}
-.band-signal-pro .signal-validity.confirmed{background:rgba(26,155,106,.1);color:var(--down)}
-.band-signal-pro .signal-validity.unconfirmed{background:rgba(245,158,11,.1);color:#b25c00}
-.band-signal-pro .signal-validity.warning{background:rgba(217,74,74,.08);color:var(--up)}
-.band-disclaimer{font-size:10px;color:var(--text-sec);margin-top:3px;font-style:italic}
-
-/* ===== AI 7-Step Evidence Chain ===== */
-.ai-evidence-chain{display:flex;flex-direction:column;gap:8px}
-.ai-evidence-step{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.5);border:1px solid rgba(120,160,210,.1);position:relative}
-.ai-evidence-step .step-num{font-size:10px;font-weight:700;color:var(--blue);margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.ai-evidence-step .step-body{font-size:12px;color:var(--text-sec);line-height:1.7}
-.ai-evidence-step .step-body b{color:var(--text)}
-.ai-evidence-step .step-evidence{font-size:10px;color:var(--text-light);margin-top:3px;padding-top:3px;border-top:1px dashed rgba(120,160,210,.1)}
-.ai-evidence-step.judge{background:linear-gradient(145deg,rgba(255,245,245,.7),rgba(255,248,248,.6));border-color:rgba(217,74,74,.12)}
-.ai-evidence-step.judge .step-body{color:var(--text);font-weight:500}
 
 /* ===== responsive ===== */
 @media(max-width:480px){
@@ -849,8 +660,16 @@ table td b{font-weight:700}
  .glass{padding:14px 12px;border-radius:24px}
  .header h1{font-size:19px}
  .sc .pz{font-size:22px}
- 
+ .tabbar .tab{padding:2px 8px;font-size:9px;min-width:40px}
  .tabbar .tab .ico svg{width:18px;height:18px}
+}
+/* ===== iPhone/iOS 专属：dock 更小巧，玻璃质感更强 ===== */
+@supports (-webkit-touch-callout:none){
+ .tabbar{width:calc(100% - 36px);max-width:420px;bottom:10px;padding:5px 4px;padding-bottom:calc(5px + var(--safe-bottom));background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(244,249,255,.38));-webkit-backdrop-filter:blur(40px) saturate(220%) brightness(1.08);backdrop-filter:blur(40px) saturate(220%) brightness(1.08);border:1px solid rgba(255,255,255,.66);box-shadow:0 18px 60px rgba(20,60,110,.18),inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(255,255,255,.4)}
+ .tabbar .tab{padding:2px 6px;font-size:9px;min-width:34px;min-height:38px;gap:1px}
+ .tabbar .tab .ico{width:17px;height:17px}
+ .tabbar .tab .ico svg{width:16px;height:16px}
+ .tabbar .tab.active{box-shadow:inset 0 1px rgba(255,255,255,.95),0 4px 14px rgba(10,132,255,.16)}
 }
 @media(min-width:768px){
  body{padding:12px 24px calc(96px + var(--safe-bottom)) 24px}
@@ -895,6 +714,9 @@ table td b{font-weight:700}
  <div class="source-status" id="sourceStatus">
   <span class="dot warn"></span>
   <span>正在连接数据源…</span>
+ </div>
+ <div id="headerWeekendBanner" style="display:none;margin-top:10px;padding:8px 12px;border-radius:12px;background:linear-gradient(135deg,#fff8e1,#ffecb3);border:1px solid rgba(245,166,35,.3);font-size:12px;color:#b27500;line-height:1.6;text-align:center">
+  ⚠️ 周末休市 · 行情数据暂停更新，新闻正常刷新
  </div>
 </header>
 
@@ -995,6 +817,9 @@ table td b{font-weight:700}
    <button class="news-filter" data-news-filter="宏观">宏观</button>
    <button class="news-filter" data-news-filter="海外">海外</button>
   </div>
+  <div id="weekendBanner" style="display:none;margin-bottom:10px;padding:8px 12px;border-radius:12px;background:linear-gradient(135deg,#fff8e1,#ffecb3);border:1px solid rgba(245,166,35,.3);font-size:12px;color:#b27500;line-height:1.6">
+    ⚠️ 周末休市 · 消息面可能集中发酵，周一注意开盘波动
+  </div>
   <div id="newsErrorStrip" style="display:none" class="news-error-strip">
    <span>⚠️</span>
    <span id="newsErrorText">新闻源暂时无法更新，显示最近一次成功数据</span>
@@ -1037,6 +862,23 @@ table td b{font-weight:700}
   <div class="cmt" style="font-size:13px;color:var(--up)" id="adviceDanger">—</div>
  </div>
 
+ <!-- AI 综合解读（轻量卡片，基于新闻快照） -->
+ <div class="glass fade-in" id="aiSummary" style="display:none">
+  <div class="glass-title">🤖 AI 综合解读 <small>新闻快照·证据链</small></div>
+  <div class="ai-summary-card">
+   <div class="ai-summary-mini-chain">
+    <div class="mini-step"><span class="mini-icon">📰</span><span class="mini-label">新闻催化</span><span class="mini-val" id="sumNews">暂无</span></div>
+    <div class="mini-step"><span class="mini-icon">🏛️</span><span class="mini-label">政策支持</span><span class="mini-val" id="sumPolicy">暂无</span></div>
+    <div class="mini-step"><span class="mini-icon">🌍</span><span class="mini-label">外围共振</span><span class="mini-val" id="sumGlobal">暂无</span></div>
+    <div class="mini-step"><span class="mini-icon">🎯</span><span class="mini-label">综合判断</span><span class="mini-val" id="sumVerdict">暂无</span></div>
+   </div>
+   <div class="ai-summary-section" style="margin-top:10px">
+    <div class="ai-summary-label">📋 详细解读</div>
+    <div class="ai-summary-content" id="sumDetail">—</div>
+   </div>
+  </div>
+ </div>
+
  <!-- 中长期布局 -->
  <div class="glass fade-in" id="midLongCard">
   <div class="glass-title">🏗️ 中长期布局 <small>产业趋势·动态生成</small></div>
@@ -1045,17 +887,51 @@ table td b{font-weight:700}
 
  <!-- AI 综合解读 -->
  <div class="glass fade-in" id="aiCard">
-  <div class="glass-title">🤖 AI 综合解读 <small>基于数据快照</small><span class="badge" id="aiTime">—</span></div>
+  <div class="glass-title">🤖 AI 综合解读 <small>7步证据链·数据驱动</small><span class="badge" id="aiTime">—</span></div>
   <div id="aiContent">
-   <div class="ai-evidence-chain">
-    <div class="ai-evidence-step"><div class="step-num">① 发生了什么</div><div class="step-body" id="aiStep1">—</div><div class="step-evidence" id="aiStep1Evidence"></div></div>
-    <div class="ai-evidence-step"><div class="step-num">② 市场有没有反应</div><div class="step-body" id="aiStep2">—</div><div class="step-evidence" id="aiStep2Evidence"></div></div>
-    <div class="ai-evidence-step"><div class="step-num">③ 资金有没有确认</div><div class="step-body" id="aiStep3">—</div><div class="step-evidence" id="aiStep3Evidence"></div></div>
-    <div class="ai-evidence-step"><div class="step-num">④ 新闻有没有催化</div><div class="step-body" id="aiStep4">—</div><div class="step-evidence" id="aiStep4Evidence"></div></div>
-    <div class="ai-evidence-step"><div class="step-num">⑤ 政策有没有支持</div><div class="step-body" id="aiStep5">—</div><div class="step-evidence" id="aiStep5Evidence"></div></div>
-    <div class="ai-evidence-step"><div class="step-num">⑥ 外围有没有共振</div><div class="step-body" id="aiStep6">—</div><div class="step-evidence" id="aiStep6Evidence"></div></div>
-    <div class="ai-evidence-step judge"><div class="step-num">⑦ 综合判断</div><div class="step-body" id="aiConclusion">— <span class="muted">（仅供参考）</span></div></div>
+   <div class="evidence-chain">
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">①</span><span class="ev-icon">📊</span><span class="ev-title">发生了什么</span></div>
+     <div class="ev-step-body" id="aiStep1">暂无数据</div>
+    </div>
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">②</span><span class="ev-icon">📈</span><span class="ev-title">市场有没有反应</span></div>
+     <div class="ev-step-body" id="aiStep2">暂无数据</div>
+    </div>
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">③</span><span class="ev-icon">💰</span><span class="ev-title">资金有没有确认</span></div>
+     <div class="ev-step-body" id="aiStep3">暂无数据</div>
+    </div>
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">④</span><span class="ev-icon">📰</span><span class="ev-title">新闻有没有催化</span></div>
+     <div class="ev-step-body" id="aiStep4">暂无数据</div>
+    </div>
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">⑤</span><span class="ev-icon">🏛️</span><span class="ev-title">政策有没有支持</span></div>
+     <div class="ev-step-body" id="aiStep5">暂无数据</div>
+    </div>
+    <div class="ev-step">
+     <div class="ev-step-head"><span class="ev-num">⑥</span><span class="ev-icon">🌍</span><span class="ev-title">外围有没有共振</span></div>
+     <div class="ev-step-body" id="aiStep6">暂无数据</div>
+    </div>
+    <div class="ev-step ev-final">
+     <div class="ev-step-head"><span class="ev-num">⑦</span><span class="ev-icon">🎯</span><span class="ev-title">最后判断</span></div>
+     <div class="ev-step-body" id="aiStep7">暂无数据</div>
+    </div>
    </div>
+   <details class="evidence-detail" id="evidenceDetail">
+    <summary>🔍 为什么这么判断？展开看证据链</summary>
+    <div class="evidence-detail-body">
+     <div class="ev-metrics">
+      <div class="ev-metric"><span class="evm-icon">📈</span><span class="evm-label">板块</span><span class="evm-val" id="evmSector">暂无</span></div>
+      <div class="ev-metric"><span class="evm-icon">💰</span><span class="evm-label">资金</span><span class="evm-val" id="evmFlow">暂无</span></div>
+      <div class="ev-metric"><span class="evm-icon">📰</span><span class="evm-label">新闻</span><span class="evm-val" id="evmNews">暂无</span></div>
+      <div class="ev-metric"><span class="evm-icon">🌎</span><span class="evm-label">外围</span><span class="evm-val" id="evmGlobal">暂无</span></div>
+      <div class="ev-metric"><span class="evm-icon">📊</span><span class="evm-label">成交量</span><span class="evm-val" id="evmVolume">暂无</span></div>
+     </div>
+     <div class="ev-judge">综合判断：<span id="evmJudge" class="ev-judge-val">暂无</span></div>
+    </div>
+   </details>
   </div>
  </div>
 
@@ -1067,7 +943,7 @@ table td b{font-weight:700}
   <summary>📋 点开看详细说明（估算方法、口径、风险提示）</summary>
   <div class="detail-body">
    ① <b>基金估值</b>：优先读取天天基金/东方财富公开估值接口；收盘后优先展示正式净值。部分基金若无盘中估值，明确显示"暂无盘中估值"，不拿随机数替代。<br><br>
-   ② <b>资金流</b>："主力资金"=超大单+大单合计。正数=净流入，负数=净流出。数据来自多源行情；若接口不可用则显示暂无数据。<br><br>
+   ② <b>资金流</b>："大资金"=超大单+大单合计。正数=净流入，负数=净流出。数据来自多源行情；若接口不可用则显示暂无数据。按成交单金额分层，不等同于真实投资者身份。<br><br>
    ③ <b>板块资金</b>：板块行情来自东方财富实时板块接口；订单结构按超大单/大单/中单/小单展示。<br><br>
    ④ <b>波段信号</b>：RSI(14), BIAS(MA20), BOLL(MA20±2σ), MACD 综合计算。波段评分 0-100：0-30 高位风险，30-45 偏高，45-55 中性，55-70 偏低，70-100 低位机会。<br><br>
    ⑤ <b>趋势强弱</b>：MA5/MA10/MA20/MA60 + MACD 综合评分。0-100：82+强势，68偏强，52震荡，38偏弱，21弱势。<br><br>
@@ -1180,13 +1056,40 @@ table td b{font-weight:700}
   <div class="glass-title">🤖 AI 综合分析面板 <small>数据驱动·非聊天机器人</small><span class="badge" id="aiTime2">—</span></div>
   <div id="aiPanelContent">
    <div class="ai-evidence-chain">
-    <div class="ai-evidence-step step-1"><div class="aes-num">STEP 1</div><div class="aes-title">① 发生了什么</div><div class="aes-body" id="aiSentence">—</div><div class="aes-evidence" id="aiSentenceEv"></div></div>
-    <div class="ai-evidence-step step-2"><div class="aes-num">STEP 2</div><div class="aes-title">② 市场有没有反应</div><div class="aes-body" id="aiMarket2">—</div><div class="aes-evidence" id="aiMarketEv"></div></div>
-    <div class="ai-evidence-step step-3"><div class="aes-num">STEP 3</div><div class="aes-title">③ 资金有没有确认</div><div class="aes-body" id="aiFlow2">—</div><div class="aes-evidence" id="aiFlowEv"></div></div>
-    <div class="ai-evidence-step step-4"><div class="aes-num">STEP 4</div><div class="aes-title">④ 新闻有没有催化</div><div class="aes-body" id="aiNews">—</div><div class="aes-evidence" id="aiNewsEv"></div></div>
-    <div class="ai-evidence-step step-5"><div class="aes-num">STEP 5</div><div class="aes-title">⑤ 政策有没有支持</div><div class="aes-body" id="aiPolicy2">—</div><div class="aes-evidence" id="aiPolicyEv"></div></div>
-    <div class="ai-evidence-step step-6"><div class="aes-num">STEP 6</div><div class="aes-title">⑥ 外围有没有共振</div><div class="aes-body" id="aiGlobal2">—</div><div class="aes-evidence" id="aiGlobalEv"></div></div>
-    <div class="ai-evidence-step step-7"><div class="aes-num">STEP 7</div><div class="aes-title">⑦ 最终判断</div><div class="aes-body" id="aiConclusion">—</div><div class="aes-evidence" id="aiConclusionEv"></div></div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">①</span><span class="ai-es-icon">📊</span><span class="ai-es-title">发生了什么</span></div>
+     <div class="ai-es-body" id="aiStep1">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep1Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">②</span><span class="ai-es-icon">📈</span><span class="ai-es-title">市场有没有反应</span></div>
+     <div class="ai-es-body" id="aiStep2">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep2Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">③</span><span class="ai-es-icon">💰</span><span class="ai-es-title">资金有没有确认</span></div>
+     <div class="ai-es-body" id="aiStep3">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep3Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">④</span><span class="ai-es-icon">📰</span><span class="ai-es-title">新闻有没有催化</span></div>
+     <div class="ai-es-body" id="aiStep4">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep4Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">⑤</span><span class="ai-es-icon">🏛️</span><span class="ai-es-title">政策有没有支持</span></div>
+     <div class="ai-es-body" id="aiStep5">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep5Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step">
+     <div class="ai-es-head"><span class="ai-es-num">⑥</span><span class="ai-es-icon">🌍</span><span class="ai-es-title">外围有没有共振</span></div>
+     <div class="ai-es-body" id="aiStep6">暂无数据</div>
+     <div class="ai-es-evidence" id="aiStep6Evidence">—</div>
+    </div>
+    <div class="ai-evidence-step judge">
+     <div class="ai-es-head"><span class="ai-es-num">⑦</span><span class="ai-es-icon">🎯</span><span class="ai-es-title">最终判断</span></div>
+     <div class="ai-es-body" id="aiConclusion">暂无数据</div>
+    </div>
    </div>
   </div>
   <div class="ai-run" style="margin-top:12px">
@@ -1200,27 +1103,12 @@ table td b{font-weight:700}
 </div><!-- /page-ai -->
 
 <!-- ===== BOTTOM TAB ===== -->
-<nav class="liquid-glass-tab" id="tabBar">
-  <button class="tab-item active" data-page="home">
-    <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/></svg></span>
-    <span class="tab-label">首页</span>
-  </button>
-  <button class="tab-item" data-page="market">
-    <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3.5 3.5 5.5-5.5"/><circle cx="7" cy="14" r="1" fill="currentColor"/><circle cx="10.5" cy="10.5" r="1" fill="currentColor"/><circle cx="14" cy="14" r="1" fill="currentColor"/><circle cx="19.5" cy="8.5" r="1" fill="currentColor"/></svg></span>
-    <span class="tab-label">市场</span>
-  </button>
-  <button class="tab-item" data-page="funds">
-    <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18"/><circle cx="7" cy="14.5" r="1.2" fill="currentColor"/><path d="M12 13v3M15 13v3M18 13v3"/></svg></span>
-    <span class="tab-label">基金</span>
-  </button>
-  <button class="tab-item" data-page="combo">
-    <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="15" cy="15" r="5"/></svg></span>
-    <span class="tab-label">组合</span>
-  </button>
-  <button class="tab-item" data-page="ai">
-    <span class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6.5 6.5L5 5M19 19l-1.5-1.5M6.5 17.5L5 19M19 5l-1.5 1.5"/><circle cx="12" cy="12" r="4"/></svg></span>
-    <span class="tab-label">AI</span>
-  </button>
+<nav class="tabbar" id="tabBar">
+ <button class="tab active" data-page="home"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a2 2 0 0 1-2 2h-4v-6h-4v6H6a2 2 0 0 1-2-2z"/><path d="M10 21v-5h4v5"/></svg></span><span class="lb">首页</span></button>
+ <button class="tab" data-page="market"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M4 19L9 12l4 3 6-8"/><circle cx="4" cy="19" r="1.2" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="13" cy="15" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="7" r="1.2" fill="currentColor" stroke="none"/></svg></span><span class="lb">市场</span></button>
+ <button class="tab" data-page="funds"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><circle cx="18" cy="14.5" r="1.5" fill="currentColor" stroke="none"/></svg></span><span class="lb">基金</span></button>
+ <button class="tab" data-page="combo"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="6.5"/><circle cx="15" cy="12" r="6.5"/></svg></span><span class="lb">组合</span></button>
+ <button class="tab" data-page="ai"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M4.5 5.5l2 2M17.5 16.5l2 2M3 12h3M18 12h3M5.5 17.5l2-2M16.5 6.5l2-2"/><circle cx="12" cy="12" r="4"/></svg></span><span class="lb">AI</span></button>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -1277,6 +1165,162 @@ const SECTOR_RULES=[
  {id:'mlcc',name:'MLCC',keys:['MLCC','元件','电子元件']}
 ];
 
+/* ===== 持仓重合度检测：更广泛板块分类规则（顺序敏感：长词优先） ===== */
+const OVERLAP_SECTOR_RULES=[
+ {name:'半导体',keys:['半导体','芯片','集成电路','晶圆','中芯国际','北方华创','韦尔股份','兆易创新']},
+ {name:'AI算力',keys:['算力','AI','人工智能','大模型','英伟达','寒武纪','海光信息','中科曙光','浪潮信息','服务器','GPU']},
+ {name:'CPO光模块',keys:['CPO','光模块','光通信','中际旭创','新易盛','天孚通信','光迅科技']},
+ {name:'新能源',keys:['新能源','光伏','锂电','储能','风电','宁德时代','隆基','比亚迪','阳光电源','天齐锂业','赣锋锂业','通威股份']},
+ {name:'医药',keys:['医药','医疗','创新药','CXO','药明康德','恒瑞医药','迈瑞医疗','爱尔眼科','智飞生物','疫苗','生物']},
+ {name:'消费',keys:['消费','白酒','茅台','五粮液','食品饮料','海天味业','伊利股份','家电','美的','格力']},
+ {name:'金融',keys:['金融','银行','证券','保险','券商','招商银行','中信证券','中国平安']},
+ {name:'房地产',keys:['地产','房地产','保利','万科','招商蛇口','金地']},
+ {name:'军工',keys:['军工','国防','中航','航天','船舶']},
+ {name:'煤炭有色',keys:['煤炭','有色','稀土','黄金','中国神华','紫金矿业','山东黄金']},
+];
+
+/* ===== 常见重仓股关键词（用于重合个股提示） ===== */
+const HEAVY_STOCK_KEYWORDS=[
+ '英伟达','茅台','宁德时代','腾讯','阿里','比亚迪','隆基','药明康德',
+ '中芯国际','招商银行','中国平安','五粮液','恒瑞医药','迈瑞医疗',
+ '海康威视','美的集团','格力电器','伊利股份','海天味业','紫金矿业',
+ '北方华创','韦尔股份','兆易创新','寒武纪','海光信息','中科曙光',
+ '浪潮信息','中际旭创','新易盛','天孚通信','阳光电源','通威股份',
+ '天齐锂业','赣锋锂业','智飞生物','爱尔眼科','中航沈飞','航发动力',
+ '中国神华','陕西煤业','长江电力','华友钴业','恩捷股份','亿纬锂能'
+];
+
+/* ===== 根据基金名称判断主要关联板块 ===== */
+function getFundSector(fundName){
+  const name=fundName||'';
+  for(const r of OVERLAP_SECTOR_RULES){
+    if(r.keys.some(k=>name.includes(k))) return r.name;
+  }
+  // 回退到SECTOR_RULES
+  for(const r of SECTOR_RULES){
+    if(r.keys.some(k=>name.includes(k))) return r.name;
+  }
+  return '其他';
+}
+
+/* ===== 根据基金名称匹配state.sectors中的板块数据 ===== */
+function getFundSectorData(fundName){
+  const name=fundName||'';
+  for(const r of SECTOR_RULES){
+    if(r.keys.some(k=>name.includes(k))){
+      const found=state.sectors.find(s=>s.name===r.name);
+      if(found&&found.available) return found;
+    }
+  }
+  return null;
+}
+
+/* ===== 基金涨跌原因分析（5维度） ===== */
+function analyzeFundReason(fundName, fundPct){
+  const sector=getFundSectorData(fundName);
+  const sectorName=getFundSector(fundName);
+  const pct=fundPct??0;
+
+  // 1. 板块因素
+  let sectorFactor={has:false, text:'暂无相关板块数据'};
+  if(sector&&sector.change!=null){
+    sectorFactor={has:true, text:`${sector.name}板块 ${sector.change>=0?'+':''}${sector.change.toFixed(2)}%`};
+  }else if(sectorName!=='其他'){
+    sectorFactor={has:false, text:`${sectorName}（暂无实时数据）`};
+  }
+
+  // 2. 资金因素
+  let flowFactor={has:false, text:'暂无资金数据'};
+  if(sector&&sector.flow!=null){
+    const flowVal=sector.flow/100000000; // 转为亿
+    flowFactor={has:true, text:`${sector.name}资金${flowVal>=0?'净流入':'净流出'} ${Math.abs(flowVal).toFixed(2)}亿`};
+  }
+
+  // 3. 消息因素
+  let newsFactor={has:false, text:'暂无相关新闻', count:0, items:[]};
+  if(state.news&&state.news.length){
+    const relatedNews=state.news.filter(n=>{
+      const text=(n.title+' '+(n.summary||'')).toLowerCase();
+      // 用板块关键词匹配新闻
+      const sectorRule=OVERLAP_SECTOR_RULES.find(r=>r.name===sectorName);
+      if(sectorRule){
+        return sectorRule.keys.some(k=>text.includes(k.toLowerCase()));
+      }
+      // 回退用SECTOR_RULES
+      for(const r of SECTOR_RULES){
+        if(r.keys.some(k=>fundName.includes(k))){
+          return r.keys.some(k=>text.includes(k.toLowerCase()));
+        }
+      }
+      return false;
+    }).slice(0,3);
+    if(relatedNews.length){
+      newsFactor={has:true, text:`${relatedNews.length}条相关新闻`, count:relatedNews.length, items:relatedNews};
+    }
+  }
+
+  // 4. 外围因素
+  let globalFactor={has:false, text:'暂无外围数据', items:[]};
+  if(state.global&&state.global.length){
+    // 简单关联：科技类关联纳指/美股，消费金融等关联港股
+    const isTech=OVERLAP_SECTOR_RULES.slice(0,3).some(r=>r.name===sectorName)||
+      SECTOR_RULES.some(r=>fundName.includes(r.keys[0]));
+    let relatedGlobal;
+    if(isTech){
+      relatedGlobal=state.global.filter(g=>/纳指|纳斯达克|美股|标普|道指|费城|半导体/.test(g.name)).slice(0,2);
+    }else{
+      relatedGlobal=state.global.slice(0,2);
+    }
+    if(relatedGlobal.length){
+      globalFactor={
+        has:true,
+        text:relatedGlobal.map(g=>`${g.name} ${g.pct>=0?'+':''}${g.pct.toFixed(2)}%`).join(' · '),
+        items:relatedGlobal
+      };
+    }
+  }
+
+  // 5. AI判断：驱动类型
+  let driveType='暂无明确驱动因素';
+  let driveDesc='';
+  const sectorStrong=sectorFactor.has&&Math.abs(sector?.change||0)>=1;
+  const flowStrong=flowFactor.has&&Math.abs(sector?.flow||0)>=50000000; // 5000万以上
+  const newsStrong=newsFactor.has&&newsFactor.count>=2;
+
+  if(sectorStrong&&flowStrong&&newsStrong){
+    driveType='三因素共振';
+    driveDesc='板块行情+资金流向+消息面共同驱动，趋势确定性较高';
+  }else if(sectorStrong&&flowStrong){
+    driveType=pct>=0?'量价齐升':'量价齐跌';
+    driveDesc='板块行情与资金流向同向，价量配合';
+  }else if(sectorStrong&&newsStrong){
+    driveType='消息+板块联动';
+    driveDesc='消息面刺激板块行情，需观察资金跟进';
+  }else if(newsStrong&&!sectorStrong){
+    driveType='消息面驱动';
+    driveDesc='主要由消息面驱动，需观察资金和板块跟进情况';
+  }else if(sectorStrong){
+    driveType='板块行情带动';
+    driveDesc='主要跟随板块整体行情波动';
+  }else if(flowStrong){
+    driveType='资金面驱动';
+    driveDesc='资金有明显动向，但价格反应尚不显著';
+  }else{
+    driveType='暂无明确驱动因素';
+    driveDesc='当前缺乏明显的板块、资金或消息驱动信号';
+  }
+
+  return {
+    sectorName,
+    sectorFactor,
+    flowFactor,
+    newsFactor,
+    globalFactor,
+    driveType,
+    driveDesc
+  };
+}
+
 /* ===== 板块 SVG 图标（锤子风格·粗线条圆润） ===== */
 const SEC_ICONS={
  '存储芯片':'<rect x="4" y="6" width="16" height="12" rx="2"/><path d="M4 9l4 4h8l4-4"/><rect x="9" y="11" width="6" height="4" rx="1"/><path d="M7 18v2M17 18v2"/>',
@@ -1320,11 +1364,11 @@ function lastTradeDateStr(d){
 }
 
 /* ============================================================
- * 盘中实时估值（三路反推）· 养基宝/小倍养基同款思路
- * 路线① 重仓股穿透：前十大重仓股权重 × 个股实时涨跌（腾讯行情）
- * 路线② 行业指数拟合：重仓股归类行业代表指数 × 权重
- * 路线③ 主题指数拟合：基金主题映射代表指数实时涨跌
- * 三路分歧 > 0.8% 标红"可能已调仓"；收盘后自动切回官方净值
+ * 盘中实时估值（多模型交叉估算）
+ * 模型① 重仓股穿透：前十大重仓股权重 × 个股实时涨跌（腾讯行情）
+ * 模型② 行业指数拟合：重仓股归类行业代表指数 × 权重
+ * 模型③ 主题指数拟合：基金主题映射代表指数实时涨跌
+ * 模型分歧 > 0.8% 标记为一致性低；收盘后自动切回官方净值
  * ============================================================ */
 
 /* --- 6位股票代码 → 腾讯代码 --- */
@@ -1488,7 +1532,7 @@ async function fetchFundHoldings(code){
 
 /* ============================================================
  * 三路估值计算（价格已在 qtCache 中）
- * 返回 {pct, spread, warn, detail[], cls, track}
+ * 返回 {pct, spread, warn, detail[], cls, track, routes[]}
  * ============================================================ */
 function calcLiveRoutes(code,name){
   const f=state.funds[code]||{};
@@ -1499,6 +1543,7 @@ function calcLiveRoutes(code,name){
   const track=matchTrackIndex(name);
   const detail=[];
   const routeVals=[];
+  const routes=[];
 
   // 指数/联接基金：直接用跟踪指数（仓位≈95%×指数）
   if(cls==='index'&&track){
@@ -1506,7 +1551,8 @@ function calcLiveRoutes(code,name){
     if(p!=null){
       const v=+(p*0.95).toFixed(2);   // 联接基金约95%仓位
       detail.push('跟踪'+track.name+' '+fmtPct(p)+'，按95%仓位折算');
-      return {pct:v,spread:0,warn:false,detail,cls,track:track.code};
+      routes.push({label:'跟踪指数', value:v, desc:track.name+' × 95%仓位'});
+      return {pct:v,spread:0,warn:false,detail,cls,track:track.code,routes};
     }
     return null;
   }
@@ -1528,6 +1574,7 @@ function calcLiveRoutes(code,name){
       const v=(acc+(90-w)*bench)/100;
       routeVals.push(v);
       detail.push('①重仓股穿透 '+fmtPct(v)+'（前十大覆盖'+w.toFixed(0)+'%：'+hits.join('，')+'）');
+      routes.push({label:'重仓股穿透', value:+v.toFixed(2), desc:'前十大重仓覆盖'+w.toFixed(0)+'%'});
     }
   }
 
@@ -1545,6 +1592,7 @@ function calcLiveRoutes(code,name){
       const v=(acc+(90-w)*bench)/100;
       routeVals.push(v);
       detail.push('②行业拟合 '+fmtPct(v)+'（重仓股按行业归类加权）');
+      routes.push({label:'行业指数模型', value:+v.toFixed(2), desc:'重仓股按行业归类加权'});
     }
   }
 
@@ -1554,6 +1602,7 @@ function calcLiveRoutes(code,name){
     if(p!=null){
       routeVals.push(p);
       detail.push('③主题拟合 '+fmtPct(p)+'（'+track.name+'）');
+      routes.push({label:'主题指数模型', value:+p.toFixed(2), desc:track.name});
     }
   }else if((state.sectors||[]).some(s=>s.available&&s.change!=null)){
     const sec=SECTOR_RULES.map((r,i)=>({r,s:state.sectors[i]}))
@@ -1561,6 +1610,7 @@ function calcLiveRoutes(code,name){
     if(sec){
       routeVals.push(sec.s.change);
       detail.push('③板块拟合 '+fmtPct(sec.s.change)+'（'+sec.r.name+'板块）');
+      routes.push({label:'主题指数模型', value:+sec.s.change.toFixed(2), desc:sec.r.name+'板块'});
     }
   }
 
@@ -1574,7 +1624,8 @@ function calcLiveRoutes(code,name){
     spread:+spread.toFixed(2),
     warn:arr.length>=2&&spread>0.8,   // 0.8% 分歧红线
     detail,cls,
-    track:track?track.code:null
+    track:track?track.code:null,
+    routes
   };
 }
 
@@ -2072,27 +2123,53 @@ function formatNewsTime(ts){
 }
 
 function normalizeNewsItem(x,source){
-  const rawTime=x.time||x.showTime||x.display_time||x.resource?.display_time||x.ctime||x.publish_time||'';
+  const rz=x.resource||{};
+  const rawTime=x.time||x.showTime||x.display_time||rz.display_time||x.ctime||x.publish_time||'';
   const ts=parseNewsTime(rawTime, source);
-  const rawSummary=x.summary||x.brief||x.content_short||x.resource?.content_short||x.digest||x.content||'';
-  // Strip ALL HTML tags from summary to prevent garbled display
-  const cleanSummary=String(rawSummary).replace(/<[^>]+>/g,'').replace(/&[a-z]+;/gi,' ').replace(/\s+/g,' ').trim();
+  // 优先取纯文本字段，避免把 HTML 富文本当成标题
+  const rawTitle=x.title||rz.title||rz.content_text||x.content_text||x.content||'';
+  const rawSummary=x.summary||x.brief||x.content_short||rz.content_short||x.digest||rz.content_text||'';
   return{
-    title:String(x.title||x.resource?.title||x.content||'').replace(/<[^>]+>/g,'').trim(),
-    summary:cleanSummary,
+    title:cleanHTML(rawTitle),
+    summary:cleanHTML(rawSummary),
     time:formatNewsTime(ts),
     timestamp:ts,
     source,
     sources:[source], // 用于多源合并
-    url:x.url||x.uri||x.resource?.uri||x.articleUrl||''
+    url:x.url||x.uri||rz.uri||x.articleUrl||''
   };
+}
+
+// HTML实体解码，防止API返回的 &amp; &lt; &#160; 等被 safe() 二次转义变乱码
+function decodeEntities(text){
+  var s=String(text||'');
+  s=s.replace(/&amp;/g,'&');
+  s=s.replace(/&lt;/g,'<');
+  s=s.replace(/&gt;/g,'>');
+  s=s.replace(/&quot;/g,'"');
+  s=s.replace(/&#39;/g,"'");
+  s=s.replace(/&nbsp;/g,' ');
+  s=s.replace(/&#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));});
+  // 剥离残留HTML标签，避免 <p> </p> <br> 等直接显示成乱码
+  s=s.replace(/<[^>]*>/g,'');
+  s=s.replace(/\s+/g,' ').trim();
+  return s;
+}
+
+// 清理HTML标签 + 实体解码，把富文本变成干净纯文本
+function cleanHTML(text){
+  var s=decodeEntities(text);
+  s=s.replace(/<[^>]*>/g,''); // 移除所有 <p> <div> <br> 等标签
+  s=s.replace(/&[a-z#0-9]+;/gi,''); // 兜底清理残留实体
+  s=s.replace(/\s+/g,' ').trim(); // 合并连续空白
+  return s;
 }
 
 // 华尔街见闻
 async function fetchWSCN(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=wscn&limit=25',10000);
+      const j=await proxyFetchJSON('news?source=wscn&limit=20',10000);
       const raw=j?.items||[];
       const arr=raw.map(x=>normalizeNewsItem(x,'华尔街见闻')).filter(x=>x.title);
       if(arr.length) return arr;
@@ -2119,13 +2196,13 @@ async function fetchWSCN(){
 async function fetchTHS(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=ths&limit=60',10000);
+      const j=await proxyFetchJSON('news?source=ths&limit=40',10000);
       const list=j?.items||[];
       return list.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','同花顺');
         return{
-          title:x.title||'',
-          summary:x.summary||x.digest||'',
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.digest||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'同花顺',
@@ -2143,8 +2220,8 @@ async function fetchTHS(){
     return list.map(x=>{
       const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
       return{
-        title:x.title||'',
-        summary:x.digest||'',
+        title:decodeEntities(x.title||''),
+        summary:decodeEntities(x.digest||''),
         time:formatNewsTime(ts),
         timestamp:ts,
         source:'同花顺',
@@ -2159,13 +2236,13 @@ async function fetchTHS(){
 async function fetchJin10News(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=jin10&limit=25',10000);
+      const j=await proxyFetchJSON('news?source=jin10&limit=20',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','金十数据');
         return{
-          title:x.title||'',
-          summary:x.summary||x.content||x.brief||'',
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||x.brief||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'金十数据',
@@ -2190,7 +2267,7 @@ async function fetchJin10News(){
         const list=j?.data||j?.list||[];
         if(Array.isArray(list)&&list.length){
           return list.filter(x=>x.data?.content||x.content||x.title).map(x=>{
-            const ct=x.data?.content||x.content||x.title||'';
+            const ct=decodeEntities(x.data?.content||x.content||x.title||'');
             const ts=x.data?.time?new Date(x.data.time).getTime():Date.now();
             return{
               title:ct.slice(0,50),
@@ -2219,8 +2296,8 @@ async function fetchOfficialNews(){
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','官方');
         return{
-          title:x.title||'',
-          summary:x.summary||'',
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'官方',
@@ -2241,13 +2318,13 @@ async function fetchOfficialNews(){
 async function fetchCLSNews(){
   if(USE_PROXY){
     try{
-      const j=await proxyFetchJSON('news?source=cls&limit=15',10000);
+      const j=await proxyFetchJSON('news?source=cls&limit=20',10000);
       const raw=j?.items||[];
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','财联社');
         return{
-          title:x.title||'',
-          summary:x.summary||x.content||'',
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'财联社',
@@ -2275,8 +2352,8 @@ async function fetchCLSNews(){
           return list.filter(x=>x.title||x.content).map(x=>{
             const ts=x.ctime?parseInt(x.ctime)*1000:Date.now();
             return{
-              title:x.title||(x.content||'').slice(0,40),
-              summary:x.brief||x.content||x.description||'',
+              title:decodeEntities(x.title||(x.content||'').slice(0,40)),
+              summary:decodeEntities(x.brief||x.content||x.description||''),
               time:formatNewsTime(ts),
               timestamp:ts,
               source:'财联社',
@@ -2302,8 +2379,8 @@ async function fetchYicaiNews(){
       return raw.map(x=>{
         const ts=parseNewsTime(x.time||x.ctime||'','第一财经');
         return{
-          title:x.title||'',
-          summary:x.summary||x.content||'',
+          title:decodeEntities(x.title||''),
+          summary:decodeEntities(x.summary||x.content||''),
           time:formatNewsTime(ts),
           timestamp:ts,
           source:'第一财经',
@@ -2325,8 +2402,8 @@ async function fetchYicaiNews(){
         return list.filter(x=>x.title).map(x=>{
           const ts=parseNewsTime(x.createtime||x.time||'','第一财经');
           return{
-            title:x.title||'',
-            summary:x.summary||x.desc||x.content||'',
+            title:decodeEntities(x.title||''),
+            summary:decodeEntities(x.summary||x.desc||x.content||''),
             time:formatNewsTime(ts),
             timestamp:ts,
             source:'第一财经',
@@ -2408,7 +2485,7 @@ async function fetchTHSForumSentiment(){
   return [];
 }
 
-// 分析散户情绪（基于关键词）
+// 分析社区情绪（基于关键词）
 function analyzeSentiment(posts){
   if(!posts||!posts.length){
     return {score:50, label:'neutral', labelText:'情绪中性', posts:[], reason:'暂无足够社区数据'};
@@ -2440,18 +2517,18 @@ function analyzeSentiment(posts){
   else if(score<=30){ label='extreme-fear'; labelText='极度恐慌'; }
   else if(score<=45){ label='fear'; labelText='偏谨慎'; }
   
-  // 反推提示
+  // 反向提示
   let contrarian='';
   if(score>=80){
-    contrarian='散户情绪极度乐观，历史上往往是短期见顶信号，需警惕回调风险。';
+    contrarian='社区情绪极度乐观，历史数据显示情绪过热时往往伴随短期波动，需注意风险。';
   }else if(score<=30){
-    contrarian='散户情绪极度恐慌，可能是短期底部区域，关注是否有企稳信号。';
+    contrarian='社区情绪极度低迷，情绪处于低位区间，可关注后续是否出现企稳信号。';
   }else if(score>=65){
-    contrarian='散户偏乐观，情绪偏热，追高需谨慎。';
+    contrarian='社区情绪偏乐观，整体偏热，追高需谨慎。';
   }else if(score<=45){
-    contrarian='散户偏谨慎，情绪不高，反而可能有布局机会。';
+    contrarian='社区情绪偏谨慎，整体偏冷，不宜盲目悲观。';
   }else{
-    contrarian='散户情绪中性，没有明显的情绪极端信号。';
+    contrarian='社区情绪中性，没有明显的情绪极端信号。';
   }
   
   return {score, label, labelText, posts:analyzed, contrarian};
@@ -2484,69 +2561,33 @@ function matchSentiment(newsItem, sentPosts){
   return {matched, overall};
 }
 
-// ===== 重要新闻过滤 =====
-// 只保留对基金投资有实际参考价值的新闻，过滤掉流水账式快讯
-function isImportantNews(n){
-  const t=(String(n.title)+' '+String(n.summary||'')).toLowerCase();
-  if(String(n.title).trim().length<8) return false;
-  const policyKW=['降息','降准','加息','lpr','mlf','逆回购','国常会','国务院','央行','财政部','证监会','发改委','工信部','金融监管','政策','监管','处罚','立案','退市','改革','规划','补贴','减税','刺激','稳增长','化债'];
-  const marketKW=['美股','纳指','标普','道指','美联储','鲍威尔','非农','cpi','ppi','pmi','gdp','社融','m2','通胀','通缩','加息','缩表','qe','外资','北向','南向','港股','恒生','日经','欧洲央行','地缘','中东','俄乌','关税','制裁','贸易'];
-  const fundKW=['基金','etf','净值','公募','私募','持仓','调仓','申购','赎回','分红','基金经理','重仓','规模','清盘','发行','募集','理财','资管','保险资金','社保','养老'];
-  const techKW=['半导体','芯片','算力','ai','人工智能','大模型','cpo','光模块','pcb','存储','机器人','新能源','光伏','锂电','风电','储能','医药','创新药','cxo','白酒','消费','汽车','房地产','地产','城投','原油','黄金','铜','铁矿石','稀土'];
-  const corpKW=['业绩','财报','营收','利润','亏损','暴雷','增持','减持','回购','并购','重组','上市','退市','分红','配股','定增','解禁','质押','爆仓','违约'];
-  const trivialKW=['快讯','播报','早报','午报','晚报','日报','一览','盘点','汇总','行情回顾','收盘评论'];
-  const titleStr=String(n.title);
-  const isTrivialOnly=trivialKW.some(k=>titleStr.includes(k))&&!policyKW.some(k=>t.includes(k))&&!marketKW.some(k=>t.includes(k))&&!fundKW.some(k=>t.includes(k))&&!techKW.some(k=>t.includes(k))&&!corpKW.some(k=>t.includes(k));
-  if(isTrivialOnly) return false;
-  if(n.multiSource&&n.sources&&n.sources.length>=2) return true;
-  const isImportant=policyKW.some(k=>t.includes(k))||marketKW.some(k=>t.includes(k))||fundKW.some(k=>t.includes(k))||techKW.some(k=>t.includes(k))||corpKW.some(k=>t.includes(k));
-  return isImportant;
-}
-
-// 事件聚类：识别同一事件并合并（升级版：事件ID + 关键词 + 时间窗）
-function generateEventId(newsItem){
-  const kws=extractKeyWords(newsItem.title);
-  const topic=newsTopic(newsItem);
-  // 事件ID = 事件类型 + 核心关键词前2个 + 时间窗口（小时级）
-  const hourBucket=Math.floor(newsItem.timestamp/3600000);
-  return topic+'_'+kws.slice(0,2).sort().join('_')+'_'+hourBucket;
-}
-
+// 三源交叉验证：识别同一事件并合并
 function crossValidateNews(newsList){
   const merged=[];
   const used=new Set();
-  // 先按事件ID分组
-  const eventGroups={};
   for(let i=0;i<newsList.length;i++){
     if(used.has(i)) continue;
     const a=newsList[i];
-    const aEid=generateEventId(a);
+    const aKey=a.title.replace(/\s+/g,'').slice(0,30);
     const group=[a];
     used.add(i);
     for(let j=i+1;j<newsList.length;j++){
       if(used.has(j)) continue;
       const b=newsList[j];
-      const bEid=generateEventId(b);
-      // 事件ID相同 → 同一事件
-      if(aEid===bEid){
-        group.push(b);
-        used.add(j);
-        continue;
-      }
-      // 标题前30字完全相同
-      const aKey=a.title.replace(/\s+/g,'').slice(0,30);
       const bKey=b.title.replace(/\s+/g,'').slice(0,30);
+      // 判断是否同一事件：标题前30字相似度高 或 共有核心关键词
       if(aKey===bKey){
         group.push(b);
         used.add(j);
         continue;
       }
-      // 关键词重叠 + 时间窗
+      // 关键词重叠判断
       const aWords=extractKeyWords(a.title);
       const bWords=extractKeyWords(b.title);
       if(aWords.length>=2&&bWords.length>=2){
         const overlap=aWords.filter(w=>bWords.includes(w));
         if(overlap.length>=Math.min(3,Math.min(aWords.length,bWords.length)*0.6)){
+          // 时间差在2小时内视为同一事件
           if(Math.abs(a.timestamp-b.timestamp)<7200000){
             group.push(b);
             used.add(j);
@@ -2556,48 +2597,19 @@ function crossValidateNews(newsList){
     }
     // 合并同组新闻
     if(group.length===1){
-      merged.push({...group[0], multiSource:false, eventId:aEid});
+      merged.push({...group[0], multiSource:false});
     }else{
+      // 取时间最新的作为主新闻
       group.sort((x,y)=>y.timestamp-x.timestamp);
       const main=group[0];
       const allSources=[...new Set(group.flatMap(g=>g.sources))];
-      // 事件类型标签
-      const topic=newsTopic(main);
-      const eventLabel={
-        '政策':'政策事件',
-        '科技':'科技产业事件',
-        '市场':'市场事件',
-        '海外':'外围市场事件',
-        '宏观':'宏观经济事件',
-        '基金':'基金市场事件'
-      }[topic]||'市场事件';
-      // 检查影响的板块
-      const impactSectors=SECTOR_RULES.filter(s=>{
-        const text=(main.title+' '+(main.summary||'')).toLowerCase();
-        return s.keys.some(k=>text.includes(k.toLowerCase()));
-      }).map(s=>s.name);
-      // 检查资金数据
-      let impactFlow='';
-      if(impactSectors.length){
-        const sectorFlows=impactSectors.map(sn=>{
-          const sd=state.sectors.find(x=>x.name===sn);
-          return sd&&sd.available?{name:sn,change:sd.change,flow:sd.flow}:null;
-        }).filter(Boolean);
-        if(sectorFlows.length){
-          const totalFlow=sectorFlows.reduce((a,x)=>a+(x.flow||0),0);
-          impactFlow=fmtYi(totalFlow);
-        }
-      }
       merged.push({
         ...main,
         sources:allSources,
         source:allSources.join('、'),
         multiSource:true,
-        eventId:aEid,
-        eventLabel,
-        impactSectors,
-        impactFlow,
-        summary:String(group.reduce((best,g)=>g.summary.length>best.length?g.summary:best,main.summary)).replace(/<[^>]+>/g,'')
+        // 汇总摘要，取最长的
+        summary:group.reduce((best,g)=>g.summary.length>best.length?g.summary:best,main.summary)
       });
     }
   }
@@ -2654,41 +2666,41 @@ function matchNewsWithPortfolio(newsItem){
 // 新闻与行情联动判断
 function checkMarketResonance(newsItem){
   const text=(newsItem.title+' '+(newsItem.summary||'')).toLowerCase();
-  // 找出新闻涉及的板块
-  const relatedSectors=SECTOR_RULES.filter(s=>s.keys.some(k=>text.includes(k.toLowerCase())));
-  if(!relatedSectors.length){
-    return {resonance:false, evidence:'未找到对应板块行情数据', sectors:[]};
+
+  // 1) 新闻本身就是"资金"新闻：真金白银的流向，天然共振
+  if(/主力资金|北向资金|南向资金|净流入|净流出|资金流入|资金流出|龙虎榜|融资买入|融资余额|增持|减持|扫货|抢筹|爆买|大单|游资|外资|北水|南水|净买入|净卖出|机构买入|机构卖出/.test(text)){
+    return {resonance:true, evidence:'直接涉及资金流向', from:'money', sectors:[]};
   }
-  // 检查这些板块的行情和资金数据
+
+  // 2) 影响"钱"的政策（降准降息、流动性等），资金面直接相关
+  if(/降准|降息|lpr|mlf|逆回购|再贷款|流动性|货币宽松|货币收紧|加息|缩表|印花税|减持新规/.test(text)){
+    return {resonance:true, evidence:'货币政策影响资金面', from:'policy', sectors:[]};
+  }
+
+  // 3) 新闻关联板块，用真实行情验证"价与资金同向"（涨+流入 / 跌+流出）
+  const relatedSectors=SECTOR_RULES.filter(s=>s.keys.some(k=>text.includes(k.toLowerCase())));
   const sectorData=relatedSectors.map(s=>{
     const found=state.sectors.find(sec=>sec.name===s.name);
-    return found?{name:s.name, change:found.change, flow:found.flow, volume:found.volume}:null;
+    return found?{name:s.name, change:found.change, flow:found.flow}:null;
   }).filter(Boolean);
-  if(!sectorData.length){
-    return {resonance:false, evidence:'板块行情数据不足，无法确认', sectors:[]};
+
+  if(sectorData.length){
+    const sameDirection=sectorData.filter(s=>(Number(s.change)>0&&Number(s.flow)>0)||(Number(s.change)<0&&Number(s.flow)<0));
+    if(sameDirection.length){
+      return {resonance:true, evidence:'板块价格与资金同向', from:'sector', sectors:sameDirection};
+    }
+    const bigMove=sectorData.filter(s=>Math.abs(Number(s.change)||0)>=1.5&&Math.abs(Number(s.flow)||0)>0);
+    if(bigMove.length){
+      return {resonance:true, evidence:'板块异动明显', from:'sector', sectors:bigMove};
+    }
   }
-  // 判断共振条件：上涨 + 资金流入 + 成交量放大（有涨有资金就算共振迹象）
-  const resonating=sectorData.filter(s=>s.change>0&&s.flow>0);
-  if(resonating.length>=1){
-    return {
-      resonance:true,
-      evidence:'新闻与资金形成共振',
-      sectors:resonating.map(s=>({name:s.name, change:s.change, flow:s.flow}))
-    };
+
+  // 4) 没有板块数据兜底：标题在讲真实的价格动作，且带资金/成交痕迹
+  if(/(大涨|暴涨|涨停|创新高|新高|跌停|暴跌|跳水|拉升|翻红|反弹|重挫|飙升|急涨|急跌)/.test(text) && /资金|流入|流出|买入|卖出|成交|放量/.test(text)){
+    return {resonance:true, evidence:'价格异动伴随资金痕迹', from:'price', sectors:[]};
   }
-  const partialUp=sectorData.filter(s=>s.change>0);
-  if(partialUp.length){
-    return {
-      resonance:false,
-      evidence:'板块有上涨但资金流入不明显，需继续观察',
-      sectors:sectorData
-    };
-  }
-  return {
-    resonance:false,
-    evidence:'相关板块暂无明显上涨和资金流入',
-    sectors:sectorData
-  };
+
+  return {resonance:false, evidence:'暂未形成资金共振', from:null, sectors:sectorData};
 }
 
 // 新闻独立刷新函数（15分钟一次，独立于整体刷新）
@@ -2770,7 +2782,7 @@ async function refreshNewsOnly(force){
     if(seen.has(k)) return false;
     seen.add(k);
     return true;
-  }).filter(isImportantNews).slice(0,12);
+  }).slice(0,20);
 
   // 只有在有新数据时才更新状态
   if(merged.length>0){
@@ -2811,7 +2823,7 @@ function updateNewsEvidence(){
     el.textContent='暂无可用资讯源 · 请检查网络连接';
   }else{
     const aiMode=getDSKey()?'DeepSeek':'规则版';
-    const sentTxt=state.sentimentOverall?` · 散户：${state.sentimentOverall.labelText}`:'';
+    const sentTxt=state.sentimentOverall?` · 社区情绪：${state.sentimentOverall.labelText}`:'';
     el.textContent=`快讯：${t1.length?t1.join('·'):'—'} | 情绪：${t3.length?t3.join('·'):'—'}${sentTxt} · ${aiMode}AI`;
   }
 }
@@ -2920,8 +2932,22 @@ function calcIndicators(c){
   if(c.length>=60&&Math.abs(bandScore-50)>20)conf='高';
   if(c.length<40)conf='低';
 
+  // 信号强度（0-100分）：基于 RSI、MACD、BOLL、BIAS 四个维度综合计算
+  // 每个维度 25 分，满足极值条件即得分
+  let sigStrength=0;
+  const sigConds=[];
+  // 1. RSI 极值
+  if(rsi<30||rsi>70){sigStrength+=25;sigConds.push('RSI极值')}
+  // 2. MACD 金叉/死叉
+  if((dif>dea&&macd>0)||(dif<dea&&macd<0)){sigStrength+=25;sigConds.push('MACD趋势')}
+  // 3. BOLL 触及轨道
+  if(last<=lower||last>=upper){sigStrength+=25;sigConds.push('BOLL轨道')}
+  // 4. BIAS 偏离
+  if(Math.abs(bias)>=5){sigStrength+=25;sigConds.push('BIAS偏离')}
+
   return{last,ma5,ma10,ma20,ma60,rsi,bias,upper,lower,macd,dif,dea,
-    band,bandTone,trend,bandScore,trendScore,combo,conf};
+    band,bandTone,trend,bandScore,trendScore,combo,conf,
+    sigStrength,sigConds,sigTotal:4};
 }
 
 /* ============================================================
@@ -2960,7 +2986,7 @@ async function refreshFunds(){
         state.funds[p.code].pct=live.pct;
         state.funds[p.code].estimate=+(nav*(1+live.pct/100)).toFixed(4);
         state.funds[p.code].time=timeStr()+' 实时';
-        state.funds[p.code].sources.push('腾讯行情·三路反推');
+        state.funds[p.code].sources.push('腾讯行情·实时估算模型');
         state._hadLive=true;
       }
     }else{
@@ -3084,7 +3110,7 @@ function renderSentence(){
   // 资金
   let moneyPart='';
   if(q){
-    if(q.main>80e8&&q.small<-20e8)moneyPart='大资金在买，小资金在卖，大资金占优';
+    if(q.main>80e8&&q.small<-20e8)moneyPart='大资金净流入，中小单净流出，资金结构分化';
     else if(q.main<-50e8)moneyPart='大资金在卖，市场偏谨慎';
     else if(Math.abs(q.main)<30e8)moneyPart='大资金动静不大，市场偏存量博弈';
     else moneyPart='大资金有流入，但还不算特别猛';
@@ -3159,43 +3185,30 @@ function renderPortfolio(){
         sigs.push(`<span class="fc-sig ${m.trendScore>=60?'strong':(m.trendScore<40?'weak':'neutral')}">${m.trend}</span>`);
       }
       const estLabel=d.live?'盘中实时估值':(d.estimate!=null?'盘中估值':(d.nav!=null?'官方净值':'暂无'));
-      /* 三路估值明细（盘中） */
-      const liveHtml=d.live?(()=>{
-        const vals=d.live.detail.map(t=>{
-          const m=t.match(/([\+\-]?\d+\.?\d*)%/);
-          return m?parseFloat(m[1]):null;
-        }).filter(v=>v!==null);
-        const maxV=vals.length?Math.max(...vals):0;
-        const minV=vals.length?Math.min(...vals):0;
-        const spread=d.live.spread;
-        const consCls=spread<=0.3?'high':(spread<=0.6?'mid':'low');
-        const consIcon=spread<=0.3?'🟢':(spread<=0.6?'🟡':'🔴');
-        const consText=spread<=0.3?'高一致性':(spread<=0.6?'中等一致性':'分歧较大');
-        const routeLabels=['重仓股穿透','行业指数模型','主题指数模型'];
-        const routeVals=vals.slice(0,3);
-        return `
+      const reason=analyzeFundReason(d.name||p.name||'', d.pct);
+      /* 三路估值明细（盘中）- 三层结构：官方数据 / 实时估算 / 估算一致性 */
+      const liveHtml=d.live?`
         <div class="fc-live ${d.live.warn?'fc-live-warn':''}">
           <div class="fc-live-head">
-            <span class="fc-live-tag">⚡ 实时估算</span>
+            <span class="fc-live-tag">⚡ 实时估值</span>
             <span class="fc-live-time">${safe(d.time||'')}</span>
-            ${d.live.warn?`<span class="fc-warn-tag">⚠ 分歧${spread.toFixed(2)}% · 可能已调仓</span>`:''}
           </div>
-          <div class="fc-live-section">
-            <div class="fc-live-section-title">官方数据</div>
-            <div class="fc-official-row"><span class="lbl">官方净值</span><span class="val">${d.nav!=null?d.nav.toFixed(4):'—'}</span></div>
-            <div class="fc-official-row"><span class="lbl">更新时间</span><span class="val">${safe(d.time||'—')}</span></div>
-            <div class="fc-official-row"><span class="lbl">数据来源</span><span class="val">${safe(d.sources?.join('·')||'天天基金/东财')}</span></div>
-          </div>
-          <div class="fc-live-section">
-            <div class="fc-live-section-title">实时估算（三路模型）</div>
-            <div class="fc-estimate-grid">
-              ${routeVals.map((v,i)=>`<div class="fc-est-item"><div class="est-lbl">${routeLabels[i]||'模型'+(i+1)}</div><div class="est-val ${v>=0?'up':'down'}" style="color:${v>=0?'var(--up)':'var(--down)'}">${v>=0?'+':''}${v.toFixed(2)}%</div></div>`).join('')}
+          <div class="fc-live-detail">
+            <div style="margin-bottom:6px"><b style="font-size:11px">① 官方数据</b><br>
+              ${d.nav!=null?`净值 ${d.nav.toFixed(4)}`:'官方净值暂无'}
+              ${d.navDate?` · ${d.navDate}`:''}
+              <span style="color:var(--text-sec)"> · 来源：天天基金</span>
             </div>
-            <div class="fc-consistency ${consCls}">${consIcon} 估算一致性 ${spread.toFixed(2)}% · ${consText}</div>
-            ${d.live.warn?'<div class="fc-live-note">三路分歧较大，基金可能已调仓，估值仅供参考</div>':''}
+            <div style="margin-bottom:6px"><b style="font-size:11px">② 实时估算</b><br>
+              ${d.live.routes.map(r=>`<span style="display:inline-block;margin-right:10px">${r.label}：<b class="${r.value>=0?'up':'down'}">${fmtPct(r.value)}</b></span>`).join('')}
+            </div>
+            <div><b style="font-size:11px">③ 估算一致性</b><br>
+              最大差值：<b>${d.live.spread.toFixed(2)}%</b>
+              <span style="margin-left:6px;padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600;${d.live.spread<=0.3?'background:#ecfdf5;color:#047857':(d.live.spread<=0.8?'background:#fffbeb;color:#b45309':'background:#fef2f2;color:#dc2626')}">${d.live.routes.length<2?'参考模型不足':(d.live.spread<=0.3?'一致性高':(d.live.spread<=0.8?'一致性中':'一致性低'))}</span>
+            </div>
           </div>
-        </div>`;
-      })():'';
+          <div class="fc-live-note">${d.live.warn?'模型分歧较大，可能因基金调仓或成分股异动导致，估值仅供参考':(d.live.routes.length<2?'可用估算模型较少，参考价值有限':'多模型交叉估算，结果仅供参考，不构成投资建议')}</div>
+        </div>`:'';
       return `<div class="fund-card fade-in">
         <div class="fc-head">
           <div>
@@ -3216,51 +3229,52 @@ function renderPortfolio(){
         </div>
         ${sigs.length?`<div class="fc-signals">${sigs.join('')}</div>`:''}
         ${m?`<div class="fc-combo">${safe(m.combo)} · 置信度 ${safe(m.conf)} · RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · 趋势评分 ${m.trendScore}</div>`:''}
-        ${(()=>{
-          // 为什么涨跌
-          if(d.pct==null||!Number.isFinite(d.pct))return '';
-          const pct=d.pct;
-          const factors=[];
-          // 板块因素
-          const fundName=d.name||'';
-          const relatedSectors=SECTOR_RULES.filter(s=>s.keys.some(k=>fundName.includes(k)));
-          if(relatedSectors.length){
-            const secData=relatedSectors.map(rs=>state.sectors.find(s=>s.name===rs.name)).filter(s=>s&&s.available);
-            secData.forEach(s=>{
-              if(s.change!=null){
-                factors.push({label:`${s.name} ${fmtPct(s.change)}`,type:s.change>=0?'pos':'neg'});
-              }
-              if(s.flow!=null&&Math.abs(s.flow)>0){
-                factors.push({label:`${s.name}资金 ${fmtYi(s.flow)}`,type:s.flow>=0?'pos':'neg'});
-              }
-            });
-          }
-          // 新闻因素
-          const relatedNews=(state.news||[]).filter(n=>{
-            const text=(n.title+' '+(n.summary||'')).toLowerCase();
-            return relatedSectors.some(rs=>rs.keys.some(k=>text.includes(k.toLowerCase())));
-          }).slice(0,2);
-          if(relatedNews.length){
-            factors.push({label:`相关新闻 ${relatedNews.length}条`,type:'neu'});
-          }
-          // 外围因素
-          if(state.global&&state.global.length){
-            const tech=state.global.find(g=>/纳指|纳斯达克/.test(g.name));
-            if(tech&&tech.pct!=null){
-              factors.push({label:`${tech.name} ${fmtPct(tech.pct)}`,type:tech.pct>=0?'pos':'neg'});
-            }
-          }
-          if(!factors.length)return '';
-          const posCount=factors.filter(f=>f.type==='pos').length;
-          const negCount=factors.filter(f=>f.type==='neg').length;
-          let verdict='';
-          if(posCount>=2&&negCount===0)verdict='<b>多重利好驱动</b>：板块行情 + 资金 + 消息共同推动';
-          else if(posCount>=1&&negCount===0)verdict='<b>单一因素驱动</b>，持续性需观察';
-          else if(negCount>=2&&posCount===0)verdict='<b>多重利空压制</b>，短期承压';
-          else if(posCount>0&&negCount>0)verdict='<b>多空交织</b>，方向不明确';
-          else verdict='<b>无明显驱动</b>，可能跟随大盘';
-          return `<div class="fc-why"><div class="fc-why-title">🔎 为什么${pct>=0?'涨':'跌'}？</div><div class="fc-why-factors">${factors.map(f=>`<span class="fc-why-factor ${f.type}">${safe(f.label)}</span>`).join('')}</div><div class="fc-why-verdict">${verdict}</div></div>`;
-        })()}
+        <div class="fc-reason-wrap">
+          <button class="fc-reason-btn" data-reason="${i}">
+            <span>📊 为什么${d.pct==null?'涨跌':(d.pct>=0?'涨':'跌')}？</span>
+            <span class="fc-reason-arrow">▾</span>
+          </button>
+          <div class="fc-reason-body" id="reasonBody_${i}" style="display:none">
+            <div class="fc-reason-ai">
+              <div class="fc-reason-drive">
+                <span class="drive-label">AI判断</span>
+                <span class="drive-type">${safe(analyzeFundReason(d.name||p.name||'', d.pct).driveType)}</span>
+              </div>
+              <div class="fc-reason-desc">${safe(analyzeFundReason(d.name||p.name||'', d.pct).driveDesc)}</div>
+            </div>
+            <div class="fc-reason-grid">
+              <div class="fc-reason-item">
+                <div class="ri-icon">📈</div>
+                <div class="ri-content">
+                  <div class="ri-title">板块因素</div>
+                  <div class="ri-text">${safe(analyzeFundReason(d.name||p.name||'', d.pct).sectorFactor.text)}</div>
+                </div>
+              </div>
+              <div class="fc-reason-item">
+                <div class="ri-icon">💰</div>
+                <div class="ri-content">
+                  <div class="ri-title">资金因素</div>
+                  <div class="ri-text">${safe(analyzeFundReason(d.name||p.name||'', d.pct).flowFactor.text)}</div>
+                </div>
+              </div>
+              <div class="fc-reason-item">
+                <div class="ri-icon">📰</div>
+                <div class="ri-content">
+                  <div class="ri-title">消息因素</div>
+                  <div class="ri-text">${safe(analyzeFundReason(d.name||p.name||'', d.pct).newsFactor.text)}</div>
+                </div>
+              </div>
+              <div class="fc-reason-item">
+                <div class="ri-icon">🌍</div>
+                <div class="ri-content">
+                  <div class="ri-title">外围因素</div>
+                  <div class="ri-text">${safe(analyzeFundReason(d.name||p.name||'', d.pct).globalFactor.text)}</div>
+                </div>
+              </div>
+            </div>
+            <div class="fc-reason-note">基于板块行情、资金流向、新闻舆情、外围市场综合判断，仅供参考。</div>
+          </div>
+        </div>
         <div class="fc-actions">
           <button data-edit="${i}">编辑</button>
           <button class="del" data-del="${i}">删除</button>
@@ -3282,6 +3296,20 @@ function renderPortfolio(){
       const c=prompt('成本价',p.cost);
       if(c===null)return;
       if(+s>0&&+c>0){p.shares=+s;p.cost=+c;savePortfolio();renderPortfolio();renderCombo();showToast('已保存')}
+    });
+    // 为什么涨/跌 展开/收起
+    listEl.querySelectorAll('[data-reason]').forEach(b=>b.onclick=()=>{
+      const idx=+b.dataset.reason;
+      const body=$('reasonBody_'+idx);
+      if(!body)return;
+      const arrow=b.querySelector('.fc-reason-arrow');
+      if(body.style.display==='none'){
+        body.style.display='block';
+        if(arrow)arrow.style.transform='rotate(180deg)';
+      }else{
+        body.style.display='none';
+        if(arrow)arrow.style.transform='rotate(0deg)';
+      }
     });
     // 汇总
     const totalPct=totalCost>0?(totalGain/totalCost*100):null;
@@ -3322,35 +3350,20 @@ function renderBand(){
     if(!el)return;
     const funds=state.portfolio.map(p=>state.funds[p.code]).filter(x=>x?.metrics);
     if(!funds.length){
-      el.innerHTML='<div class="empty-state"><div class="icon">📶</div>添加基金后自动计算波段信号</div>';
+      const weekendMsg=isWeekend()?'<br><small>周末休市，下周一更新</small>':'';
+      el.innerHTML='<div class="empty-state"><div class="icon">📶</div>添加基金后自动计算波段信号'+weekendMsg+'</div>';
       return;
     }
     // 取每只基金的波段和趋势做汇总
     const items=funds.slice(0,4).map(f=>{
       const m=f.metrics;
       const bandText={
-        '低位区':'超跌观察区，不代表马上反弹',
+        '低位区':'跌得比较便宜，可能有反弹机会',
         '偏低':'比正常位置便宜一点',
         '震荡':'不高不低，处于中间位置',
         '偏高':'比正常位置贵一点',
-        '高位区':'高位风险区，不代表马上下跌'
+        '高位区':'涨得比较高，要注意回调风险'
       }[m.band]||m.band;
-      // Signal strength and confirmation
-      const sigStrength=Math.min(100,Math.abs(m.bandScore-50)*2);
-      const sigCls=sigStrength>=60?'high':(sigStrength>=30?'mid':'low');
-      const confirmConditions=[
-        m.rsi<35||m.rsi>65,
-        m.macd>0&&m.dif>m.dea,
-        m.last<=(m.lower||0),
-        m.ma5>m.ma20
-      ];
-      const confirmCount=confirmConditions.filter(Boolean).length;
-      let validityText='',validityCls='';
-      if(m.bandScore>=55&&m.trendScore>=60&&confirmCount>=3){validityText='🟢 反转确认度：'+Math.round(60+confirmCount*10)+'%';validityCls='confirmed'}
-      else if(m.bandScore>=55&&m.trendScore<40){validityText='⚠️ 低位但未确认，趋势仍在走弱';validityCls='warning'}
-      else if(m.bandScore<=45&&m.trendScore>=60){validityText='⚠️ 高位但趋势仍强，注意回调风险';validityCls='warning'}
-      else if(m.bandScore<=45&&m.trendScore<40){validityText='🔴 高位+走弱，回撤风险较高';validityCls='unconfirmed'}
-      else{validityText='信号待确认，建议继续观察';validityCls='unconfirmed'}
       const trendText={
         '强势':'走势很强，短期向上',
         '偏强':'走势偏强',
@@ -3372,10 +3385,23 @@ function renderBand(){
           <div class="label">${safe(f.name)} · 波段信号</div>
           <div class="value ${m.bandTone==='low'?'up':(m.bandTone==='high'?'down':'flat')}">${safe(m.band)}</div>
           <div class="sub">评分 ${m.bandScore}/100 · ${bandText}</div>
+          ${m.band==='低位区'?'<div class="sub" style="color:var(--up);font-size:10px;margin-top:2px">超跌观察区，不代表马上反弹</div>':''}
+          ${m.band==='高位区'?'<div class="sub" style="color:var(--down);font-size:10px;margin-top:2px">高位风险区，不代表马上下跌</div>':''}
           <div class="band-score-bar"><div class="marker" style="left:${m.bandScore}%"></div></div>
           <span class="tag ${m.bandTone}">${safe(m.band)}</span>
-          <div class="band-signal-strength"><span style="font-size:10px;color:var(--text-sec)">信号强度</span><div class="band-signal-bar"><i class="${sigCls}" style="width:${sigStrength}%"></i></div><span style="font-size:10px;font-weight:600">${sigStrength}/100</span></div>
-          <div class="band-confirm">确认条件：${confirmCount}/4 满足</div>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px dashed rgba(120,160,210,.15)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:11px;color:var(--text-sec)">信号强度</span>
+              <span style="font-size:13px;font-weight:700;${m.sigStrength>=75?'color:var(--up)':(m.sigStrength>=50?'color:#f59e0b':'color:var(--text-sec)')}">${m.sigStrength}分</span>
+            </div>
+            <div style="height:6px;border-radius:3px;background:rgba(0,0,0,.06);overflow:hidden">
+              <div style="height:100%;width:${m.sigStrength}%;border-radius:3px;background:linear-gradient(90deg,${m.sigStrength>=75?'#d94a4a':(m.sigStrength>=50?'#f59e0b':'#94a3b8')},${m.sigStrength>=75?'#ff7a45':(m.sigStrength>=50?'#fbbf24':'#cbd5e1')})"></div>
+            </div>
+            <div style="font-size:10px;color:var(--text-sec);margin-top:4px">
+              确认条件：${m.sigConds.length}/${m.sigTotal} 满足
+              ${m.sigConds.length?`（${m.sigConds.join('、')}）`:''}
+            </div>
+          </div>
         </div>
         <div class="band-item">
           <div class="label">${safe(f.name)} · 趋势强弱</div>
@@ -3385,7 +3411,6 @@ function renderBand(){
           <span class="tag ${m.trendScore>=60?'strong':(m.trendScore<40?'weak':'neutral')}">${safe(m.trend)}</span>
         </div>
       </div>
-      <div class="band-validity ${validityCls}">${validityText}</div>
       <div class="fc-combo" style="margin-bottom:10px"><b>组合判断（${safe(f.name)}）：</b>${comboText}</div>
       <div class="text-xs text-sec" style="margin-bottom:16px;padding-bottom:10px;border-bottom:1px dashed rgba(120,160,210,.15)">
         指标明细：RSI ${m.rsi.toFixed(1)} · BIAS ${m.bias.toFixed(2)}% · BOLL ${(m.lower||0).toFixed(4)}~${(m.upper||0).toFixed(4)} · MACD ${m.macd.toFixed(4)} · MA5 ${(m.ma5||0).toFixed(4)} · MA20 ${(m.ma20||0).toFixed(4)}${m.ma60?' · MA60 '+m.ma60.toFixed(4):''}
@@ -3404,7 +3429,8 @@ function renderSectors(){
   const renderInto=(el,dsEl)=>{
     if(!el)return;
     if(!state.sectors.length){
-      el.innerHTML='<div class="empty-state"><div class="icon">📈</div>正在读取真实板块行情…</div>';
+      const weekendMsg=isWeekend()?'<br><small style="color:var(--text-sec)">周末休市，下周一更新</small>':'';
+      el.innerHTML='<div class="empty-state"><div class="icon">📈</div>正在读取真实板块行情…'+weekendMsg+'</div>';
       return;
     }
     // 最大资金流，用来做进度条比例
@@ -3452,7 +3478,7 @@ function renderSectors(){
             <span class="fd-value ${fdCls(largeV)}">${fmtYi(largeV)}</span>
           </div>
           <div class="fd-item">
-            <span class="fd-label">小资金(中+小单)</span>
+            <span class="fd-label">中小单</span>
             <span class="fd-value ${fdCls(midSmallV)}">${fmtYi(midSmallV)}</span>
           </div>
         </div>
@@ -3476,7 +3502,8 @@ function renderFlow(){
     if(!duoEl)return;
     const valid=state.sectors.filter(x=>x.available&&Number.isFinite(x.flow));
     if(!valid.length){
-      duoEl.innerHTML='<div class="empty-state">暂无可靠资金数据</div>';
+      const weekendMsg=isWeekend()?'<br><small>周末休市，下周一更新</small>':'';
+      duoEl.innerHTML='<div class="empty-state">暂无可靠资金数据'+weekendMsg+'</div>';
       if(noteEl)noteEl.innerHTML='';
       return;
     }
@@ -3491,7 +3518,7 @@ function renderFlow(){
       let dir='资金整体方向分歧';
       if(net>0)dir='资金整体净流入';
       else if(net<0)dir='资金整体净流出';
-      noteEl.innerHTML=`流入TOP5合计 <b class="up">${fmtYi(inT)}</b>；流出TOP5合计 <b class="down">${fmtYi(outT)}</b>。${dir}。仅展示已获取的真实板块资金，不用随机数字补位。`;
+      noteEl.innerHTML=`流入TOP5合计 <b class="up">${fmtYi(inT)}</b>；流出TOP5合计 <b class="down">${fmtYi(outT)}</b>。${dir}。仅展示已获取的真实板块资金，不用随机数字补位。<br><span style="font-size:10px;color:var(--text-light)">按成交单金额分层，不等同于真实投资者身份</span>`;
     }
   };
   renderInto($('flowDuo'),$('flowNote'));
@@ -3507,7 +3534,8 @@ function renderWho(){
     const q=state.marketOrder;
     const vals=state.sectors.filter(x=>x.available&&Number.isFinite(x.flow));
     if(!q&&!vals.length){
-      gridEl.innerHTML='<div class="empty-state">全A股订单源暂不可用</div>';
+      const weekendMsg=isWeekend()?'<br><small>周末休市，下周一更新</small>':'';
+      gridEl.innerHTML='<div class="empty-state">全A股订单源暂不可用'+weekendMsg+'</div>';
       if(noteEl)noteEl.innerHTML='';
       return;
     }
@@ -3516,19 +3544,19 @@ function renderWho(){
     const large=q?.large??vals.reduce((a,x)=>a+(x.large||0),0);
     const midV=q?.mid??0;
     const smallV=q?.small??vals.reduce((a,x)=>a+(x.small||0),0);
-    gridEl.innerHTML=`<div class="wc"><div class="t">大资金(超大+大单)</div><div class="e">🏦</div><div class="v ${main>=0?'up':'down'}">${fmtYi(main)}</div><div class="s">${q?'全A股 '+q.count+' 条':'关注板块汇总'}</div></div><div class="wc"><div class="t">超大单</div><div class="e">🏛️</div><div class="v ${superV>=0?'up':'down'}">${fmtYi(superV)}</div><div class="s">订单分层</div></div><div class="wc"><div class="t">大单</div><div class="e">💼</div><div class="v ${large>=0?'up':'down'}">${fmtYi(large)}</div><div class="s">订单分层</div></div><div class="wc"><div class="t">中小单</div><div class="e">👥</div><div class="v ${smallV>=0?'up':'down'}">${fmtYi(smallV)}</div><div class="s">中单+小单</div></div>`;
+    gridEl.innerHTML=`<div class="wc"><div class="t">大资金(超大单+大单)</div><div class="e">🏦</div><div class="v ${main>=0?'up':'down'}">${fmtYi(main)}</div><div class="s">${q?'全A股 '+q.count+' 条':'关注板块汇总'}</div></div><div class="wc"><div class="t">超大单</div><div class="e">🏛️</div><div class="v ${superV>=0?'up':'down'}">${fmtYi(superV)}</div><div class="s">订单分层</div></div><div class="wc"><div class="t">大单</div><div class="e">💼</div><div class="v ${large>=0?'up':'down'}">${fmtYi(large)}</div><div class="s">订单分层</div></div><div class="wc"><div class="t">中小单</div><div class="e">👥</div><div class="v ${smallV>=0?'up':'down'}">${fmtYi(smallV)}</div><div class="s">中单+小单</div></div>`;
     if(noteEl){
       // 资金博弈分析（基于真实数据）
       let parts=[];
       if(q){
-        if(main>0&&smallV<0)parts.push('大资金净流入同时小资金净流出，大资金占优');
-        else if(main<0&&smallV>0)parts.push('大资金净流出同时小资金净流入，注意资金结构分化');
-        else if(main>0&&smallV>0)parts.push('大资金和小资金同步流入');
-        else if(main<0&&smallV<0)parts.push('大资金和小资金同步流出');
+        if(main>0&&smallV<0)parts.push('大资金净流入同时中小单净流出，资金结构分化');
+        else if(main<0&&smallV>0)parts.push('大资金净流出同时中小单净流入，资金结构分化');
+        else if(main>0&&smallV>0)parts.push('大资金和中小单同步流入');
+        else if(main<0&&smallV<0)parts.push('大资金和中小单同步流出');
       }else{
         parts.push('全A股订单源暂不可用，仅展示关注板块汇总');
       }
-      noteEl.innerHTML='今日资金博弈：'+parts.join('；')+'。数据来源：'+safe(state.source.marketOrder||'—')+'。<div class="order-disclaimer">按成交单金额分层，并不等同于真实投资者身份。</div>';
+      noteEl.innerHTML='今日资金博弈：'+parts.join('；')+'。数据来源：'+safe(state.source.marketOrder||'—')+'。<br><span style="font-size:10px;color:var(--text-light)">按成交单金额分层，不等同于真实投资者身份</span>';
     }
   };
   renderInto($('whoGrid'),$('whoNote'));
@@ -3742,8 +3770,8 @@ function renderAIFlow(){
     // 2. 谁在买卖
     let whoPart='';
     if(q){
-      const mainText=q.main>0?`大资金净买入 ${fmtYi(q.main)}，大资金在买入`:(q.main<0?`大资金净卖出 ${fmtYi(Math.abs(q.main))}，大资金在卖出`:'大资金没明显方向');
-      const smallText=q.small>0?`散户也在买 ${fmtYi(q.small)}`:(q.small<0?`散户在卖 ${fmtYi(Math.abs(q.small))}`:'散户没明显方向');
+      const mainText=q.main>0?`大资金净买入 ${fmtYi(q.main)}`:(q.main<0?`大资金净卖出 ${fmtYi(Math.abs(q.main))}`:'大资金没明显方向');
+      const smallText=q.small>0?`中小单净买入 ${fmtYi(q.small)}`:(q.small<0?`中小单净卖出 ${fmtYi(Math.abs(q.small))}`:'中小单无明显方向');
       whoPart=`${mainText}；${smallText}。`;
     }
 
@@ -3769,7 +3797,7 @@ function renderAIFlow(){
     const fakeInflow=inflow.filter(x=>x.flow>0&&x.change<=0);
     let verifyPart='';
     if(realInflow.length>=3)verifyPart='真流入信号：多个板块资金和价格一起涨，量价配合较好。';
-    else if(fakeInflow.length>=2)verifyPart='警惕假流入：有些板块资金流入但价格没涨，可能是主力在悄悄出货。';
+    else if(fakeInflow.length>=2)verifyPart='量价背离：有些板块资金流入但价格没涨，需关注资金持续性。';
     else verifyPart='量价配合一般，需要继续观察后面几天资金是否持续。';
 
     // 6. 结论
@@ -3852,69 +3880,136 @@ function renderCombo(){
   if(highBand>=total*0.5)drawLevel='中等';
 
   let html='';
+  // === 核心指标：行业集中度仪表 ===
   html+=`<div class="combo-meter"><span class="lbl" style="color:${concColor}">${concLevel}</span><div class="bar"><div class="m" style="left:${Math.min(concentration,100)}%"></div></div><span class="lbl">行业集中度</span></div>`;
-  html+=`<div class="cmt" style="font-size:13px;line-height:1.9">`;
-  html+=`<b>行业集中度：</b>${concLevel}（${topSec?safe(topSec[0]):'—'}占比 ${concentration.toFixed(0)}%）<br>`;
-  html+=`<b>风格集中：</b>${up>down*1.5?'成长偏高':(down>up*1.5?'防御偏低':'均衡')}<br>`;
-  html+=`<b>相关性：</b>${relLevel}（${sameSecCount}/${total}只同板块）<br>`;
-  html+=`<b>波动风险：</b>${volLevel}（标准差 ${volatility.toFixed(2)}%）<br>`;
-  html+=`<b>回撤压力：</b>${drawLevel}（${highBand}只偏高/高位）<br>`;
-  html+=`<b>涨跌统计：</b>${up}涨 ${down}跌<br>`;
+
+  // === 指标网格（液态玻璃卡片） ===
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0">`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">风格集中</div>
+    <div class="cgc-value">${up>down*1.5?'成长偏高':(down>up*1.5?'防御偏低':'均衡')}</div>
+  </div>`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">相关性</div>
+    <div class="cgc-value" style="color:${relLevel==='高'?'#d94a4a':(relLevel==='中等'?'#f59e0b':'#1a9b6a')}">${relLevel}</div>
+    <div class="cgc-sub">${sameSecCount}/${total}只同板块</div>
+  </div>`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">波动风险</div>
+    <div class="cgc-value" style="color:${volLevel==='高'?'#d94a4a':(volLevel==='中等'?'#f59e0b':'#1a9b6a')}">${volLevel}</div>
+    <div class="cgc-sub">σ ${volatility.toFixed(2)}%</div>
+  </div>`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">回撤压力</div>
+    <div class="cgc-value" style="color:${drawLevel!=='低'?'#d94a4a':'#1a9b6a'}">${drawLevel}</div>
+    <div class="cgc-sub">${highBand}只高位</div>
+  </div>`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">涨跌统计</div>
+    <div class="cgc-value"><span style="color:var(--up)">${up}涨</span> <span style="color:var(--down)">${down}跌</span></div>
+    <div class="cgc-sub">共 ${total} 只</div>
+  </div>`;
+  html+=`<div class="combo-glass-card">
+    <div class="cgc-label">行业分布</div>
+    <div class="cgc-value">${sortedSec.length}个</div>
+    <div class="cgc-sub">${topSec?safe(topSec[0].slice(0,4)):'—'}为主</div>
+  </div>`;
   html+=`</div>`;
-  // AI 建议
+
+  // AI 建议（液态玻璃卡片）
   let advice=[];
   if(concentration>=60)advice.push(`当前组合科技成长暴露较高（${topSec[0]}占比${concentration.toFixed(0)}%），多个基金存在较强相关性。新增资金可以考虑降低同涨同跌风险。`);
   if(relLevel==='高')advice.push('多个基金属于同一板块，相关性较高，建议适当分散到不同行业。');
   if(volLevel==='高')advice.push('组合波动较大，注意仓位控制。');
   if(highBand>=total*0.5)advice.push('部分基金处于高位区，注意回撤风险。');
   if(!advice.length)advice.push('组合结构相对均衡，暂无明显风险。');
-  html+=`<div class="fc-combo" style="margin-top:10px"><b>组合建议：</b>${advice.join(' ')}</div>`;
-  // 持仓重合度分析（穿透到重仓股）
-  const stockMap={};
-  funds.forEach(f=>{
-    if(f.holdings&&f.holdings.top10&&f.holdings.top10.length&&!f.holdings.isFundHoldings){
-      f.holdings.top10.forEach(s=>{
-        if(!stockMap[s.name])stockMap[s.name]={count:0,ratio:0,funds:[]};
-        stockMap[s.name].count++;
-        stockMap[s.name].ratio+=s.ratio||0;
-        stockMap[s.name].funds.push(f.name||'');
-      });
+  html+=`<div class="combo-advice-card"><b style="color:var(--blue)">💡 组合建议</b><br><span style="font-size:12.5px;line-height:1.8;color:var(--text-sec)">${advice.join(' ')}</span></div>`;
+  html+=`<div class="text-xs text-sec" style="margin-top:6px;text-align:center">基于基金名称板块归类和实时数据估算，仅供参考。</div>`;
+
+  // ========== 持仓重合度检测 ==========
+  html+=`<div class="combo-overlap-card">`;
+  html+=`<div style="font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;position:relative;z-index:1">🔗 持仓重合度分析</div>`;
+
+  // 1. 按市值计算板块占比
+  const sectorValueMap={};
+  let totalMarketValue=0;
+  state.portfolio.forEach(p=>{
+    const d=state.funds[p.code]||{};
+    const price=d.estimate??d.nav;
+    const value=Number.isFinite(price)?price*p.shares:0;
+    totalMarketValue+=value;
+    const secName=getFundSector(d.name||p.name||'');
+    sectorValueMap[secName]=(sectorValueMap[secName]||0)+value;
+  });
+
+  const sortedSecValue=Object.entries(sectorValueMap).sort((a,b)=>b[1]-a[1]);
+  const top3Secs=sortedSecValue.slice(0,3);
+
+  html+=`<div style="font-size:12px;color:var(--text-sec);margin-bottom:8px;position:relative;z-index:1"><b style="color:var(--text)">板块重合暴露</b>（按持仓市值）</div>`;
+  if(totalMarketValue>0&&top3Secs.length){
+    html+=`<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:6px;position:relative;z-index:1">`;
+    top3Secs.forEach(([sec,val])=>{
+      const pct=val/totalMarketValue*100;
+      const barColor=pct>=40?'#d94a4a':(pct>=25?'#f59e0b':'#3b82f6');
+      html+=`<div class="combo-bar-item">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+          <span style="font-weight:600">${safe(sec)}</span>
+          <span style="color:${pct>=40?'#d94a4a':'var(--text-sec)'};font-weight:700">${pct.toFixed(1)}%</span>
+        </div>
+        <div style="height:7px;background:rgba(0,0,0,.05);border-radius:4px;overflow:hidden">
+          <div style="height:100%;width:${Math.min(pct,100)}%;background:linear-gradient(90deg,${barColor}88,${barColor});border-radius:4px;box-shadow:0 0 8px ${barColor}44"></div>
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+
+    // 主要暴露方向
+    const mainExposure=top3Secs.map(s=>s[0]).join('、');
+    html+=`<div style="font-size:11px;color:var(--text-sec);margin-top:8px;position:relative;z-index:1">主要暴露方向：<b style="color:var(--text)">${safe(mainExposure)}</b></div>`;
+
+    // 集中度风险提示
+    const topSecPct=top3Secs[0][1]/totalMarketValue*100;
+    if(topSecPct>=40){
+      html+=`<div class="combo-risk-warn">
+        <b style="color:#d94a4a">⚠️ 集中度风险提示</b><br>
+        表面上是 ${total} 只基金，实际 <b>${safe(top3Secs[0])}</b> 方向暴露已达 <b>${topSecPct.toFixed(1)}%</b>，同涨同跌效应明显，注意集中度风险。
+      </div>`;
+    }
+  }else{
+    html+=`<div style="font-size:12px;color:var(--text-sec);position:relative;z-index:1">暂无足够持仓数据计算板块暴露</div>`;
+  }
+
+  // 2. 重仓股关键词重合检测
+  const stockFundMap={};
+  state.portfolio.forEach(p=>{
+    const d=state.funds[p.code]||{};
+    const name=d.name||p.name||'';
+    for(const kw of HEAVY_STOCK_KEYWORDS){
+      if(name.includes(kw)){
+        if(!stockFundMap[kw]) stockFundMap[kw]=[];
+        stockFundMap[kw].push(name);
+      }
     }
   });
-  const overlapStocks=Object.entries(stockMap).filter(([k,v])=>v.count>=2).sort((a,b)=>b[1].count-a[1].count||b[1].ratio-a[1].ratio);
+  const overlapStocks=Object.entries(stockFundMap).filter(([_,funds])=>funds.length>=2);
   if(overlapStocks.length){
-    html+=`<div class="combo-overlap"><div class="combo-overlap-title">🔍 持仓重合度分析</div>`;
-    // 行业暴露
-    const sectorExposure={};
-    funds.forEach(f=>{
-      if(f.holdings&&f.holdings.top10&&f.holdings.top10.length&&!f.holdings.isFundHoldings){
-        f.holdings.top10.forEach(s=>{
-          const sec=matchStockSector(s.name);
-          const secName=sec?sec.name:'其他';
-          sectorExposure[secName]=(sectorExposure[secName]||0)+(s.ratio||0);
-        });
-      }
+    html+=`<div style="margin-top:14px;position:relative;z-index:1">
+      <div style="font-size:12px;color:var(--text-sec);margin-bottom:8px"><b style="color:var(--text)">最高重合个股</b></div>`;
+    overlapStocks.slice(0,3).forEach(([stock,funds])=>{
+      html+=`<div class="combo-stock-overlap">
+        <b style="color:#c2410c">${safe(stock)}</b>
+        <span style="color:var(--text-sec);margin-left:6px">${funds.length}只基金共同重仓</span>
+      </div>`;
     });
-    const sortedExp=Object.entries(sectorExposure).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    if(sortedExp.length){
-      html+=`<div style="font-size:11px;font-weight:600;margin-bottom:6px">行业暴露（穿透重仓股）</div>`;
-      sortedExp.forEach(([sec,ratio])=>{
-        const pct=(ratio/funds.length).toFixed(0);
-        const barCls=sec.includes('半导体')||sec.includes('AI')||sec.includes('算力')?'ai':(sec.includes('半导体')?'semi':(sec.includes('光模块')||sec.includes('CPO')?'cpo':'other'));
-        html+=`<div class="overlap-bar-item"><div class="ob-head"><span class="ob-name">${safe(sec)}</span><span class="ob-pct">${pct}%</span></div><div class="ob-bar"><i class="${barCls}" style="width:${Math.min(pct,100)}%"></i></div></div>`;
-      });
-    }
-    // 最高重合个股
-    const topOverlap=overlapStocks[0];
-    html+=`<div class="overlap-stock-alert"><b>${safe(topOverlap[0])}</b> 被 ${topOverlap[1].count} 只基金同时重仓，合计权重 ${topOverlap[1].ratio.toFixed(1)}%（${topOverlap[1].funds.map(f=>safe(f.slice(0,8))).join('、')}）</div>`;
-    if(overlapStocks.length>=3){
-      html+=`<div style="font-size:10px;color:var(--text-sec);margin-top:4px">其他重合：${overlapStocks.slice(1,4).map(([k,v])=>safe(k)+'('+v.count+'只)').join('、')}</div>`;
-    }
     html+=`</div>`;
   }else{
-    html+=`<div class="combo-overlap"><div class="combo-overlap-title">🔍 持仓重合度分析</div><div style="font-size:11px;color:var(--text-sec)">暂无重仓股数据或无重合持仓，添加基金后自动分析</div></div>`;
+    html+=`<div style="margin-top:12px;font-size:12px;color:var(--text-sec);position:relative;z-index:1">未检测到明显的重仓股重合（基于名称关键词）</div>`;
   }
-  html+=`<div class="text-xs text-sec" style="margin-top:6px">基于基金名称板块归类和实时数据估算，仅供参考。</div>`;
+
+  html+=`<div class="text-xs text-sec" style="margin-top:10px;text-align:center;position:relative;z-index:1">基于基金名称关键词规则匹配，仅供参考，实际持仓以基金定期报告为准。</div>`;
+  html+=`</div>`;
+  // ========== /持仓重合度检测 ==========
+
   el.innerHTML=html;
 }
 
@@ -3938,116 +4033,170 @@ function newsTopic(n){
   return '市场';
 }
 
-// 本地规则版AI解读（大白话，小学文化能看懂，每条不一样）
+// 邻居大叔版AI解读：四步唠嗑结构，小学文化能懂
 function ruleExplain(title,summary,newsItem){
-  const t=(String(title)+' '+String(summary)).toLowerCase();
-  const result={fact:'', market:'', judge:'', text:''};
-  
-  // 提取关键信息
-  const hasNumber=t.match(/(\d+\.?\d*)\s*[万亿%]?/);
-  const hasPrice=t.match(/[涨跌](\d+\.?\d*)/);
-  const hasCompany=t.match(/([A-Z\u4e00-\u9fa5]{2,8})(公司|集团|银行|基金|证券|保险|科技|医药|能源|汽车|电子|化工|地产|钢铁|煤炭|军工|航空|物流|传媒|教育|农业|通信|互联网|软件|硬件|手机|家电|食品|饮料|服装|零售|酒店|旅游|电力|水务|环保|建筑|建材|机械|纺织|造纸|包装|塑料|橡胶|玻璃|陶瓷|有色|黄金|白银|石油|天然气|新能源|光伏|锂电|风电|核电|氢能|储能|芯片|半导体|AI|算力|CPO|PCB|机器人|无人驾驶|智能驾驶|低空|卫星|航天|生物|医药|创新药|CXO|医疗器械|中药|疫苗|血制品|检测|诊断|基因|细胞|合成|化工|新材料|稀土)/);
-  
-  // 事实部分——根据新闻具体内容来写，每条不一样
-  if(/降息[^\d]*(\d+)/.test(t)){
-    result.fact=`降息${RegExp.$1}个基点，借钱成本变低了`;
-  }else if(/降准[^\d]*(\d+)/.test(t)){
-    result.fact=`降准${RegExp.$1}个百分点，银行手里钱变多了`;
-  }else if(/降息|降准|lpr下调/.test(t)){
-    result.fact='央行又降息了，钱变得更便宜了';
-  }else if(/加息|升息/.test(t)){
-    result.fact='央行在加息，借钱成本变高了';
-  }else if(/mlf|逆回购|公开市场/.test(t)){
-    result.fact='央行在往市场里放水，钱变多了';
-  }else if(/收水|回笼|缩表/.test(t)){
-    result.fact='央行在从市场里抽水，钱变少了';
-  }else if(/芯片[限禁]|半导体[限禁]|制裁|出口管制|实体清单/.test(t)){
-    result.fact='美国又搞芯片限制，卡我们脖子';
-  }else if(/半导体[涨好]|芯片[涨好]|算力[爆火]|AI[大模型]/.test(t)){
-    result.fact='芯片和算力这块又火了，需求很大';
-  }else if(/cpo|光模块|光通信/.test(t)){
-    result.fact='光模块这波有消息，跟AI算力有关';
-  }else if(/pcb|印制电路板/.test(t)){
-    result.fact='PCB电路板有新消息，科技圈在动';
-  }else if(/黄金[涨冲上破]|金价[涨冲上破]/.test(t)){
-    result.fact='黄金价格又涨了，买金的人很多';
-  }else if(/黄金[跌回]|金价[跌回]/.test(t)){
-    result.fact='黄金价格跌了，可能有人在卖';
-  }else if(/原油[涨冲]|油价[涨冲]|石油[涨冲]/.test(t)){
-    result.fact='原油价格涨了，能源成本在上升';
-  }else if(/原油[跌]|油价[跌]/.test(t)){
-    result.fact='原油价格跌了，能源成本在下降';
-  }else if(/新能源[补]|光伏[补]|锂电[补]|风电[补]/.test(t)){
-    result.fact='新能源有补贴或政策利好';
-  }else if(/新能源[过剩]|光伏[过剩]|锂电[过剩]/.test(t)){
-    result.fact='新能源产能过剩，行业在内卷';
-  }else if(/基金[经]理[变换离任]/.test(t)){
-    result.fact='有基金经理换人了，要注意一下';
-  }else if(/etf[规模资金]|ETF[规模资金]/.test(t)){
-    result.fact='有ETF资金在大量进出';
-  }else if(/公募[持仓调仓]/.test(t)){
-    result.fact='公募基金在调仓换股';
-  }else if(/净值[涨]/.test(t)){
-    result.fact='净值涨了，之前买的回本了';
-  }else if(/净值[跌]/.test(t)){
-    result.fact='净值跌了，账面可能亏了';
-  }else if(/美股[涨冲]|纳指[涨冲]|标普[涨冲]/.test(t)){
-    result.fact='美股那边涨了，外围情绪不错';
-  }else if(/美股[跌]|纳指[跌]|标普[跌]/.test(t)){
-    result.fact='美股跌了，外围情绪不太好';
-  }else if(/港股[涨]|恒生[涨]/.test(t)){
-    result.fact='港股涨了，南向资金可能进了';
-  }else if(/港股[跌]|恒生[跌]/.test(t)){
-    result.fact='港股跌了，外资可能在卖';
-  }else if(/政策[出]|国务院[发]|证监会[发]/.test(t)){
-    result.fact='上面出了新政策，要看看具体内容';
-  }else if(/监管[问]|处罚|罚款|立案/.test(t)){
-    result.fact='有公司被监管盯上了，可能是利空';
-  }else if(/业绩[预增]|利润[大增]|营收[大增]/.test(t)){
-    result.fact='有公司业绩很好，赚到钱了';
-  }else if(/业绩[预亏]|亏损|暴雷|计提/.test(t)){
-    result.fact='有公司业绩不好，可能暴雷了';
-  }else if(hasCompany){
-    result.fact=`${hasCompany[0]}有消息，跟它的股价有关`;
+  const raw=cleanHTML(title)+' '+cleanHTML(summary);
+  const t=raw.toLowerCase();
+  let summaryLine='', impact='', why='', action='', final='';
+
+  // 地缘冲突
+  if(/中东|伊朗|以色列|加沙|以伊|美伊|霍尔木兹/.test(t)){
+    summaryLine='中东又打起来了，石油和黄金要涨价。';
+    impact='你买的黄金基金可能涨一点，能源股也可能跟着涨。';
+    why='因为一打仗，大家就怕石油供不上，就会抢着买黄金保值。';
+    action='手里有的可以拿着，没有的别追进去，打仗的消息来得快去得也快。';
+    final='总的来说，短期是好事，但别上头，见好就收。';
+  }else if(/俄乌|俄罗斯|乌克兰|普京|乌军|停火/.test(t)){
+    summaryLine='俄乌那边又有动静了，局势还没稳。';
+    impact='对你手里的国内基金影响不大，黄金军工可能晃一下。';
+    why='因为这俩国家离咱们远，主要影响欧洲和能源价格。';
+    action='不用特意操作，该怎么定投怎么定投。';
+    final='总的来说，背景噪音而已，不用紧张。';
+  }else if(/关税|贸易战|贸易磋商|贸易代表|加征|制裁/.test(t)){
+    summaryLine='又要加关税了，出口的东西不好卖了。';
+    impact='出口相关的股票和基金可能要跌，尤其是汽车、家电、金属。';
+    why='因为加了税，东西卖贵了，老外就不买了，公司赚的钱就少了。';
+    action='手里有出口类基金的可以减一点，没有的先别碰。';
+    final='总的来说，是个坏消息，先躲一躲再说。';
+  }else if(/降准|降息|lpr.{0,4}下调|宽松|释放流动性/.test(t)){
+    summaryLine='国家放水了，市场上的钱变多了。';
+    impact='股票和基金多半要涨，尤其是科技股，债券也会涨。';
+    why='就像菜市场突然多了很多买菜的人，菜价自然就上去了。';
+    action='手里的基金拿着别动，想加仓的可以慢慢加。';
+    final='总的来说，是好事，钱袋子要鼓一点了。';
+  }else if(/加息|升息|缩表|收紧|通胀超预期/.test(t)){
+    summaryLine='国家收水了，市场上的钱变少了。';
+    impact='股票和基金可能要跌，尤其是涨得高的科技股。';
+    why='就像菜市场买菜的人突然少了，菜卖不出去只能降价。';
+    action='先别急着加仓，等跌稳了再说。';
+    final='总的来说，是个坏消息，先管住手。';
+  }else if(/机器人|具身智能|人形机器人|大模型|deepseek/.test(t)){
+    summaryLine='机器人又出新技术了，大家都在聊。';
+    impact='科技股和机器人相关的基金可能涨一波。';
+    why='因为每次出新技术，大家就觉得以后能赚大钱，就抢着买。';
+    action='别追高，等回调了再考虑，这种消息炒得快凉得也快。';
+    final='总的来说，短期热闹，能不能长久还不一定。';
+  }else if(/算力|cpo|光模块|光通信|pcb|半导体|芯片|存储|人工智能/.test(t)){
+    summaryLine='AI和芯片又有利好，大家还在追。';
+    impact='半导体、算力、光模块这些基金可能继续涨。';
+    why='因为现在最热的就是AI，大家都觉得以后能赚大钱。';
+    action='手里有的拿着，没有的等跌一点再买，别追在山顶上。';
+    final='总的来说，是当前最火的方向，但涨多了也会回调。';
+  }else if(/黄金|金价|避险|央行购金/.test(t)){
+    summaryLine='黄金又涨了，大家都在买黄金避险。';
+    impact='你买的黄金基金要涨，黄金股也跟着涨。';
+    why='因为世道不稳的时候，大家觉得黄金最靠谱，就都去买。';
+    action='手里有的拿着，没有的别追太高，黄金不会一直涨。';
+    final='总的来说，是好事，但涨多了就别再加了。';
+  }else if(/原油|油价|石油|欧佩克|opec/.test(t)){
+    summaryLine='油价又变了，产油国在搞事情。';
+    impact='能源基金和石油相关股票会跟着动。';
+    why='因为石油是工业的血液，价格变了，很多行业的成本都变了。';
+    action='看看就行，别因为一天的涨跌就买卖。';
+    final='总的来说，影响有限，不用太当回事。';
+  }else if(/新能源|光伏|锂电|储能|风电|氢能/.test(t)){
+    summaryLine='新能源出消息了，就看这次能不能真起来。';
+    impact='新能源基金可能涨一下，但能不能持续不好说。';
+    why='因为新能源跌了很久了，出个利好大家就想抄底，但每次都没起来。';
+    action='先别急着买，等连续涨几天再说，别抄底抄在半山腰。';
+    final='总的来说，先观察，别急着动手。';
+  }else if(/医药|制药|疫苗|创新药|药企|医疗/.test(t)){
+    summaryLine='医药有新消息，影响不大。';
+    impact='医药基金可能小涨小跌，不会有大动静。';
+    why='因为医药是个长期赛道，一天两天的消息改变不了什么。';
+    action='该怎么定投怎么定投，不用特意操作。';
+    final='总的来说，不用管它，正常拿着就行。';
+  }else if(/地产|房地产|楼市|房贷|救市/.test(t)){
+    summaryLine='地产又出政策了，就看能不能救起来。';
+    impact='地产和银行基金可能涨一下，但别抱太大希望。';
+    why='因为房子现在没人买，出政策只能短期刺激一下。';
+    action='别重仓买地产基金，政策市不好做。';
+    final='总的来说，看看热闹就行，别当真。';
+  }else if(/基金经理|调仓|持仓|净值|etf|公募|重仓/.test(t)){
+    summaryLine='基金在换股票了，经理在调仓。';
+    impact='你买的基金可能涨跌幅跟以前不一样了。';
+    why='因为基金经理觉得有些股票不行了，要换成更有潜力的。';
+    action='去看看你买的基金最近换了啥，是不是还符合你的预期。';
+    final='总的来说，正常操作，不用慌，但要心里有数。';
+  }else if(/国务院|证监会|央行|财政部|发改委|监管|补贴/.test(t)){
+    summaryLine='国家又出政策了，要扶持或者管一管。';
+    impact='相关行业的基金可能涨，也可能跌，看政策是好是坏。';
+    why='因为国家政策是指挥棒，说让哪个行业好，哪个就容易涨。';
+    action='看看政策说的是啥，跟你手里的基金对不对得上。';
+    final='总的来说，跟着政策走没错，但别一上来就all in。';
+  }else if(/美股|纳指|标普|道指|美联储|美元|美债/.test(t)){
+    summaryLine='美国股市有动静，A股开盘会跟着晃一下。';
+    impact='你买的国内基金开盘可能涨也可能跌，但一般半天就回来了。';
+    why='因为美国是全球最大的股市，它一哆嗦，全世界都跟着抖。';
+    action='不用因为美股涨跌就买卖国内基金，影响不大。';
+    final='总的来说，就是开盘晃一下，不用大惊小怪。';
+  }else if(/港股|恒生|南向/.test(t)){
+    summaryLine='港股有波动，跟A股联动着来。';
+    impact='你买的港股基金涨跌会明显一点，国内基金影响不大。';
+    why='因为港股和A股是邻居，经常你涨我也涨，你跌我也跌。';
+    action='有港股基金的可以看看，没有的不用管。';
+    final='总的来说，影响有限，正常操作就行。';
+  }else if(/业绩.{0,6}预增|利润.{0,6}大增|营收.{0,6}大增|扭亏|预喜/.test(t)){
+    summaryLine='公司赚到钱了，而且赚得比预想的多。';
+    impact='这家公司的股票和相关基金大概率要涨。';
+    why='因为公司赚钱了，买它股票的人就能分到钱，大家就抢着买。';
+    action='手里有的可以拿着，看看下个季度还能不能继续赚。';
+    final='总的来说，是好事，说明公司真的在赚钱。';
+  }else if(/暴雷|亏损|预亏|处罚|立案|调查|退市/.test(t)){
+    summaryLine='公司出事了，亏了钱或者被查了。';
+    impact='这家公司的股票和相关基金大概率要跌。';
+    why='因为公司出事了，大家就怕血本无归，就抢着卖。';
+    action='赶紧看看你买的基金里有没有这只股票，有的话小心点。';
+    final='总的来说，是坏事，离远点别踩雷。';
+  }else if(/减持|套现|大股东/.test(t)){
+    summaryLine='大股东在卖股票，要套现走人。';
+    impact='这只股票短期可能要跌，因为卖的人多了。';
+    why='因为最了解公司的人都在卖，说明他们觉得股价够高了。';
+    action='手里有的可以减一点，没有的别买。';
+    final='总的来说，不是好事，小心点没坏处。';
+  }else if(/增持|回购|举牌/.test(t)){
+    summaryLine='有人在买股票，而且买了不少。';
+    impact='这只股票短期可能要涨，因为买的人多了。';
+    why='因为有人愿意花大价钱买，说明他们觉得以后还能涨。';
+    action='手里有的拿着，没有的可以看看但别追高。';
+    final='总的来说，是好事，但也别全信，跟着看看就行。';
+  }else if(/涨价|提价|价格上涨/.test(t)){
+    summaryLine='东西涨价了，卖东西的公司赚得更多了。';
+    impact='卖这个东西的公司股票可能涨。';
+    why='因为东西卖贵了，成本没变，赚的钱就多了。';
+    action='看看就行，别因为一个涨价消息就冲进去买。';
+    final='总的来说，是好事，但要看能不能持续涨价。';
+  }else if(/降价|跌价|价格战/.test(t)){
+    summaryLine='东西降价了，还打得很凶。';
+    impact='卖这个东西的公司股票可能跌。';
+    why='因为东西卖便宜了，赚的钱就少了，甚至可能亏钱。';
+    action='手里有相关基金的可以减一点，没有的先别碰。';
+    final='总的来说，不是好事，打价格战没赢家。';
   }else{
-    // 最后兜底，但从标题里提取关键信息
     const kws=extractKeyWords(title);
-    if(kws.length>=3){
-      result.fact=`简单说就是${kws.slice(0,3).join('、')}这块有动静`;
-    }else if(kws.length>=1){
-      result.fact=`主要是${kws[0]}相关的消息`;
+    if(kws.length>=1){
+      summaryLine=kws[0]+'出消息了，具体影响还不好说。';
+      impact='对你的钱袋子影响不大，先观察观察。';
+      why='因为一条消息说了不算，得看有没有人真金白银买进去。';
+      action='先别动，等看清楚了再说。';
+      final='总的来说，先看看，别急着动手。';
     }else{
-      result.fact='这条新闻现在看看，先别急着做判断';
+      summaryLine='这条消息不太重要，影响有限。';
+      impact='对你的基金和股票基本没影响。';
+      why='因为这种消息太多了，市场根本不当回事。';
+      action='该干嘛干嘛，不用管它。';
+      final='总的来说，就是个小消息，不用放心上。';
     }
   }
-  
-  // 市场反应（结合行情数据）
-  const resonance=newsItem?checkMarketResonance(newsItem):{resonance:false, evidence:'数据不足'};
-  if(resonance.resonance){
-    result.market='新闻出来之后，相关板块确实涨了，钱也在往里进';
-    result.judge='短期看是好事，但别追高，等回调再看';
-  }else if(resonance.sectors&&resonance.sectors.length){
-    const upSectors=resonance.sectors.filter(s=>s.change>0);
-    const downSectors=resonance.sectors.filter(s=>s.change<=0);
-    if(upSectors.length>downSectors.length){
-      result.market='相关板块大部分在涨，但钱进来的不多';
-      result.judge='涨是涨了，但没看到大资金进场，先别激动';
-    }else if(downSectors.length>upSectors.length){
-      result.market='相关板块反而在跌，市场不太买账';
-      result.judge='消息是好消息，但市场不认，再等等看';
-    }else{
-      result.market='板块涨跌不一，没有统一方向';
-      result.judge='信号不明确，先别急着操作';
-    }
-  }else{
-    result.market='暂时没看到行情数据跟着动';
-    result.judge='光看新闻没用，还得看资金跟不跟，继续观察';
-  }
-  // 一句话大白话总结
-  result.text=`${result.fact}。${result.judge}。`;
-  // 同时保留一句话版本用于简洁显示
-  result.oneLiner=`${result.fact}，${result.judge}`;
-  return result;
+
+  return {
+    summary: summaryLine,
+    impact: impact,
+    why: why,
+    action: action,
+    final: final,
+    text: summaryLine
+  };
 }
 
 // 获取来源样式类
@@ -4062,186 +4211,365 @@ function sourceClass(source){
   return 'cls';
 }
 
+// 新闻源分类：一手权威 / 极速快讯 / 深度逻辑
+function sourceTier(source){
+  if(!source) return '快讯';
+  const s=String(source);
+  // 一手权威
+  if(/官方|证监会|央行|财政部|发改委|统计局|国务院|巨潮|上交所|深交所|北交所|基金公司/.test(s)) return '一手';
+  // 深度逻辑
+  if(/第一财经|财新|证券时报|券商中国|研报|中金|中信|华泰|国君|招商/.test(s)) return '深度';
+  // 极速快讯（默认）
+  return '快讯';
+}
+
+function sourceTierClass(source){
+  const tier=sourceTier(source);
+  if(tier==='一手') return 'tier1';
+  if(tier==='深度') return 'tier3';
+  return 'tier2';
+}
+
+/* ============================================================
+ * 新闻事件聚类
+ * ============================================================ */
+function clusterNewsEvents(newsArray){
+  if(!newsArray||!newsArray.length) return [];
+  const events=[];
+  const TWO_HOURS=2*60*60*1000; // 2小时时间窗口
+
+  // 解析新闻时间
+  function parseNewsTime(n){
+    if(!n.time) return Date.now();
+    const t=String(n.time);
+    const m=t.match(/(\d{1,2}):(\d{2})/);
+    if(m){
+      const d=new Date();
+      const cn=new Date(d.getTime()+8*60*60*1000);
+      cn.setUTCHours(parseInt(m[1]),parseInt(m[2]),0,0);
+      return cn.getTime()-8*60*60*1000;
+    }
+    return Date.now();
+  }
+
+  // 获取新闻涉及板块
+  function getSectors(n){
+    const text=(n.title+' '+(n.summary||'')).toLowerCase();
+    return SECTOR_RULES.filter(s=>s.keys.some(k=>text.includes(k.toLowerCase()))).map(s=>s.name);
+  }
+
+  // 关键词重合度（Jaccard）
+  function kwOverlap(a,b){
+    if(!a.length||!b.length) return 0;
+    const sa=new Set(a), sb=new Set(b);
+    let common=0;
+    for(const k of sa){ if(sb.has(k)) common++; }
+    const total=new Set([...sa,...sb]).size;
+    return total>0?common/total:0;
+  }
+
+  // 按时间从新到旧排序
+  const sorted=[...newsArray].sort((a,b)=>parseNewsTime(b)-parseNewsTime(a));
+
+  for(const news of sorted){
+    const kw=extractKeyWords(news.title);
+    const sectors=getSectors(news);
+    const t=parseNewsTime(news);
+    let matched=null;
+
+    for(const ev of events){
+      const timeDiff=Math.abs(t-ev.latestTime);
+      // 规则1：2小时时间窗口
+      if(timeDiff>TWO_HOURS) continue;
+      // 规则2：关键词重合度
+      const overlap=kwOverlap(kw,ev.keywords);
+      // 规则3：涉及板块相同
+      const sameSector=sectors.length>0&&ev.sectors.length>0&&
+        sectors.some(s=>ev.sectors.includes(s));
+      // 判定同一事件
+      let same=false;
+      if(overlap>=0.6) same=true;                    // 关键词高度重合
+      else if(sameSector&&overlap>=0.3) same=true;   // 同板块+部分关键词
+      else if(sameSector&&timeDiff<30*60*1000) same=true; // 同板块+30分钟内
+
+      if(same){ matched=ev; break; }
+    }
+
+    if(matched){
+      matched.news.push(news);
+      if(t>matched.latestTime) matched.latestTime=t;
+      if(t<matched.earliestTime) matched.earliestTime=t;
+      for(const k of kw){ if(!matched.keywords.includes(k)) matched.keywords.push(k); }
+      for(const s of sectors){ if(!matched.sectors.includes(s)) matched.sectors.push(s); }
+      const src=news.source||'资讯';
+      if(!matched.sources.includes(src)) matched.sources.push(src);
+    }else{
+      const srcs=news.sources&&news.sources.length?[...news.sources]:(news.source?[news.source]:[]);
+      events.push({
+        event_id:'ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+        title:generateEventTitle(news, kw),
+        news:[news],
+        keywords:kw,
+        sectors:sectors,
+        sources:srcs,
+        latestTime:t,
+        earliestTime:t
+      });
+    }
+  }
+
+  // 按最新时间排序
+  events.sort((a,b)=>b.latestTime-a.latestTime);
+  return events;
+}
+
+// 生成事件标题：核心动词+名词
+function generateEventTitle(newsItem, keywords){
+  const title=newsItem.title||'';
+  // 判断情绪
+  let tone='';
+  if(/涨|升|新高|利好|突破|反弹|上涨|暴涨|拉升|翻红/.test(title)) tone='利好';
+  else if(/跌|崩|跳水|利空|暴跌|下跌|回调|下挫|走弱/.test(title)) tone='利空';
+  else if(/政策|国务院|央行|证监会|发改委|工信部|监管|降准|降息|国常会|补贴|支持|规划/.test(title)) tone='政策';
+  else if(/业绩|财报|预增|预亏|利润|营收/.test(title)) tone='业绩';
+  else if(/美股|美联储|纳指|标普|黄金|原油|美元|外围|地缘/.test(title)) tone='外围';
+
+  // 用关键词生成事件名
+  if(keywords&&keywords.length){
+    const mainKw=keywords.slice(0,2).join('+');
+    if(tone) return `【${mainKw}${tone}】`;
+    return `【${mainKw}相关】`;
+  }
+
+  // 兜底：截取标题核心
+  const short=title.replace(/[，。！？、；：""''（）【】\s\d.%+\-]/g,'').slice(0,10);
+  if(tone) return `【${short}${tone}】`;
+  return `【${short}】`;
+}
+
 function renderNews(filter){
   if(filter===undefined) filter=state.activeNewsFilter;
   state.activeNewsFilter=filter;
-  // 新闻已经按时间排序了，这里只做分类过滤
-  const all=state.news.filter(n=>n.title&&String(n.title).trim()).map(n=>({...n, topic:newsTopic(n)}));
+  // 周末提示条：周末时显示
+  const wb=$('weekendBanner');
+  if(wb) wb.style.display=isWeekend()?'block':'none';
+  // 只保留"与资金形成共振"的新闻，其余一律不显示
+  const all=state.news
+    .filter(n=>n.title&&String(n.title).trim())
+    .map(n=>{
+      const resonanceInfo=checkMarketResonance(n);
+      return {...n, topic:newsTopic(n), resonanceInfo};
+    })
+    .filter(n=>n.resonanceInfo.resonance);
   let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
   // 保持时间排序（从新到旧），不做相关度排序
-  const list=filtered.slice(0,10);
+  const list=filtered.slice(0,30);
   const listEl=$('newsList');
   if(!listEl) return;
   if(!list.length){
-    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>当前分类暂无真实资讯</div>';
+    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>'+(state.news.length?'暂未筛选出与资金共振的资讯，稍后刷新再看看':'当前分类暂无与资金共振的资讯')+'</div>';
   }else{
-    const [hero,...rest]=list;
-    const itemHtml=(n,i,heroMode)=>{
+    // === 事件聚类 ===
+    let events=clusterNewsEvents(list);
+    // 突发新闻优先级提升：含突发新闻的事件排到前面
+    events.sort((a,b)=>{
+      const aBreaking=a.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
+      const bBreaking=b.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
+      if(aBreaking&&!bBreaking) return -1;
+      if(!aBreaking&&bBreaking) return 1;
+      return 0;
+    });
+
+    // 单条新闻渲染（事件内部使用）
+    const itemHtml=(n,i)=>{
       const cls=sourceClass(n.source);
+      const tierCls=sourceTierClass(n.source||(n.sources&&n.sources[0]||''));
+      const tierLabel=sourceTier(n.source||(n.sources&&n.sources[0]||''));
       const timeVal=safe(n.time||'');
       const title=n.url?`<a href="${safe(n.url)}" target="_blank" rel="noopener">${safe(n.title)}</a>`:safe(n.title);
-      // 多源确认 / 单一来源 标签
+      // 突发新闻检测
+      const isBreaking=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||'');
+      // 来源标签 + 分类层级
       let sourceBadge='';
       if(n.multiSource&&n.sources&&n.sources.length>=2){
-        sourceBadge=`<span class="news-source multi-source">多源确认 · ${n.sources.length}家</span>`;
+        sourceBadge=`<span class="news-source multi-source">多源确认</span><span class="news-tier tier2">快讯</span>`;
       }else{
-        sourceBadge=`<span class="news-source ${cls}">${safe(n.sources&&n.sources.length?n.sources[0]:(n.source||'资讯'))}</span>`;
+        const srcName=n.sources&&n.sources.length?n.sources[0]:(n.source||'资讯');
+        sourceBadge=`<span class="news-source ${cls}">${safe(srcName)}</span><span class="news-tier ${tierCls}">${safe(tierLabel)}</span>`;
       }
-      // 多来源详情
-      let sourcesDetail='';
-      if(n.multiSource&&n.sources&&n.sources.length>=2){
-        const colors={
-          '财联社':'#dc2626',
-          '金十数据':'#b45309',
-          '华尔街见闻':'#7c3aed',
-          '同花顺':'#ea580c',
-          '第一财经':'#7c3aed',
-          '官方':'#b45309'
-        };
-        sourcesDetail=`<div class="news-sources-detail">${n.sources.map(s=>`<span><span class="src-dot" style="background:${colors[s]||'#94a3b8'}"></span>${safe(s)}</span>`).join('')}</div>`;
-      }
-      // 关联持仓基金
-      const portfolioMatch=matchNewsWithPortfolio(n);
-      let relatedHtml='';
-      if(portfolioMatch.affect){
-        relatedHtml=`<div class="news-related affect"><b>⚠️ ${safe(portfolioMatch.reason)}</b><div class="fund-tags">${portfolioMatch.funds.slice(0,3).map(f=>`<span class="fund-tag">${safe(f.name.slice(0,8))}</span>`).join('')}</div></div>`;
-      }else if(state.portfolio&&state.portfolio.length){
-        relatedHtml=`<div class="news-related no-affect">${safe(portfolioMatch.reason)}</div>`;
-      }
-      // 行情共振
-      const resonance=checkMarketResonance(n);
-      let resonanceHtml='';
-      if(resonance.resonance){
-        resonanceHtml=`<div class="news-resonance"><span class="res-badge resonance">⚡ 新闻与资金形成共振</span></div>`;
-      }
-      // AI一句话
+      if(isBreaking) sourceBadge+=`<span class="news-breaking">⚡突发</span>`;
+      // AI解读（邻居大叔四步版）
       let aiHtml='';
       if(n.ai){
-        if(typeof n.ai==='object'){
-          const aiFact=String(n.ai.fact||'').replace(/<[^>]+>/g,'');
-          const aiMarket=String(n.ai.market||'').replace(/<[^>]+>/g,'');
-          const aiJudge=String(n.ai.judge||'').replace(/<[^>]+>/g,'');
-          const aiOne=String(n.ai.oneLiner||'').replace(/<[^>]+>/g,'');
-          if(aiOne){
-            aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiOne)}</div>`;
-          }else{
-            aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiFact)} ${safe(aiMarket)} ${safe(aiJudge)}</div>`;
-          }
-        }else{
-          const aiText=String(n.ai).replace(/<[^>]+>/g,'');
-          aiHtml=`<div class="news-ai"><span class="ai-tag">AI</span>${safe(aiText)}</div>`;
+        const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai), impact:'', why:'', action:'', final:'', text:String(n.ai)};
+        const summaryLine=aiObj.summary||aiObj.text||'';
+        const hasDetail=aiObj.impact||aiObj.why||aiObj.action||aiObj.final;
+        if(summaryLine){
+          aiHtml=`<div class="news-ai-wrap">
+            <div class="news-ai">
+              <span class="ai-tag">🤖</span>${safe(cleanHTML(summaryLine))}
+              ${hasDetail?`<span class="ai-expand-btn" data-ai-expand="${i}">展开 ▼</span>`:''}
+            </div>
+            ${hasDetail?`
+            <div class="news-ai-detail" data-ai-detail="${i}" style="display:none">
+              ${aiObj.impact?`<div class="ai-detail-item"><span class="ai-detail-label">对你有啥影响</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.impact))}</span></div>`:''}
+              ${aiObj.why?`<div class="ai-detail-item"><span class="ai-detail-label">为啥重要</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.why))}</span></div>`:''}
+              ${aiObj.action?`<div class="ai-detail-item"><span class="ai-detail-label">该怎么办</span><span class="ai-detail-text">${safe(cleanHTML(aiObj.action))}</span></div>`:''}
+              ${aiObj.final?`<div class="ai-detail-item ai-detail-final">${safe(cleanHTML(aiObj.final))}</div>`:''}
+            </div>`:''}
+          </div>`;
         }
       }
       // 摘要
-      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').replace(/&[a-z]+;/gi,' ').replace(/\s+/g,' ').trim().slice(0, heroMode?160:110)):'';
-      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>110?'…':''}</div>`:'';
-
-      // === 第二级：深度解读 ===
-      const deepItems=matchDeepAnalysis(n, state.newsDeep);
-      let deepHtml='';
-      if(deepItems.length){
-        const deepList=deepItems.map(d=>{
-          const srcCls=d.source==='财联社'?'cls':'yicai';
-          const dSummary=safe(String(d.summary||'').replace(/<[^>]+>/g,'').replace(/&[a-z]+;/gi,' ').replace(/\s+/g,' ').trim().slice(0,100));
-          return `<div class="deep-item"><span class="deep-src ${srcCls}">${safe(d.source||'')}</span>${safe(d.title||'')}${dSummary?`<div style="font-size:10px;color:#64748b;margin-top:2px">${dSummary}</div>`:''}</div>`;
-        }).join('');
-        deepHtml=`<div class="news-deep">
-          <div class="deep-title">🔍 深度解读 · 为什么会发生？</div>
-          ${deepList}
-          <div class="deep-summary"><b>导读：</b>${deepItems.length}篇深度文章从不同角度解读此事件。核心关注：${extractKeyWords(n.title).slice(0,5).join('、')||'综合因素'}。</div>
-        </div>`;
-      }else{
-        deepHtml=`<div class="news-deep">
-          <div class="deep-title">🔍 深度解读</div>
-          <div class="news-deep-empty">暂无相关深度分析文章，持续关注中…</div>
-        </div>`;
-      }
-
-      // === 第三级：市场情绪 ===
-      const sentData=matchSentiment(n, state.newsSentiment);
-      const sent=sentData.overall;
-      let sentimentHtml='';
-      if(sent&&sent.matched&&sent.matched.length){
-        const scorePos=Math.max(0, Math.min(100, sent.score));
-        const sentPosts=sent.matched.slice(0,3).map(p=>{
-          const srcLabel=p.source==='东方财富股吧'?'股吧':'同花顺';
-          return `<div class="sent-item"><span class="sent-source">${srcLabel}</span>${safe(p.title||'').slice(0,28)}</div>`;
-        }).join('');
-        sentimentHtml=`<div class="news-sentiment">
-          <div class="sent-title">👥 散户情绪 · 反推拐点</div>
-          <div class="sent-meter">
-            <div class="sent-bar"><div class="indicator" style="left:${scorePos}%"></div></div>
-            <span class="sent-label ${sent.label}">${safe(sent.labelText)}</span>
-          </div>
-          <div class="sent-items">${sentPosts}</div>
-          <div class="sent-note"><b>反向提示：</b>${safe(sent.contrarian||'')}</div>
-        </div>`;
-      }else{
-        sentimentHtml=`<div class="news-sentiment">
-          <div class="sent-title">👥 散户情绪</div>
-          <div class="news-sentiment-empty">暂无相关社区讨论数据</div>
-        </div>`;
-      }
-
-      // 层级切换按钮（只对非头条新闻显示，节省空间）
-      const hasTiers=deepItems.length||(sentData.matched&&sentData.matched.length);
-      let tiersHtml='';
-      if(hasTiers){
-        tiersHtml=`<div class="news-tiers">
-          <button class="news-tier-btn t2" data-news-tier="deep" data-idx="${i}">🔍 深度解读 ${deepItems.length?`(${deepItems.length})`:''}</button>
-          <button class="news-tier-btn t3" data-news-tier="sentiment" data-idx="${i}">👥 散户情绪</button>
+      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,80)):'';
+      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>80?'…':''}</div>`:'';
+      return `<div class="news-item" style="padding:8px 0;border-bottom:1px dashed rgba(100,130,170,.08)">
+        <div class="news-meta">
+          <span class="news-time">${timeVal}</span>
+          ${sourceBadge}
         </div>
-        <div class="news-tier-body" data-tier-body="deep" data-idx="${i}">${deepHtml}</div>
-        <div class="news-tier-body" data-tier-body="sentiment" data-idx="${i}">${sentimentHtml}</div>`;
+        <div class="news-title" style="font-size:12px;font-weight:500">${title}</div>
+        ${summaryHtml}
+        ${aiHtml}
+      </div>`;
+    };
+
+    // 事件渲染
+    const renderEvent=(ev,idx,isHero)=>{
+      // 事件时间（用最新的那条新闻时间）
+      const timeVal=ev.news[0]?.time||'';
+      // 多源确认
+      const srcCount=ev.sources.length;
+      const multiSrcBadge=srcCount>=2?`<span class="multi-src">多源确认 · ${srcCount}家媒体</span>`:'';
+      // 来源标签列表
+      const sourceColors={
+        '财联社':'#dc2626','金十数据':'#b45309','华尔街见闻':'#7c3aed',
+        '同花顺':'#ea580c','第一财经':'#7c3aed','官方':'#b45309'
+      };
+      const sourcesHtml=ev.sources.slice(0,5).map(s=>
+        `<span style="font-size:10px;display:inline-flex;align-items:center;gap:3px">
+          <span style="width:5px;height:5px;border-radius:50%;background:${sourceColors[s]||'#94a3b8'};display:inline-block"></span>${safe(s)}
+        </span>`
+      ).join(' · ');
+
+      // 影响板块（带涨跌幅）
+      let sectorsHtml='';
+      if(ev.sectors.length){
+        const secData=ev.sectors.map(name=>{
+          const found=state.sectors.find(s=>s.name===name);
+          return {name, change:found?.change, flow:found?.flow};
+        }).filter(Boolean);
+        if(secData.length){
+          sectorsHtml='<div class="news-event-sectors">影响板块：'+secData.map(s=>{
+            const dirCls=s.change>0?'up':(s.change<0?'down':'');
+            const arrow=s.change>0?'↑':(s.change<0?'↓':'');
+            return `<span class="news-event-sector ${dirCls}">${safe(s.name)} ${arrow}${s.change!=null?fmtPct(s.change):''}</span>`;
+          }).join('')+'</div>';
+        }
       }
 
-      if(heroMode){
-        // 头条新闻默认展开深度和情绪
-        const eventTag=n.multiSource&&n.eventLabel?`<div class="news-event-tag ${n.topic}">📌 ${safe(n.eventLabel)}</div>`:'';
-        const eventImpact=n.multiSource&&n.impactSectors&&n.impactSectors.length?`<div class="news-event-impact">${n.impactSectors.slice(0,4).map(s=>{
-          const sd=state.sectors.find(x=>x.name===s);
-          const ch=sd&&sd.change!=null?sd.change:0;
-          return `<span class="news-impact-tag ${ch>=0?'up':'down'}">${safe(s)} ${ch>=0?'↑':'↓'}</span>`;
-        }).join('')}</div>`:'';
-        const eventFlow=n.multiSource&&n.impactFlow?`<div style="font-size:10px;color:var(--text-sec);margin-top:4px">相关资金：${safe(n.impactFlow)}</div>`:'';
-        const eventAlert=n.multiSource&&portfolioMatch.affect?`<div class="news-event-fund-alert">⚠️ 你的持仓基金可能受到影响</div>`:'';
-        return `<div class="news-feature">
-          ${eventTag}
-          <div class="news-meta">
-            <span class="news-time">${timeVal}</span>
-            ${sourceBadge}
-            <span class="news-topic">${safe(n.topic)}</span>
-          </div>
-          <div class="news-title">${title}</div>
-          ${summaryHtml}
-          ${sourcesDetail}
-          ${eventImpact}
-          ${eventFlow}
-          ${eventAlert}
-          ${resonanceHtml}
-          ${relatedHtml}
-          ${aiHtml}
-          ${deepItems.length?deepHtml:''}
-          ${sentData.matched&&sentData.matched.length?sentimentHtml:''}
-        </div>`;
-      }else{
-        return `<div class="news-item">
-          <div class="news-meta">
-            <span class="news-time">${timeVal}</span>
-            ${sourceBadge}
-            <span class="news-topic">${safe(n.topic)}</span>
-          </div>
-          <div class="news-title">${title}</div>
-          ${summaryHtml}
-          ${sourcesDetail}
-          ${resonanceHtml}
-          ${relatedHtml}
-          ${aiHtml}
-          ${tiersHtml}
-        </div>`;
+      // 资金：相关板块资金净流入合计
+      let flowHtml='';
+      if(ev.sectors.length){
+        const totalFlow=ev.sectors.reduce((sum,name)=>{
+          const found=state.sectors.find(s=>s.name===name);
+          return sum+(found?.flow||0);
+        },0);
+        if(totalFlow!==0){
+          const flowDir=totalFlow>0?'+':'';
+          flowHtml=`<div class="news-event-flow">资金：<b>${flowDir}${fmtYi(totalFlow)}</b>（相关板块合计）</div>`;
+        }
       }
+
+      // 我的持仓关联
+      let portfolioHtml='';
+      if(state.portfolio&&state.portfolio.length){
+        const relatedFunds=[];
+        for(const n of ev.news){
+          const m=matchNewsWithPortfolio(n);
+          if(m.affect){
+            for(const f of m.funds){
+              if(!relatedFunds.find(x=>x.code===f.code)) relatedFunds.push(f);
+            }
+          }
+        }
+        if(relatedFunds.length){
+          portfolioHtml=`<div class="news-event-portfolio">⚠️ ${relatedFunds.length}只持仓基金可能受到影响：${relatedFunds.slice(0,3).map(f=>safe(f.name.slice(0,8))).join('、')}</div>`;
+        }
+      }
+
+      // 事件内新闻列表
+      const newsListHtml=ev.news.map((n,i)=>itemHtml(n,i)).join('');
+
+      // 事件头部
+      const evBreaking=ev.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
+      const headHtml=`
+        <div class="news-event-head" data-event-toggle="${ev.event_id}">
+          <div class="news-event-title">
+            ${evBreaking?'<span class="news-breaking">⚡突发</span>':''}
+            <span class="event-tag">${safe(ev.title)}</span>
+            <span class="news-event-toggle">${isHero?'收起 ▲':'展开 ▼'}</span>
+          </div>
+          <div class="news-event-meta">
+            <span>${safe(timeVal)}</span>
+            ${multiSrcBadge}
+            <span>${sourcesHtml}</span>
+          </div>
+          ${sectorsHtml}
+          ${flowHtml}
+          ${portfolioHtml}
+        </div>
+      `;
+
+      // 事件主体（新闻列表）
+      const bodyHtml=`
+        <div class="news-event-body" data-event-body="${ev.event_id}">
+          ${newsListHtml}
+        </div>
+      `;
+
+      const cls=isHero?'news-event hero':'news-event';
+      return `<div class="${cls}" data-event-id="${ev.event_id}">${headHtml}${bodyHtml}</div>`;
     };
-    listEl.innerHTML=itemHtml(hero,0,true)+rest.map((n,i)=>itemHtml(n,i+1,false)).join('');
+
+    // 渲染所有事件（前5个展开，第6个以后折叠）
+    const [heroEvent,...restEvents]=events;
+    let html=renderEvent(heroEvent,0,true);
+    html+=restEvents.slice(0,9).map((ev,i)=>{
+      const isExpanded=i<4; // 第2-5个事件（索引1-4）也展开
+      const evHtml=renderEvent(ev,i+1,false);
+      if(isExpanded){
+        return evHtml.replace('class="news-event"','class="news-event open"').replace('展开 ▼','收起 ▲');
+      }
+      return evHtml;
+    }).join('');
+    listEl.innerHTML=html;
+
+    // 绑定事件展开/折叠
+    listEl.querySelectorAll('[data-event-toggle]').forEach(head=>{
+      head.addEventListener('click',()=>{
+        const eventEl=head.closest('.news-event');
+        if(!eventEl) return;
+        eventEl.classList.toggle('open');
+        const toggle=head.querySelector('.news-event-toggle');
+        if(toggle){
+          toggle.textContent=eventEl.classList.contains('open')?'收起 ▲':'展开 ▼';
+        }
+      });
+    });
+
+    // 绑定AI解读展开/收起
+    listEl.querySelectorAll('[data-ai-expand]').forEach(btn=>{
+      btn.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        const idx=btn.dataset.aiExpand;
+        const detail=listEl.querySelector(`[data-ai-detail="${idx}"]`);
+        if(!detail) return;
+        const isOpen=detail.style.display!=='none';
+        detail.style.display=isOpen?'none':'block';
+        btn.textContent=isOpen?'展开 ▼':'收起 ▲';
+      });
+    });
   }
   // 更新时间
   const updTimeEl=$('newsUpdateTime');
@@ -4254,6 +4582,76 @@ function renderNews(filter){
   document.querySelectorAll('.news-filter').forEach(b=>{
     b.classList.toggle('active',(b.dataset.newsFilter||'all')===filter);
   });
+  // 生成AI综合解读
+  renderAISummary();
+}
+
+/* ============================================================
+ * AI综合解读：整体判读 + 仓位 + 利好利空 + 操作提示
+ * 汇总全天所有新闻，结合持仓、行情、资金数据，生成专业解读
+ * ============================================================ */
+function renderAISummary(){
+  var el=$('aiSummary');
+  if(!el) return;
+  var all=state.news;
+  if(!all||!all.length){el.style.display='none';return;}
+  el.style.display='block';
+
+  var allText=all.map(function(n,i){return '新闻'+i+': '+n.title+' '+n.summary;}).join(' | ');
+  var t=allText.toLowerCase();
+
+  // 统计多空新闻数量
+  var upCount=0,downCount=0;
+  all.forEach(function(n){
+    if(/涨|升|冲|新高|突破|反弹|回暖|翻红/i.test(n.title||'')) upCount++;
+    if(/跌|跌|回|崩|跳水|绿色|暴跌|下挫/i.test(n.title||'')) downCount++;
+  });
+
+  // ① 新闻催化：新闻条数 + 情绪倾向
+  var newsCount=all.length;
+  var newsLabel=newsCount+'条';
+  setInner($('sumNews'),newsLabel);
+
+  // ② 政策支持：政策新闻条数
+  var policyNews=all.filter(function(n){return /政策|国务院|央行|财政部|证监会|发改委|工信部|监管|降准|降息|LPR|MLF|国常会|补贴|支持|规划/.test(n.title||'');});
+  var policyLabel=policyNews.length+'条';
+  setInner($('sumPolicy'),policyLabel);
+
+  // ③ 外围共振：外围新闻条数
+  var globalNews=all.filter(function(n){return /美股|美联储|美元|黄金|原油|纳指|标普|道指|外围|国际|地缘|港股|恒生/.test(n.title||'');});
+  var globalLabel=globalNews.length?(globalNews.length+'条'):'暂无';
+  setInner($('sumGlobal'),globalLabel);
+
+  // ④ 综合判断：基于多空比例
+  var verdict='中性震荡';
+  if(upCount>downCount*2){
+    verdict='偏利好';
+  }else if(upCount>downCount){
+    verdict='温和偏多';
+  }else if(downCount>upCount*2){
+    verdict='偏利空';
+  }else if(downCount>upCount){
+    verdict='温和偏空';
+  }
+  setInner($('sumVerdict'),verdict);
+
+  // 详细解读（大白话）
+  var detail='';
+  if(upCount>downCount*2){
+    detail='今天消息面偏暖，'+upCount+'条新闻偏积极，科技和成长方向是主角。政策面有'+policyNews.length+'条相关消息支撑。整体看是稳中有升的态势，但别太乐观，板块分化还在。建议：手里有强势方向的可以拿住，没买的等回调再进。';
+  }else if(downCount>upCount*2){
+    detail='今天消息面偏冷，'+downCount+'条新闻偏负面，市场情绪偏谨慎。外围也有'+globalNews.length+'条相关消息。不过也不用太慌，结构性机会还在，只是赚钱难度变大了。建议：先控制仓位，别急着抄底，等企稳信号。';
+  }else{
+    detail='今天消息面多空交织，涨跌新闻各半。有涨的板块在发力，也有跌的板块在拖后腿。政策面有'+policyNews.length+'条消息，外围有'+globalNews.length+'条消息。整体属于"温吞水"行情，板块之间分化明显。建议：多看少动，维持中性仓位，等方向明确。';
+  }
+  if(/风险|预警|利空|暴雷|监管|处罚|调查/i.test(t)){
+    detail+='⚠️ 当前有风险信号，注意控制仓位。';
+  }
+  setInner($('sumDetail'),detail);
+}
+
+function setInner(el,text){
+  if(el) el.textContent=text;
 }
 
 /* ============================================================
@@ -4330,7 +4728,7 @@ async function explainNewsBatch(){
     const cached=state.newsAI[cacheKey];
     if(cached&&now-cached.time<AI_CACHE_MS){
       n.ai=cached.data; // 使用缓存
-    }else if(i<8){ // 只对前8条重要新闻调用AI，省token
+    }else if(i<10){ // 只对前10条调用AI，省token
       needAI.push({index:i, news:n});
       newsToFetch.push({
         id:i+1,
@@ -4348,42 +4746,53 @@ async function explainNewsBatch(){
     return;
   }
 
-  const prompt=`你是给普通老百姓讲财经新闻的人。用最接地气的大白话，像跟邻居聊天一样，小学文化的人也能听懂。
-严禁编造、严禁把相关性说成因果、严禁凭标题断言资金流向。
+  const prompt=`你扮演一个给普通老百姓讲财经的邻居大叔。说话要像聊天一样自然，不许用任何专业术语。
+不许说"流动性""估值""戴维斯双击""非农就业""承压""受益""共振""提振""边际""仓位"这些词。
+如果非要解释概念，必须用生活中的例子打比方，比如拿买菜、发工资、开小店来比喻。
 
-每条新闻只输出一句话解读，格式："大白话翻译 + 对老百姓基金的影响"。
-比如："央行又降息了，钱存银行利息更少了，对基金是好事"。
-比如："芯片被限制了，相关基金可能要跌，注意一下"。
-比如："美股涨了，但跟咱们基金关系不大，看看就行"。
+每条新闻按下面这个格式写，一共5段：
+
+1. 一句话总结：先用一句大白话说清楚这条新闻到底讲了啥事，就像跟朋友在饭桌上随口说那样。
+2. 对我有啥影响：告诉我这件事对我的股票账户、买的基金、每个月的钱袋子，到底是好事还是坏事。说清楚就行，不用绕弯子。
+3. 为什么重要：用一个最简单的理由说明为啥这事值得我关心。
+4. 我该怎么办：给我一个具体、能操作的建议。
+5. 最后一句总结：用一句话把整件事对我的钱包意味着什么说清楚。
 
 要求：
-- 严禁用"央行货币政策操作""市场情绪修复""风险偏好提升"这种官话
-- 必须用"钱变多了/变少了""涨/跌""好事/坏事"这种大白话
-- 如果看不出影响就说"暂时看不出来，等几天再说"
-- 每条不超过50字
+- 每段话不超过3句话。
+- 全部用短句子，像平时唠嗑一样。
+- 禁止用括号、星号、表情符号。
+- 用"可能""多半""说不定"，别说死。
+- 如果新闻太复杂，就挑最重要的一两点说，其他不讲。宁可少说，不能把人讲晕。
 
-必须输出JSON数组，字段：id, oneLiner。
+必须输出JSON数组，每条的字段：id, summary, impact, why, action, final
 
 ${JSON.stringify(newsToFetch)}`;
 
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是给老百姓讲财经新闻的人。用最土的大白话说，像村口大爷聊天一样。小学文化也能听懂。证据不足就说看不出来，别装懂，别编行情和资金数据。'},
+      {role:'system',content:'你是一个邻居大叔，给老百姓用大白话讲财经新闻。不用专业词，用生活比喻，每条分5段：一句话总结、对我有啥影响、为什么重要、该怎么办、最后总结。'},
       {role:'user',content:prompt}
     ], getDSModel());
     
     const parsed=JSON.parse(r);
     const arr=Array.isArray(parsed)?parsed:(parsed.items||parsed.data||[]);
-    const map=new Map(arr.map(x=>[Number(x.id), {oneLiner:String(x.oneLiner||x.fact||''), fact:String(x.fact||''), market:String(x.market||''), judge:String(x.judge||'')}]));
+    const map=new Map(arr.map(x=>[Number(x.id), {
+      summary: String(x.summary||x.text||'').trim(),
+      impact: String(x.impact||'').trim(),
+      why: String(x.why||'').trim(),
+      action: String(x.action||'').trim(),
+      final: String(x.final||'').trim(),
+      text: String(x.summary||x.text||'').trim()
+    }]));
     
     needAI.forEach((item,idx)=>{
       const aiData=map.get(idx+1);
-      if(aiData&&(aiData.oneLiner||aiData.fact)){
-        const result={oneLiner:aiData.oneLiner, fact:aiData.fact, market:aiData.market, judge:aiData.judge};
-        state.news[item.index].ai=result;
+      if(aiData&&aiData.summary){
+        state.news[item.index].ai=aiData;
         // 写入缓存
         const cacheKey=newsAICacheKey(item.news);
-        state.newsAI[cacheKey]={data:result, time:now};
+        state.newsAI[cacheKey]={data:aiData, time:now};
       }else{
         // AI返回无效，用规则版
         state.news[item.index].ai=ruleExplain(item.news.title, item.news.summary, item.news);
@@ -4401,93 +4810,270 @@ ${JSON.stringify(newsToFetch)}`;
  * AI 综合解读
  * ============================================================ */
 function evidenceAI(){
+  // 顶部周末提示条
+  const hwb=$('headerWeekendBanner');
+  if(hwb) hwb.style.display=isWeekend()?'block':'none';
   const vals=state.sectors.filter(x=>x.available);
-  const ctx=state.context;
   const news=[...state.news,...state.global];
   const strong=vals.filter(x=>x.change>0&&x.flow>0).sort((a,b)=>b.flow-a.flow).slice(0,3);
   const weak=vals.filter(x=>x.change<0&&x.flow<0).sort((a,b)=>a.flow-b.flow).slice(0,3);
-  const fund=state.portfolio.map(p=>state.funds[p.code]).find(x=>x?.metrics);
-  const enough=vals.length>=5&&news.length>=3;
-  const q=state.marketOrder;
   const idx=state.indices;
+  const q=state.marketOrder;
+  const weekend=isWeekend();
 
-  // ① 发生了什么
-  const idxTxt=idx.length?idx.map(x=>`${safe(x.name)}${x.pct!=null?fmtPct(x.pct):'—'}`).join('｜'):'指数数据缺失';
-  const avg=vals.length?vals.reduce((a,x)=>a+(x.change||0),0)/vals.length:0;
-  const step1=vals.length?`科技板块平均${fmtPct(avg)}，${idxTxt}`:'数据不足';
-  const step1Ev=vals.length?`证据：${vals.filter(x=>x.available).length}个板块 · ${idx.length}个指数 · 更新${timeStr()}`:'证据不足';
-  setAI('aiStep1',step1);setAI('aiStep1Evidence',step1Ev);
-  setAI('aiStep1b',step1);setAI('aiStep1bEvidence',step1Ev);
-
-  // ② 市场有没有反应
-  const upS=vals.filter(x=>x.change>0).length;
-  const step2=vals.length?`${upS}涨${vals.length-upS}跌，平均${fmtPct(avg)}。${strong.length?'强势：'+strong.map(x=>safe(x.name)+' '+fmtYi(x.flow)).join('；'):'暂无明显共振'}`:'板块数据不足';
-  const step2Ev=vals.length?`证据：涨幅最大${strong[0]?safe(strong[0].name)+' '+fmtPct(strong[0].change):'—'} · 跌幅最大${weak[0]?safe(weak[0].name)+' '+fmtPct(weak[0].change):'—'}`:'证据不足';
-  setAI('aiStep2',step2);setAI('aiStep2Evidence',step2Ev);
-  setAI('aiStep2b',step2);setAI('aiStep2bEvidence',step2Ev);
-  setAI('aiSector2',vals.length?`平均${fmtPct(avg)}。${strong.length?'资金流入：'+strong.map(x=>safe(x.name)).join('、'):'暂无'}。${weak.length?'流出：'+weak.map(x=>safe(x.name)).join('、'):''}`:'板块数据不足');
-
-  // ③ 资金有没有确认
-  const step3=q?`大资金净${q.main>=0?'流入':'流出'}${fmtYi(Math.abs(q.main))}，小资金净${q.small>=0?'流入':'流出'}${fmtYi(Math.abs(q.small))}`:'资金数据不足';
-  const step3Ev=q?`证据：超大单${fmtYi(q.super||0)} · 大单${fmtYi(q.large||0)} · 中小单${fmtYi(q.small||0)} · 来源：${safe(state.source.marketOrder||'—')}`:'证据不足';
-  setAI('aiStep3',step3);setAI('aiStep3Evidence',step3Ev);
-  setAI('aiStep3b',step3);setAI('aiStep3bEvidence',step3Ev);
-
-  // ④ 新闻有没有催化
-  const techNews=state.news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title)).slice(0,3);
-  const step4=news.length?`已读取${news.length}条资讯${techNews.length?'，其中'+techNews.length+'条科技相关':''}`:'资讯源暂不可用';
-  const step4Ev=techNews.length?`证据：${techNews.slice(0,2).map(n=>'• '+safe(n.title).slice(0,20)).join(' ')}`:'暂无科技新闻';
-  setAI('aiStep4',step4);setAI('aiStep4Evidence',step4Ev);
-  setAI('aiStep4b',step4);setAI('aiStep4bEvidence',step4Ev);
-
-  // ⑤ 政策有没有支持
-  const policyNews=state.news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|LPR|MLF|国常会/.test(n.title)).slice(0,3);
-  const mkNews=(title,arr)=>arr.length?`<b>${title}</b><br>${arr.map(n=>`• ${safe(n.title)} <span class="muted">(${safe(n.source||'资讯')})</span>`).join('<br>')}`:`暂无${title}`;
-  const step5=policyNews.length?mkNews('政策/宏观',policyNews):'暂无政策类新闻';
-  const step5Ev=policyNews.length?`证据：${policyNews.length}条政策新闻 · 来源：${[...new Set(policyNews.map(n=>n.source))].join('、')}`:'证据不足';
-  setAI('aiStep5',step5);setAI('aiStep5Evidence',step5Ev);
-  setAI('aiStep5b',step5);setAI('aiStep5bEvidence',step5Ev);
-  setAI('aiPolicy2',mkNews('科技要闻',techNews));
-
-  // ⑥ 外围有没有共振
-  const globalNews=state.news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|港股|恒生|外围|国际|地缘/.test(n.title)).slice(0,3);
-  const globalIdx=state.global.length?state.global.slice(0,3).map(x=>`${safe(x.name)} ${x.pct!=null?fmtPct(x.pct):'—'}`).join('；'):'';
-  const step6=globalIdx||'外围数据不足';
-  const step6Ev=state.global.length?`证据：${state.global.slice(0,4).map(x=>safe(x.name)+' '+(x.pct!=null?fmtPct(x.pct):'—')).join(' · ')}`:'证据不足';
-  setAI('aiStep6',step6);setAI('aiStep6Evidence',step6Ev);
-  setAI('aiStep6b',step6);setAI('aiStep6bEvidence',step6Ev);
-  setAI('aiGlobal2',state.global.length?state.global.slice(0,4).map(x=>`${safe(x.name)} ${x.pct!=null?fmtPct(x.pct):'—'}`).join(' · '):'外围数据不足');
-
-  // 基金机会
-  if(fund?.metrics){
-    setAI('aiFund',`${safe(fund.name)}：${safe(fund.metrics.band)}，趋势${safe(fund.metrics.trend)}。${safe(fund.metrics.combo)}`);
+  // ========== ① 发生了什么：指数 + 板块涨跌幅 ==========
+  let step1='';
+  if(idx.length){
+    const idxList=idx.map(x=>`${safe(x.name)} <b>${x.pct!=null?fmtPct(x.pct):'暂无'}</b>`).join('｜');
+    step1=idxList;
   }else{
-    setAI('aiFund','暂无持仓基金数据');
+    step1=weekend?'周末休市，指数暂无更新':'指数数据暂无';
+  }
+  if(vals.length){
+    const avg=vals.reduce((a,x)=>a+(x.change||0),0)/vals.length;
+    const upS=vals.filter(x=>x.change>0).length;
+    step1+=`<br>板块：${upS}涨${vals.length-upS}跌，平均 <b>${fmtPct(avg)}</b>`;
+    if(strong.length) step1+=`；最强：${strong.map(x=>safe(x.name)+' '+fmtPct(x.change)).join('、')}`;
+  }
+  setAI('aiStep1',step1);
+  // 证据行
+  if(vals.length){
+    const avg=vals.reduce((a,x)=>a+(x.change||0),0)/vals.length;
+    setAI('aiStep1Evidence',`板块平均 ${avg>=0?'+':''}${avg.toFixed(2)}% · ${vals.filter(x=>x.change>0).length}涨${vals.filter(x=>x.change<0).length}跌`);
+  }else{
+    setAI('aiStep1Evidence','暂无板块数据');
   }
 
-  // 组合风险
-  if(state.portfolio.length){
-    const funds=state.portfolio.map(p=>state.funds[p.code]).filter(Boolean);
-    const highBand=funds.filter(f=>f.metrics&&f.metrics.bandScore<=45).length;
-    setAI('aiComboRisk',`持仓${state.portfolio.length}只，${highBand}只处于高位区。${highBand>=state.portfolio.length*0.5?'注意回撤风险':'组合风险可控'}`);
+  // ========== ② 市场有没有反应：板块表现 + 成交量变化 ==========
+  let step2='';
+  if(vals.length){
+    if(strong.length>=2){
+      step2=`市场有明显反应，<b>${strong.length}</b>个板块量价齐升。<br>`;
+      step2+=strong.map(x=>`${safe(x.name)} <b>${fmtPct(x.change)}</b>`).join(' · ');
+    }else if(weak.length>=2){
+      step2=`市场反应偏冷，<b>${weak.length}</b>个板块量价齐跌。<br>`;
+      step2+=weak.map(x=>`${safe(x.name)} <b>${fmtPct(x.change)}</b>`).join(' · ');
+    }else{
+      step2='市场反应平淡，涨跌分化，暂无明确主线。';
+    }
   }else{
-    setAI('aiComboRisk','暂无持仓，无法分析组合风险');
+    step2=weekend?'周末休市，暂无行情反应':'板块数据暂无';
+  }
+  // 成交量（如果有数据的话）
+  let volText='暂无';
+  if(q&&q.volume){
+    volText=fmtYi(q.volume)+'元';
+    step2+=`<br>成交额：<b>${fmtYi(q.volume)}</b>`;
+  }
+  setAI('aiStep2',step2);
+  // 证据行
+  setAI('aiStep2Evidence',`强势 ${strong.length}个 · 弱势 ${weak.length}个 · 成交 ${volText}`);
+
+  // ========== ③ 资金有没有确认：大资金流向 + 订单结构 ==========
+  let step3='';
+  if(q){
+    const mainDir=q.main>=0?'净流入':'净流出';
+    const mainVal=fmtYi(Math.abs(q.main));
+    step3=`大资金<b>${mainDir} ${mainVal}</b>`;
+    // 订单结构
+    if(q.super!=null||q.large!=null||q.mid!=null||q.small!=null){
+      step3+='<br>订单结构：';
+      const parts=[];
+      if(q.super!=null) parts.push(`超大单${q.super>=0?'+':''}${fmtYi(q.super)}`);
+      if(q.large!=null) parts.push(`大单${q.large>=0?'+':''}${fmtYi(q.large)}`);
+      if(q.mid!=null) parts.push(`中单${q.mid>=0?'+':''}${fmtYi(q.mid)}`);
+      if(q.small!=null) parts.push(`小单${q.small>=0?'+':''}${fmtYi(q.small)}`);
+      step3+=parts.join('｜');
+    }
+    // 资金确认度
+    if(q.main>0&&strong.length>=2){
+      step3+='<br><b>✅ 资金确认度高</b>：大资金流入 + 多板块上涨共振';
+    }else if(q.main<0&&weak.length>=2){
+      step3+='<br><b>⚠️ 资金确认出逃</b>：大资金流出 + 多板块下跌共振';
+    }else{
+      step3+='<br><b>🔄 资金分歧</b>：大资金与板块方向不一致，需观察';
+    }
+  }else{
+    step3=weekend?'周末休市，暂无资金数据':'资金数据暂无';
+  }
+  setAI('aiStep3',step3);
+  // 证据行
+  if(q){
+    const flowDir=q.main>=0?'+':'';
+    setAI('aiStep3Evidence',`大资金 ${flowDir}${fmtYi(q.main)} · ${q.main>=0?'流入':'流出'}`);
+  }else{
+    setAI('aiStep3Evidence','暂无资金数据');
   }
 
-  // ⑦ 综合判断
-  let conclusion='';
-  if(isWeekend()){
-    conclusion='现在是周末，A股不开盘。先看资讯梳理和外围动向，周一开盘再确认方向。';
+  // ========== ④ 新闻有没有催化：今天相关新闻条数 ==========
+  let step4='';
+  const newsCount=state.news.length;
+  if(newsCount>0){
+    step4=`今日共 <b>${newsCount}</b> 条相关资讯`;
+    // 按主题统计
+    const techCount=state.news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title)).length;
+    const marketCount=state.news.filter(n=>/大盘|沪指|深成指|创业板|A股|股市|行情|指数/.test(n.title)).length;
+    if(techCount>0) step4+=`；科技类 <b>${techCount}</b> 条`;
+    if(marketCount>0) step4+=`；市场类 <b>${marketCount}</b> 条`;
+    // 列出最重要的1-2条
+    const topNews=state.news.slice(0,2);
+    if(topNews.length){
+      step4+='<br>核心要闻：';
+      step4+=topNews.map(n=>`• ${safe(n.title)}`).join('<br>');
+    }
   }else{
-    conclusion=enough?
-      (strong.length>=2?'今天资金和板块一起往上走，市场比较热，可以关注但别追高。':
-       weak.length>=2?'今天跌的板块多，资金也在往外跑，行情偏弱，先别急着买。':
-       '今天市场涨跌各半，钱也没明显方向，信号还不清楚，先看着。'):
-      '现在数据不够全，等一会儿刷新再看，不瞎猜。';
+    step4='暂无新闻数据';
   }
-  setAI('aiConclusion',conclusion+' 仅供参考。');
-  setAI('aiSentence',conclusion);
-  setAI('aiMarket2',conclusion+' 仅供参考。');
+  setAI('aiStep4',step4);
+  // 证据行
+  setAI('aiStep4Evidence',`资讯 ${newsCount}条 · 科技${state.news.filter(n=>/半导体|芯片|算力|AI|PCB|CPO|光模块|通信|存储|机器人|科技/.test(n.title)).length}条`);
+
+  // ========== ⑤ 政策有没有支持：政策类新闻条数 ==========
+  let step5='';
+  const policyNews=state.news.filter(n=>/政策|国务院|央行|财政部|证监会|发改委|工信部|金融监管总局|监管|降准|降息|LPR|MLF|国常会|补贴|支持|规划/.test(n.title));
+  const policyCount=policyNews.length;
+  if(policyCount>0){
+    step5=`政策面有 <b>${policyCount}</b> 条相关消息`;
+    step5+='<br>'+policyNews.slice(0,3).map(n=>`• ${safe(n.title)} <span class="muted">(${safe(n.source||'资讯')})</span>`).join('<br>');
+    if(policyCount>=3){
+      step5+='<br><b>✅ 政策支持力度较强</b>';
+    }else if(policyCount>=1){
+      step5+='<br><b>🔄 政策面有动作，关注持续性</b>';
+    }
+  }else{
+    step5='今日暂无明确政策消息';
+  }
+  setAI('aiStep5',step5);
+  // 证据行
+  setAI('aiStep5Evidence',`政策相关 ${policyCount}条 · ${policyCount>=3?'支持力度强':policyCount>=1?'有动作':'暂无'}`);
+
+  // ========== ⑥ 外围有没有共振：美股、黄金、美元、原油等 ==========
+  let step6='';
+  const globalIdx=state.global;
+  if(globalIdx.length){
+    const gl=globalIdx.slice(0,4).map(x=>`${safe(x.name)} <b>${x.pct!=null?fmtPct(x.pct):'暂无'}</b>`).join('｜');
+    step6=gl;
+  }
+  const globalNews=state.news.filter(n=>/美股|美联储|美元|黄金|原油|纳指|标普|道指|日经|港股|恒生|外围|国际|地缘/.test(n.title)).slice(0,2);
+  if(globalNews.length){
+    if(step6) step6+='<br>';
+    step6+='外围要闻：'+globalNews.map(n=>`• ${safe(n.title)}`).join('<br>');
+  }
+  if(!step6){
+    step6=weekend?'周末外围数据暂无更新':'外围数据暂无';
+  }
+  setAI('aiStep6',step6);
+  // 证据行
+  if(state.global.length){
+    const nasdaq=state.global.find(x=>/纳指|纳斯达克/i.test(x.name));
+    if(nasdaq&&nasdaq.pct!=null){
+      setAI('aiStep6Evidence',`纳指 ${nasdaq.pct>=0?'+':''}${nasdaq.pct.toFixed(2)}% · 外围 ${state.global.length}个`);
+    }else{
+      const first=state.global[0];
+      setAI('aiStep6Evidence',`${safe(first.name)} ${first.pct!=null?(first.pct>=0?'+':'')+first.pct.toFixed(2)+'%':'暂无'} · 外围 ${state.global.length}个`);
+    }
+  }else{
+    setAI('aiStep6Evidence','暂无外围数据');
+  }
+
+  // ========== ⑦ 最后判断：利好/中性/利空 + 持续性 ==========
+  let step7='';
+  let verdict='中性';
+  let duration='短期';
+  let confidence='一般';
+
+  if(weekend){
+    step7='现在是周末，A股不开盘。<br>结论：<b>中性观望</b>，等周一开盘确认方向。<br><small>周末消息面可能发酵，周一开盘波动可能加大。</small>';
+    verdict='中性观望';
+    duration='下周一确认';
+    confidence='周末模式';
+  }else{
+    // 计算多空得分
+    let bullScore=0, bearScore=0;
+    // 板块
+    if(strong.length>=2) bullScore+=2;
+    else if(strong.length===1) bullScore+=1;
+    if(weak.length>=2) bearScore+=2;
+    else if(weak.length===1) bearScore+=1;
+    // 资金
+    if(q&&q.main>0) bullScore+=2;
+    else if(q&&q.main<0) bearScore+=2;
+    // 政策
+    if(policyCount>=3) bullScore+=2;
+    else if(policyCount>=1) bullScore+=1;
+    // 新闻情绪
+    const posNews=state.news.filter(n=>/涨|升|新高|流入|利好|突破|反弹/.test(n.title)).length;
+    const negNews=state.news.filter(n=>/跌|崩|跳水|利空|制裁|冲突|暴雷|处罚/.test(n.title)).length;
+    if(posNews>negNews*2) bullScore+=1;
+    if(negNews>posNews*2) bearScore+=1;
+
+    // 判断结论
+    if(bullScore-bearScore>=3){
+      verdict='偏利好';
+      duration='短期可持续';
+      confidence='较高';
+    }else if(bullScore-bearScore>=1){
+      verdict='温和偏多';
+      duration='短期观望';
+      confidence='一般';
+    }else if(bearScore-bullScore>=3){
+      verdict='偏利空';
+      duration='中期谨慎';
+      confidence='较高';
+    }else if(bearScore-bullScore>=1){
+      verdict='温和偏空';
+      duration='短期观望';
+      confidence='一般';
+    }else{
+      verdict='中性震荡';
+      duration='方向不明';
+      confidence='一般';
+    }
+
+    step7=`综合判断：<b>${verdict}</b><br>持续性：${duration}<br>置信度：${confidence}`;
+    if(bullScore>bearScore&&strong.length){
+      step7+=`<br>关注方向：${strong.map(x=>safe(x.name)).join('、')}`;
+    }else if(bearScore>bullScore&&weak.length){
+      step7+=`<br>回避方向：${weak.map(x=>safe(x.name)).join('、')}`;
+    }
+    step7+='<br><small>仅供参考，不构成投资建议</small>';
+  }
+  setAI('aiStep7',step7);
+  setAI('aiConclusion',step7);
+
+  // ========== 证据链展开区 ==========
+  // 板块指标
+  if(vals.length){
+    const avg=vals.reduce((a,x)=>a+(x.change||0),0)/vals.length;
+    setAI('evmSector',`${avg>=0?'+':''}${avg.toFixed(2)}%`);
+  }else{
+    setAI('evmSector','暂无');
+  }
+  // 资金指标
+  if(q){
+    const flowDir=q.main>=0?'+':'';
+    setAI('evmFlow',`${flowDir}${fmtYi(q.main)}`);
+  }else{
+    setAI('evmFlow','暂无');
+  }
+  // 新闻指标
+  setAI('evmNews', newsCount>0?`${newsCount}条`:'暂无');
+  // 外围指标
+  if(globalIdx.length){
+    const nasdaq=globalIdx.find(x=>/纳指|纳斯达克/i.test(x.name));
+    if(nasdaq&&nasdaq.pct!=null){
+      setAI('evmGlobal',`纳指 ${nasdaq.pct>=0?'+':''}${nasdaq.pct.toFixed(2)}%`);
+    }else{
+      const first=globalIdx[0];
+      setAI('evmGlobal',`${safe(first.name)} ${first.pct!=null?(first.pct>=0?'+':'')+first.pct.toFixed(2)+'%':'暂无'}`);
+    }
+  }else{
+    setAI('evmGlobal','暂无');
+  }
+  // 成交量指标
+  setAI('evmVolume',volText);
+  // 综合判断
+  setAI('evmJudge',verdict);
 
   const timeStrVal='证据引擎 · '+timeStr();
   $('aiTime')&&($('aiTime').textContent=timeStrVal);
@@ -4507,7 +5093,6 @@ async function runMarketAI(){
   const news=[...state.news,...state.global].slice(0,12);
   const fund=state.portfolio.map(p=>state.funds[p.code]).filter(Boolean);
   if(!key){
-    setAI('aiConclusion','未配置 DeepSeek Key：当前只做规则证据汇总，不调用 AI。 仅供参考。');
     showToast('未配置 Key，使用规则版分析');
     return;
   }
@@ -4521,32 +5106,69 @@ async function runMarketAI(){
     news:news.map(x=>({source:x.source,title:x.title,summary:String(x.summary||'').slice(0,100)})),
     holdings:fund.map(x=>({name:x.name,code:x.code,estimate:x.estimate,pct:x.pct,metrics:x.metrics?{band:x.metrics.band,trend:x.metrics.trend,bandScore:x.metrics.bandScore,trendScore:x.metrics.trendScore,rsi:x.metrics.rsi}:null}))
   };
-  const prompt=`你是基金投研分析助手。请基于以下证据按7步分析链输出中文JSON。
-输出字段：step1(发生了什么,80字内),step2(市场有没有反应,80字内),step3(资金有没有确认,80字内),step4(新闻有没有催化,80字内),step5(政策有没有支持,80字内),step6(外围有没有共振,80字内),step7(最终判断:利好/中性/利空+持续性,100字内),confidence(0-100)。
-规则：1)每步必须先列事实数据，再说判断；2)没有证据就写"证据不足"，不编造；3)不能从单条新闻直接推断资金目的；4)不推荐具体买卖；5)不得制造不存在的数据；6)所有文字用大白话，小学文化也能看懂；7)"大资金"指超大单+大单，不等同于机构；8)第7步必须综合前6步证据才下判断。
+  const prompt=`你是基金投研分析助手。请基于以下证据，严格按照7步证据链结构输出中文JSON。
+
+必须输出的JSON字段（每步都是大白话，小学文化能懂）：
+- step1: "①发生了什么" - 用真实数据说清楚指数、板块涨跌幅，没有就写"暂无"
+- step2: "②市场有没有反应" - 板块表现、成交量变化，没有就写"暂无"
+- step3: "③资金有没有确认" - 大资金流向、超大单/大单/中单/小单结构，没有就写"暂无"
+- step4: "④新闻有没有催化" - 今天相关新闻条数，没有就写"暂无"
+- step5: "⑤政策有没有支持" - 政策类新闻条数，没有就写"暂无"
+- step6: "⑥外围有没有共振" - 美股、黄金、美元、原油等表现，没有就写"暂无"
+- step7: "⑦最后判断" - 用HTML格式，比如："综合判断：<b>偏利好</b><br>持续性：短期可持续<br>置信度：较高"
+- metrics: 证据链指标对象，字段：sector(板块平均涨跌幅，字符串如"+1.23%")、flow(大资金流向，字符串如"+18.4亿")、news(新闻条数，字符串如"12条")、global(外围核心表现，字符串如"纳指 +0.8%")、volume(成交量，字符串如"暂无"或"8500亿")、judge(综合判断结论，字符串如"偏利好")
+
+严格规则：
+1) 所有数据必须来自提供的证据，没有就写"暂无"，绝对不能编造
+2) 区分事实与推断，推断用"或""可能""短期"留余地
+3) 不能从单条新闻直接推断资金目的
+4) 用大白话，禁止官话套话
+5) 不推荐具体买卖，只给风险和观察方向
+
 证据：${JSON.stringify(evidence)}`;
   try{
     const r=await callDeepSeek([
-      {role:'system',content:'你是一名严谨、保守、可审计的基金投研助手。'},
+      {role:'system',content:'你是一名严谨、保守、可审计的基金投研助手。严格按照7步证据链结构输出，只用真实数据，没有就写"暂无"，绝不编造。'},
       {role:'user',content:prompt}
     ],getDSModel());
     const j=JSON.parse(r);
-    setAI('aiSentence',j.step1||'—');
-    setAI('aiMarket2',j.step2||'—');
-    setAI('aiFlow2',j.step3||'—');
-    setAI('aiNews',j.step4||'—');
-    setAI('aiPolicy2',j.step5||'—');
-    setAI('aiGlobal2',j.step6||'—');
-    setAI('aiConclusion',(j.step7||'—')+'  置信度 '+(Number(j.confidence)||0)+'% 仅供参考。');
+    // 填充7步证据链
+    if(j.step1) setAI('aiStep1',j.step1);
+    if(j.step2) setAI('aiStep2',j.step2);
+    if(j.step3) setAI('aiStep3',j.step3);
+    if(j.step4) setAI('aiStep4',j.step4);
+    if(j.step5) setAI('aiStep5',j.step5);
+    if(j.step6) setAI('aiStep6',j.step6);
+    if(j.step7) setAI('aiStep7',j.step7);
+    if(j.step7) setAI('aiConclusion',j.step7);
+    // 填充AI页面证据行（DeepSeek版）
+    if(j.metrics){
+      if(j.metrics.sector) setAI('aiStep1Evidence',`板块平均 ${j.metrics.sector}`);
+      if(j.metrics.flow) setAI('aiStep3Evidence',`大资金 ${j.metrics.flow}`);
+      if(j.metrics.news) setAI('aiStep4Evidence',`资讯 ${j.metrics.news}`);
+      if(j.metrics.global) setAI('aiStep6Evidence',`${j.metrics.global}`);
+      if(j.metrics.volume) setAI('aiStep2Evidence',`成交 ${j.metrics.volume}`);
+      if(j.metrics.judge) setAI('aiStep5Evidence',`综合判断：${j.metrics.judge}`);
+    }
+    // 填充证据链展开区指标
+    if(j.metrics){
+      if(j.metrics.sector) setAI('evmSector',j.metrics.sector);
+      if(j.metrics.flow) setAI('evmFlow',j.metrics.flow);
+      if(j.metrics.news) setAI('evmNews',j.metrics.news);
+      if(j.metrics.global) setAI('evmGlobal',j.metrics.global);
+      if(j.metrics.volume) setAI('evmVolume',j.metrics.volume);
+      if(j.metrics.judge) setAI('evmJudge',j.metrics.judge);
+    }
     const ts='DeepSeek · '+timeStr();
     $('aiTime')&&($('aiTime').textContent=ts);
     $('aiTime2')&&($('aiTime2').textContent=ts);
-    setDSStatus('DeepSeek 综合分析完成：仅基于当前页面已取得证据。',true);
+    setDSStatus('DeepSeek 综合分析完成：7步证据链已生成。',true);
     showToast('AI 分析完成');
   }catch(e){
-    setAI('aiConclusion','DeepSeek 综合分析失败，已保留规则证据结论：'+e.message+' 仅供参考。');
-    setDSStatus('综合分析调用失败，请检查 Key 或网络。',false);
+    setDSStatus('DeepSeek 综合分析失败（'+e.message+'），已降级为规则版证据链。',false);
     showToast('AI 分析失败，已降级为规则版');
+    // 失败时重新调用规则版确保有内容
+    evidenceAI();
   }
 }
 
@@ -4604,9 +5226,9 @@ function initEvents(){
   // 刷新按钮
   $('refreshBtn').onclick=()=>refreshAll();
   // Tab 导航
-  document.querySelectorAll('.liquid-glass-tab .tab-item').forEach(t=>{
+  document.querySelectorAll('.tabbar .tab').forEach(t=>{
     t.onclick=()=>{
-      document.querySelectorAll('.liquid-glass-tab .tab-item').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tabbar .tab').forEach(x=>x.classList.remove('active'));
       t.classList.add('active');
       const page=t.dataset.page;
       document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -4625,7 +5247,7 @@ function initEvents(){
     const b=e.target.closest('.news-filter');
     if(b)renderNews(b.dataset.newsFilter||'all');
   });
-  // 新闻层级切换（深度解读 / 散户情绪）
+  // 新闻层级切换（深度解读 / 社区情绪）
   document.addEventListener('click',e=>{
     const btn=e.target.closest('.news-tier-btn');
     if(!btn) return;
