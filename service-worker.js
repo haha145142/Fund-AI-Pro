@@ -1,7 +1,7 @@
 // Fund AI Pro · Service Worker
 // 离线策略：缓存外壳，数据显示"当前离线，数据源不可用"，绝不伪装实时数据
 
-const CACHE_NAME = 'fund-ai-pro-v3';
+const CACHE_NAME = 'fund-ai-pro-v4';
 const CACHE_URLS = ['/', '/index.html', '/manifest.json'];
 
 // 安装：缓存核心外壳
