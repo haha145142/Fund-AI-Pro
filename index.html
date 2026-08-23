@@ -1884,9 +1884,17 @@ const USE_PROXY=(()=>{
 
 /* 通用代理请求 */
 async function proxyFetchJSON(apiPath,timeout=12000){
+  // 新闻接口必须优先使用“当前网页自己的 /api/news”。
+  // 加时间戳彻底绕过浏览器/Service Worker/CDN旧缓存。
+  const raw=String(apiPath||'').replace(/^\/+/, '');
+  const sep=raw.includes('?')?'&':'?';
+  const bust='__t='+Date.now();
+  const sameOrigin='/api/'+raw+sep+bust;
+
+  // 备用地址只作为真正的跨项目兜底；不要把它当主接口。
   const endpoints=[
-    '/api/'+apiPath,
-    'https://fund-ai-pro.pages.dev/api/'+apiPath
+    sameOrigin,
+    'https://fund-ai-pro.pages.dev/api/'+raw+sep+bust
   ];
   let lastErr=null;
   for(const endpoint of endpoints){
@@ -1894,17 +1902,20 @@ async function proxyFetchJSON(apiPath,timeout=12000){
     const tid=setTimeout(()=>ctrl.abort(),timeout);
     try{
       const r=await fetch(endpoint,{
+        method:'GET',
         cache:'no-store',
-        headers:{'Accept':'application/json','Cache-Control':'no-cache'},
+        credentials:'same-origin',
+        headers:{'Accept':'application/json, text/plain, */*','Cache-Control':'no-cache, no-store, max-age=0','Pragma':'no-cache'},
         signal:ctrl.signal
       });
-      if(!r.ok) throw new Error('proxy '+r.status+' '+endpoint);
+      if(!r.ok) throw new Error('HTTP '+r.status+' '+endpoint);
       const text=await r.text();
       let data;
-      try{ data=JSON.parse(text); }catch(e){ throw new Error('非JSON响应 '+endpoint); }
+      try{ data=JSON.parse(text); }catch(e){ throw new Error('接口返回的不是 JSON：'+endpoint); }
       return data;
     }catch(e){
       lastErr=e;
+      console.warn('[API失败]',endpoint,e);
     }finally{
       clearTimeout(tid);
     }
@@ -3014,7 +3025,7 @@ async function refreshNewsOnly(force=true){
     if(!normalized.length){
       const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
       if(errStrip) errStrip.style.display='flex';
-      if(errText) errText.textContent='新闻接口暂无可用数据，保留最近一次成功数据';
+      if(errText) errText.textContent='新闻接口暂时没有返回有效数据，保留最近一次成功数据';
       updateNewsEvidence(); return;
     }
     const junk=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|奥运|世界杯|彩票|赌博|色情|低俗)/i;
@@ -3051,7 +3062,7 @@ async function refreshNewsOnly(force=true){
     console.error('refreshNews error:',e);
     const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
     if(errStrip) errStrip.style.display='flex';
-    if(errText) errText.textContent='新闻接口暂时不可用，正在切换备用接口';
+    if(errText) errText.textContent='新闻接口连接失败，正在重试当前站点接口';
     updateNewsEvidence();
   }finally{
     state._newsLoading=false;
@@ -5754,8 +5765,17 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&isTradeTi
 
 // 注册 Service Worker（PWA 离线支持）
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+  window.addEventListener('load',async()=>{
+    try{
+      // 新闻接口不能被旧 Service Worker 缓存；先注销旧 SW，再注册新版本。
+      const regs=await navigator.serviceWorker.getRegistrations();
+      for(const reg of regs){ await reg.unregister(); }
+      if('caches' in window){
+        const keys=await caches.keys();
+        for(const key of keys){ await caches.delete(key); }
+      }
+    }catch(e){}
+    try{ navigator.serviceWorker.register('/service-worker.js?v='+Date.now()).catch(()=>{}); }catch(e){}
   });
 }
 
