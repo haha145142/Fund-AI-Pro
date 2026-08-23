@@ -653,6 +653,19 @@ table td b{font-weight:700}
 
 /* ===== 新闻事件聚类 ===== */
 .news-event{position:relative;margin-bottom:12px;border-radius:16px;border:1px solid rgba(130,175,225,.18);overflow:hidden;background:linear-gradient(145deg,rgba(248,251,255,.7),rgba(245,249,255,.6));backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);box-shadow:0 8px 24px rgba(20,60,110,.05),inset 0 1px 0 rgba(255,255,255,.9);transition:box-shadow .2s ease}
+
+/* 平铺新闻卡片 */
+.news-flat-card{padding:12px 14px;margin-bottom:10px;border-radius:14px;border:1px solid rgba(130,175,225,.15);background:linear-gradient(145deg,rgba(248,251,255,.75),rgba(244,249,255,.65));backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);box-shadow:0 6px 20px rgba(20,60,110,.04),inset 0 1px 0 rgba(255,255,255,.92);position:relative;overflow:hidden}
+.news-flat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:14px 14px 0 0}
+.news-flat-card.breaking{border-color:rgba(220,38,38,.3);background:linear-gradient(145deg,rgba(255,248,248,.8),rgba(255,242,242,.7));box-shadow:0 6px 20px rgba(220,38,38,.06),inset 0 1px 0 rgba(255,255,255,.92)}
+.news-flat-card.breaking::before{background:linear-gradient(180deg,rgba(255,230,230,.5) 0%,rgba(255,255,255,0) 100%)}
+.news-flat-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;position:relative;z-index:1}
+.news-flat-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:4px;position:relative;z-index:1}
+.news-flat-title a{color:var(--text);text-decoration:none}
+.news-flat-card .news-summary{font-size:11px;color:var(--text-sec);line-height:1.5;margin-bottom:4px;position:relative;z-index:1}
+.news-flat-card .news-ai{position:relative;z-index:1;margin-top:4px}
+.news-flat-card .news-event-sectors{position:relative;z-index:1;margin-top:4px}
+.news-flat-card .news-event-portfolio{position:relative;z-index:1;margin-top:4px}
 .news-event::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,0) 100%);pointer-events:none;border-radius:16px 16px 0 0}
 .news-event.hero{background:linear-gradient(145deg,rgba(240,248,255,.9),rgba(230,242,255,.82));border-color:rgba(10,132,255,.3);box-shadow:0 14px 40px rgba(10,100,200,.10),inset 0 1.5px 0 rgba(255,255,255,.98)}
 .news-event.hero::before{background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(255,255,255,.05) 100%);height:60%}
@@ -4468,18 +4481,7 @@ function renderNews(filter){
   if(!list.length){
     listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>'+(state.news.length?'暂未筛选出与资金共振的资讯，稍后刷新再看看':'当前分类暂无与资金共振的资讯')+'</div>';
   }else{
-    // === 事件聚类 ===
-    let events=clusterNewsEvents(list);
-    // 突发新闻优先级提升：含突发新闻的事件排到前面
-    events.sort((a,b)=>{
-      const aBreaking=a.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
-      const bBreaking=b.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
-      if(aBreaking&&!bBreaking) return -1;
-      if(!aBreaking&&bBreaking) return 1;
-      return 0;
-    });
-
-    // 单条新闻渲染（事件内部使用）
+    // 单条新闻渲染（平铺列表，不折叠）
     const itemHtml=(n,i)=>{
       const cls=sourceClass(n.source);
       const tierCls=sourceTierClass(n.source||(n.sources&&n.sources[0]||''));
@@ -4497,7 +4499,7 @@ function renderNews(filter){
         sourceBadge=`<span class="news-source ${cls}">${safe(srcName)}</span><span class="news-tier ${tierCls}">${safe(tierLabel)}</span>`;
       }
       if(isBreaking) sourceBadge+=`<span class="news-breaking">⚡突发</span>`;
-      // AI解读（邻居大叔四步版）
+      // AI解读（一句话大白话）
       let aiHtml='';
       if(n.ai){
         const aiObj=typeof n.ai==='object'?n.ai:{summary:String(n.ai), text:String(n.ai)};
@@ -4507,142 +4509,43 @@ function renderNews(filter){
         }
       }
       // 摘要
-      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,80)):'';
-      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>80?'…':''}</div>`:'';
-      return `<div class="news-item" style="padding:8px 0;border-bottom:1px dashed rgba(100,130,170,.08)">
-        <div class="news-meta">
+      const summaryText=n.summary?safe(String(n.summary).replace(/<[^>]+>/g,'').slice(0,100)):'';
+      const summaryHtml=summaryText?`<div class="news-summary">${summaryText}${n.summary&&n.summary.length>100?'…':''}</div>`:'';
+      // 影响板块
+      const r=n.resonanceInfo||{};
+      let sectorHtml='';
+      if(r.sectors&&r.sectors.length){
+        sectorHtml='<div class="news-event-sectors">'+r.sectors.map(s=>{
+          const found=state.sectors.find(x=>x.name===s);
+          const chg=found?.change;
+          const dirCls=chg>0?'up':(chg<0?'down':'');
+          const arrow=chg>0?'↑':(chg<0?'↓':'');
+          return `<span class="news-event-sector ${dirCls}">${safe(s)} ${arrow}${chg!=null?fmtPct(chg):''}</span>`;
+        }).join('')+'</div>';
+      }
+      // 持仓关联
+      let portfolioHtml='';
+      if(state.portfolio&&state.portfolio.length){
+        const m=matchNewsWithPortfolio(n);
+        if(m.affect&&m.funds.length){
+          portfolioHtml=`<div class="news-event-portfolio">⚠️ ${m.funds.length}只持仓基金可能受影响：${m.funds.slice(0,3).map(f=>safe(f.name.slice(0,8))).join('、')}</div>`;
+        }
+      }
+      const cardCls=isBreaking?'news-flat-card breaking':'news-flat-card';
+      return `<div class="${cardCls}">
+        <div class="news-flat-meta">
           <span class="news-time">${timeVal}</span>
           ${sourceBadge}
         </div>
-        <div class="news-title" style="font-size:12px;font-weight:500">${title}</div>
+        <div class="news-flat-title">${title}</div>
         ${summaryHtml}
         ${aiHtml}
+        ${sectorHtml}
+        ${portfolioHtml}
       </div>`;
     };
 
-    // 事件渲染
-    const renderEvent=(ev,idx,isHero)=>{
-      // 事件时间（用最新的那条新闻时间）
-      const timeVal=ev.news[0]?.time||'';
-      // 多源确认
-      const srcCount=ev.sources.length;
-      const multiSrcBadge=srcCount>=2?`<span class="multi-src">多源确认 · ${srcCount}家媒体</span>`:'';
-      // 来源标签列表
-      const sourceColors={
-        '财联社':'#dc2626','金十数据':'#b45309','华尔街见闻':'#7c3aed',
-        '同花顺':'#ea580c','第一财经':'#7c3aed','官方':'#b45309'
-      };
-      const sourcesHtml=ev.sources.slice(0,5).map(s=>
-        `<span style="font-size:10px;display:inline-flex;align-items:center;gap:3px">
-          <span style="width:5px;height:5px;border-radius:50%;background:${sourceColors[s]||'#94a3b8'};display:inline-block"></span>${safe(s)}
-        </span>`
-      ).join(' · ');
-
-      // 影响板块（带涨跌幅）
-      let sectorsHtml='';
-      if(ev.sectors.length){
-        const secData=ev.sectors.map(name=>{
-          const found=state.sectors.find(s=>s.name===name);
-          return {name, change:found?.change, flow:found?.flow};
-        }).filter(Boolean);
-        if(secData.length){
-          sectorsHtml='<div class="news-event-sectors">影响板块：'+secData.map(s=>{
-            const dirCls=s.change>0?'up':(s.change<0?'down':'');
-            const arrow=s.change>0?'↑':(s.change<0?'↓':'');
-            return `<span class="news-event-sector ${dirCls}">${safe(s.name)} ${arrow}${s.change!=null?fmtPct(s.change):''}</span>`;
-          }).join('')+'</div>';
-        }
-      }
-
-      // 资金：相关板块资金净流入合计
-      let flowHtml='';
-      if(ev.sectors.length){
-        const totalFlow=ev.sectors.reduce((sum,name)=>{
-          const found=state.sectors.find(s=>s.name===name);
-          return sum+(found?.flow||0);
-        },0);
-        if(totalFlow!==0){
-          const flowDir=totalFlow>0?'+':'';
-          flowHtml=`<div class="news-event-flow">资金：<b>${flowDir}${fmtYi(totalFlow)}</b>（相关板块合计）</div>`;
-        }
-      }
-
-      // 我的持仓关联
-      let portfolioHtml='';
-      if(state.portfolio&&state.portfolio.length){
-        const relatedFunds=[];
-        for(const n of ev.news){
-          const m=matchNewsWithPortfolio(n);
-          if(m.affect){
-            for(const f of m.funds){
-              if(!relatedFunds.find(x=>x.code===f.code)) relatedFunds.push(f);
-            }
-          }
-        }
-        if(relatedFunds.length){
-          portfolioHtml=`<div class="news-event-portfolio">⚠️ ${relatedFunds.length}只持仓基金可能受到影响：${relatedFunds.slice(0,3).map(f=>safe(f.name.slice(0,8))).join('、')}</div>`;
-        }
-      }
-
-      // 事件内新闻列表
-      const newsListHtml=ev.news.map((n,i)=>itemHtml(n,i)).join('');
-
-      // 事件头部
-      const evBreaking=ev.news.some(n=>/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(n.title||''));
-      const headHtml=`
-        <div class="news-event-head" data-event-toggle="${ev.event_id}">
-          <div class="news-event-title">
-            ${evBreaking?'<span class="news-breaking">⚡突发</span>':''}
-            <span class="event-tag">${safe(ev.title)}</span>
-            <span class="news-event-toggle">${isHero?'收起 ▲':'展开 ▼'}</span>
-          </div>
-          <div class="news-event-meta">
-            <span>${safe(timeVal)}</span>
-            ${multiSrcBadge}
-            <span>${sourcesHtml}</span>
-          </div>
-          ${sectorsHtml}
-          ${flowHtml}
-          ${portfolioHtml}
-        </div>
-      `;
-
-      // 事件主体（新闻列表）
-      const bodyHtml=`
-        <div class="news-event-body" data-event-body="${ev.event_id}">
-          ${newsListHtml}
-        </div>
-      `;
-
-      const cls=isHero?'news-event hero':'news-event';
-      return `<div class="${cls}" data-event-id="${ev.event_id}">${headHtml}${bodyHtml}</div>`;
-    };
-
-    // 渲染所有事件（前5个展开，第6个以后折叠）
-    const [heroEvent,...restEvents]=events;
-    let html=renderEvent(heroEvent,0,true);
-    html+=restEvents.slice(0,11).map((ev,i)=>{
-      const isExpanded=i<7; // 前8个事件默认展开（头条+第2-8个）
-      const evHtml=renderEvent(ev,i+1,false);
-      if(isExpanded){
-        return evHtml.replace('class="news-event"','class="news-event open"').replace('展开 ▼','收起 ▲');
-      }
-      return evHtml;
-    }).join('');
-    listEl.innerHTML=html;
-
-    // 绑定事件展开/折叠
-    listEl.querySelectorAll('[data-event-toggle]').forEach(head=>{
-      head.addEventListener('click',()=>{
-        const eventEl=head.closest('.news-event');
-        if(!eventEl) return;
-        eventEl.classList.toggle('open');
-        const toggle=head.querySelector('.news-event-toggle');
-        if(toggle){
-          toggle.textContent=eventEl.classList.contains('open')?'收起 ▲':'展开 ▼';
-        }
-      });
-    });
+    listEl.innerHTML=list.map((n,i)=>itemHtml(n,i)).join('');
   }
   // 更新时间
   const updTimeEl=$('newsUpdateTime');
