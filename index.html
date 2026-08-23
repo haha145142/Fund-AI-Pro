@@ -37,7 +37,7 @@
  --safe-top:env(safe-area-inset-top,0px);
  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;max-width:820px;margin:0 auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+html,body{height:100%;overflow-anchor:none;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;max-width:820px;margin:0 auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
 body{background:radial-gradient(circle at 15% -10%,rgba(210,233,255,.48),transparent 35%),linear-gradient(180deg,#F8FBFF 0%,#F5F7FB 55%,#F8FAFD 100%)!important;padding:0 12px calc(96px + var(--safe-bottom)) 12px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -1243,6 +1243,9 @@ const STORAGE_PORT='fund_ai_pro_portfolio_v3';
 const STORAGE_DS_KEY='fund_ai_pro_deepseek_key';
 const STORAGE_DS_MODEL='fund_ai_pro_deepseek_model';
 
+// Tab 页面由应用自己控制滚动，禁止浏览器自动恢复旧滚动位置。
+try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+
 /* ===== 全局状态 ===== */
 const state={
   portfolio:[],      // 用户持仓 [{code,name,shares,cost}]
@@ -1257,6 +1260,7 @@ const state={
   fundRankDate:'',   // 基金排行数据日期（缓存时显示"数据截至"）
   newsSources:{},
   newsLastFetch:0,   // 新闻上次抓取时间戳
+  newsFreshness:{latestTimestamp:0,latestAgeMinutes:null,realtime:false},
   newsAI:{},         // AI解读缓存 {hash: {text, time}}
   newsDeep:[],       // 第二级：深度解读文章
   newsSentiment:[],  // 第三级：社区情绪帖子
@@ -3016,7 +3020,7 @@ function updateNewsEvidence(mode='success'){
   const el=$('newsEvidence');
   if(!el)return;
   const list=Array.isArray(state.news)?state.news:[];
-  const latest=list.length?list.reduce((m,n)=>Math.max(m,Number(n.timestamp)||0),0):0;
+  const latest=Number(state.newsFreshness?.latestTimestamp)||(list.length?list.reduce((m,n)=>Math.max(m,Number(n.timestamp)||0),0):0);
   const latestText=latest?formatNewsTime(latest):'—';
   const sourceSet=new Set(list.flatMap(n=>Array.isArray(n.sources)?n.sources:[n.source]).filter(Boolean));
 
@@ -3027,8 +3031,17 @@ function updateNewsEvidence(mode='success'){
     return;
   }
   if(list.length && mode!=='error'){
-    el.textContent=`🟢 实时资讯已连接 · ${list.length} 条 · ${sourceSet.size||1} 个来源 · 最新 ${latestText}`;
-    el.classList.add('evidence-ok');
+    const ageMin=latest?Math.max(0,Math.floor((Date.now()-latest)/60000)):null;
+    if(ageMin!=null && ageMin<=30){
+      el.textContent=`🟢 实时资讯已连接 · ${list.length} 条 · ${sourceSet.size||1} 个来源 · 最新 ${latestText} · ${ageMin}分钟前`;
+      el.classList.add('evidence-ok');
+    }else if(ageMin!=null && ageMin<=180){
+      el.textContent=`🟡 资讯已连接 · ${list.length} 条 · ${sourceSet.size||1} 个来源 · 最新 ${latestText} · ${ageMin}分钟前`;
+      el.classList.add('evidence-warn');
+    }else{
+      el.textContent=`🟠 资讯源有响应，但最新消息较旧 · 最新 ${latestText} · ${ageMin==null?'时间未知':ageMin+'分钟前'}`;
+      el.classList.add('evidence-warn');
+    }
     return;
   }
   if(list.length && mode==='error'){
@@ -3088,9 +3101,10 @@ async function refreshNewsOnly(force=true){
     }
     merged.sort((a,b)=>b.timestamp-a.timestamp);
     state.news=merged.slice(0,50);
-    state.newsLastFetch=now;
+    state.newsLastFetch=Number(j?.fetchedAt)||now;
+    state.newsFreshness={latestTimestamp:Number(j?.latestTimestamp)||Number(state.news[0]?.timestamp)||0,latestAgeMinutes:j?.latestAgeMinutes==null?null:Number(j.latestAgeMinutes),realtime:j?.realtime===true};
     state.newsSources={unified:state.news};
-    state.source.news='统一实时资讯接口';
+    state.source.news='统一实时资讯接口 · '+(state.newsFreshness.realtime?'实时':'非实时');
     state.source.cls='';state.source.jin10='';state.source.wscn='';state.source.ths='';state.source.yicai='';state.source.emflash='';state.source.sina='';
     state.newsDeep=[];state.newsSentiment=[];state.sentimentOverall=null;
     const errStrip=$('newsErrorStrip'); if(errStrip) errStrip.style.display='none';
@@ -4812,21 +4826,21 @@ function renderNews(filter){
   // 周末提示条：周末时显示
   const wb=$('weekendBanner');
   if(wb) wb.style.display=isWeekend()?'block':'none';
-  // 只保留"与资金形成共振"的新闻，其余一律不显示
+  // 主新闻流按真实发布时间展示；“资金共振”只作为卡片里的辅助信息，
+  // 不再把没有命中板块关键词的最新新闻直接过滤掉。
   const all=state.news
     .filter(n=>n.title&&String(n.title).trim())
     .map(n=>{
       const resonanceInfo=checkMarketResonance(n);
       return {...n, topic:newsTopic(n), resonanceInfo};
-    })
-    .filter(n=>n.resonanceInfo.resonance);
+    });
   let filtered=filter==='all'?all:all.filter(n=>n.topic===filter);
   // 保持时间排序（从新到旧），不做相关度排序
   const list=filtered.slice(0,40);
   const listEl=$('newsList');
   if(!listEl) return;
   if(!list.length){
-    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>'+(state.news.length?'暂未筛选出与资金共振的资讯，稍后刷新再看看':'当前分类暂无与资金共振的资讯')+'</div>';
+    listEl.innerHTML='<div class="empty-state"><div class="icon">📰</div>'+(state.news.length?'暂未筛选出该分类的资讯，稍后刷新再看看':'当前分类暂无资讯')+'</div>';
   }else{
     // 单条新闻渲染（平铺列表，不折叠）
     const itemHtml=(n,i)=>{
@@ -5599,16 +5613,21 @@ function initEvents(){
       document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
       const target=$('page-'+page);
       if(target)target.classList.add('active');
-      // 切换 Tab 后必须回到该页面最顶部；同时清掉 document/body 两套滚动容器。
-      document.documentElement.scrollTop=0;
-      document.body.scrollTop=0;
-      window.scrollTo(0,0);
-      requestAnimationFrame(()=>{
+      // 切换 Tab：先锁定滚动位置，再切页，避免 Chrome 因隐藏/显示页面产生 scroll anchoring。
+      const scroller=document.scrollingElement||document.documentElement;
+      const resetScroll=()=>{
+        scroller.scrollTop=0;
         document.documentElement.scrollTop=0;
         document.body.scrollTop=0;
-        window.scrollTo(0,0);
+        window.scrollTo({top:0,left:0,behavior:'auto'});
+      };
+      resetScroll();
+      requestAnimationFrame(()=>{
+        resetScroll();
+        requestAnimationFrame(resetScroll);
       });
-      setTimeout(()=>window.scrollTo(0,0),60);
+      setTimeout(resetScroll,80);
+      setTimeout(resetScroll,220);
     };
   });
   // 添加基金
