@@ -2,6 +2,27 @@
 (function(){
   'use strict';
 
+  // ---------- 0. 移动端交互保险：UI 优化不能覆盖原有点击/滑动 ----------
+  // 某些 Android WebView 对大量 fixed/backdrop-filter 图层会产生“视觉正常但触摸被吃掉”的情况。
+  function restoreTouch(){
+    document.documentElement.style.setProperty('touch-action','pan-y','important');
+    document.body.style.setProperty('touch-action','pan-y','important');
+    document.body.style.setProperty('pointer-events','auto','important');
+    document.querySelectorAll('button,a,input,select,textarea,.tabbar,.tabbar .tab,.page').forEach(el=>{
+      el.style.setProperty('pointer-events','auto','important');
+      el.style.setProperty('touch-action','manipulation','important');
+    });
+    const dock=document.querySelector('.tabbar');
+    if(dock){
+      dock.style.setProperty('pointer-events','auto','important');
+      dock.style.setProperty('z-index','99999','important');
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',restoreTouch,{once:true});
+  else restoreTouch();
+  setTimeout(restoreTouch,300);
+  setTimeout(restoreTouch,1200);
+
   // ---------- 1. 新闻：只允许首次加载 + 用户手动点击后的请求 ----------
   const originalFetch = window.fetch.bind(window);
   let initialNewsWindow = Date.now() + 20000;
@@ -58,59 +79,23 @@
 
   function groundedExplain(title, summary){
     const raw=(title+' '+summary).trim();
-    const t=raw.toLowerCase();
-
-    // 外交/会见类：明确说明新闻没有产业信息，不再套“国家出政策”模板。
     if(/王毅|外交部长|外交部|会见|会谈|访问|首相|总统|外长|大使/.test(raw) && !/政策|规划|补贴|支持|产业|行业|措施|资金/.test(raw)){
-      return {
-        lead:'这是一条外交与国际关系消息，核心是双方会见、交流或访问本身。',
-        key:'新闻目前能确认的是外交互动及公开表态，没有看到具体产业政策或资金安排。',
-        money:'对A股的直接影响暂不明确，不能仅凭“会见”判断哪个行业会涨。',
-        action:'先看后续有没有正式政策、贸易措施或经济合作文件落地，再判断市场影响。'
-      };
+      return {lead:'这是一条外交与国际关系消息，核心是双方会见、交流或访问本身。',key:'新闻目前能确认的是外交互动及公开表态，没有看到具体产业政策或资金安排。',money:'对A股的直接影响暂不明确，不能仅凭“会见”判断哪个行业会涨。',action:'先看后续有没有正式政策、贸易措施或经济合作文件落地，再判断市场影响。'};
     }
-
-    // 纯外交/国际事件兜底
     if(/外交|国际关系|会见|会谈/.test(raw) && !/股|行业|板块|基金|政策|制裁|关税|能源|油价|黄金/.test(raw)){
-      return {
-        lead:'这条新闻主要讲国际事务本身，不是直接的产业利好或利空。',
-        key:'当前摘要没有给出明确的行业政策、企业订单或资金变化。',
-        money:'对国内股票和基金的直接影响有限，暂时无法从这条消息推出具体板块。',
-        action:'继续等后续正式文件、经济合作内容或市场实际反应，不要自行脑补行业利好。'
-      };
+      return {lead:'这条新闻主要讲国际事务本身，不是直接的产业利好或利空。',key:'当前摘要没有给出明确的行业政策、企业订单或资金变化。',money:'对国内股票和基金的直接影响有限，暂时无法从这条消息推出具体板块。',action:'继续等后续正式文件、经济合作内容或市场实际反应，不要自行脑补行业利好。'};
     }
-
-    // 只有在新闻真的提到政策时，才谈政策。
     if(/政策|规划|补贴|专项|支持|措施|行动方案|产业政策/.test(raw)){
       const sectorMatch=raw.match(/(?:支持|促进|推动|布局|发展|扶持)[^。；，,]{0,20}(?:行业|产业|领域|板块)/);
       const sector=sectorMatch ? sectorMatch[0].replace(/^(支持|促进|推动|布局|发展|扶持)/,'') : '';
-      return {
-        lead:'这条新闻的核心是政策/措施本身，先以原文明确写出的内容为准。',
-        key:sector ? `新闻明确提到了“${sector}”，这才是可以继续观察的方向。` : '新闻提到了政策，但当前摘要没有明确点名具体行业。',
-        money:'政策是否真正影响股价，还要看后续落地力度、企业订单和资金是否跟上。',
-        action:sector ? `先观察${sector}相关标的的实际反应，不因为一条政策标题就追高。` : '先看政策全文和后续落地情况，暂时不要强行给行业贴标签。'
-      };
+      return {lead:'这条新闻的核心是政策/措施本身，先以原文明确写出的内容为准。',key:sector?`新闻明确提到了“${sector}”，这才是可以继续观察的方向。`:'新闻提到了政策，但当前摘要没有明确点名具体行业。',money:'政策是否真正影响股价，还要看后续落地力度、企业订单和资金是否跟上。',action:sector?`先观察${sector}相关标的的实际反应，不因为一条政策标题就追高。`:'先看政策全文和后续落地情况，暂时不要强行给行业贴标签。'};
     }
-
-    // 科技/产业新闻：只引用新闻明确出现的方向。
     const tech=raw.match(/半导体|芯片|算力|CPO|光模块|AI|人工智能|机器人|存储芯片|PCB|通信|新能源|光伏|锂电|储能/ig);
     if(tech){
       const sector=[...new Set(tech.map(x=>x.toUpperCase()==='AI'?'AI':x))].slice(0,3).join('、');
-      return {
-        lead:`新闻明确涉及${sector}，重点看消息本身有没有带来订单、技术或产业进展。`,
-        key:'真正能影响股价的不是“科技”两个字，而是订单、业绩、产能、技术突破等可验证信息。',
-        money:'相关板块可能受到情绪带动，但是否持续要看资金和实际业绩验证。',
-        action:'有相关基金先看仓位和板块强弱；没有持仓不要因为标题热就直接追高。'
-      };
+      return {lead:`新闻明确涉及${sector}，重点看消息本身有没有带来订单、技术或产业进展。`,key:'真正能影响股价的不是“科技”两个字，而是订单、业绩、产能、技术突破等可验证信息。',money:'相关板块可能受到情绪带动，但是否持续要看资金和实际业绩验证。',action:'有相关基金先看仓位和板块强弱；没有持仓不要因为标题热就直接追高。'};
     }
-
-    // 默认：严格不虚构行业。
-    return {
-      lead:'先看新闻本身：当前这条消息暂时没有足够证据判断具体行业方向。',
-      key:'解读只引用标题和摘要中明确出现的事实，不把“市场可能关注”写成已经发生的事实。',
-      money:'对持仓的影响需要结合实际价格、资金和后续公告确认。',
-      action:'先观察，不根据一条新闻强行追涨或减仓。'
-    };
+    return {lead:'先看新闻本身：当前这条消息暂时没有足够证据判断具体行业方向。',key:'解读只引用标题和摘要中明确出现的事实，不把“市场可能关注”写成已经发生的事实。',money:'对持仓的影响需要结合实际价格、资金和后续公告确认。',action:'先观察，不根据一条新闻强行追涨或减仓。'};
   }
 
   function renderGrounded(card){
@@ -118,43 +103,34 @@
     const ai=card.querySelector('.news-ai');
     if(!ai || !title) return;
     const current=textOf(ai);
-    // 只修复明显的“新闻与解读错配”，其余保留用户喜欢的现有 AI 解读。
-    const mismatch = /国家出政策|说的那个行业|哪个行业好|银行就给|政策点名的行业|政策支持.*行业/.test(current)
-      && !/政策|规划|补贴|支持|措施|专项|产业|行业/.test(title+' '+summary);
-    const diplomacyMismatch = /王毅|外交部长|会见|会谈|首相|总统/.test(title) && /国家出政策|哪个行业|银行就给|股票就涨/.test(current);
-    if(!mismatch && !diplomacyMismatch) return;
-
+    const mismatch=/国家出政策|说的那个行业|哪个行业好|银行就给|政策点名的行业|政策支持.*行业/.test(current)&&!/政策|规划|补贴|支持|措施|专项|产业|行业/.test(title+' '+summary);
+    const diplomacyMismatch=/王毅|外交部长|会见|会谈|首相|总统/.test(title)&&/国家出政策|哪个行业|银行就给|股票就涨/.test(current);
+    if(!mismatch&&!diplomacyMismatch)return;
     const e=groundedExplain(title,summary);
-    ai.innerHTML = `<div class="ai-line">🤖 ${e.lead}</div>`+
-      `<div class="ai-detail-line">📌 <b>关键信息：</b>${e.key}</div>`+
-      `<div class="ai-detail-line">💰 <b>对钱包：</b>${e.money}</div>`+
-      `<div class="ai-detail-line">👉 <b>该咋办：</b>${e.action}</div>`;
+    ai.innerHTML=`<div class="ai-line">🤖 ${e.lead}</div><div class="ai-detail-line">📌 <b>关键信息：</b>${e.key}</div><div class="ai-detail-line">💰 <b>对钱包：</b>${e.money}</div><div class="ai-detail-line">👉 <b>该咋办：</b>${e.action}</div>`;
     ai.dataset.groundedFix='1';
   }
-
-  function scanNews(){
-    document.querySelectorAll('#newsList .news-flat-card,#newsList .news-event').forEach(renderGrounded);
-  }
+  function scanNews(){document.querySelectorAll('#newsList .news-flat-card,#newsList .news-event').forEach(renderGrounded);}
   const newsList=document.getElementById('newsList');
-  if(newsList){
-    const mo=new MutationObserver(()=>scanNews());
-    mo.observe(newsList,{subtree:true,childList:true,characterData:true});
-    setTimeout(scanNews,80);
-    setTimeout(scanNews,600);
-    setTimeout(scanNews,1800);
-  }
+  if(newsList){const mo=new MutationObserver(()=>scanNews());mo.observe(newsList,{subtree:true,childList:true,characterData:true});setTimeout(scanNews,80);setTimeout(scanNews,600);setTimeout(scanNews,1800);}
 
-  // ---------- 4. 把“科技板块”的高级流动效果统一扩展到所有主要卡片 ----------
+  // ---------- 4. 科技板块高级流动效果统一 ----------
   document.querySelectorAll('.glass,.fund-card,.band-item,.wc,.combo-glass-card,.news-flat-card,.ai-evidence-step').forEach(el=>el.classList.add('liquid-surface'));
 
-  // 给用户一个明确的状态提示：新闻不会后台轮询。
+  // ---------- 5. 防止 UI 注入层/伪元素吞掉点击 ----------
+  document.addEventListener('click',function(e){
+    const target=e.target && e.target.closest ? e.target.closest('button,a,input,select,textarea,.tabbar .tab') : null;
+    if(target){
+      target.style.pointerEvents='auto';
+      target.style.touchAction='manipulation';
+    }
+  },true);
+
   const evidence=document.getElementById('newsEvidence');
   if(evidence){
     const observer=new MutationObserver(()=>{
       const txt=textOf(evidence);
-      if(txt && !/手动刷新/.test(txt) && /实时资讯已连接|资讯已连接/.test(txt)){
-        evidence.setAttribute('data-refresh-mode','manual');
-      }
+      if(txt && !/手动刷新/.test(txt) && /实时资讯已连接|资讯已连接/.test(txt)) evidence.setAttribute('data-refresh-mode','manual');
     });
     observer.observe(evidence,{childList:true,characterData:true,subtree:true});
   }
