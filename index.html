@@ -759,6 +759,31 @@ table td b{font-weight:700}
 .ai-run{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:520px){.ds-row{grid-template-columns:1fr}.ds-btn{width:100%}}
 </style>
+<style id="liquid-glass-v2">
+:root{--lg-shadow:0 18px 50px rgba(35,78,125,.13),0 5px 18px rgba(35,78,125,.07),inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(170,205,240,.28)}
+body{background:radial-gradient(ellipse 90% 45% at 50% -8%,rgba(191,222,255,.48),transparent 72%),radial-gradient(ellipse 70% 55% at 100% 35%,rgba(220,236,255,.28),transparent 70%),linear-gradient(180deg,#edf5fc 0%,#eaf2f9 48%,#f1f6fb 100%) !important}
+.glass,.fund-card,.wc,.band-item,.combo-glass-card,.ai-evidence-step,.ev-step,.news-event,.news-flat-card{background:linear-gradient(145deg,rgba(255,255,255,.50),rgba(235,246,255,.30)) !important;backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid rgba(255,255,255,.72) !important;box-shadow:var(--lg-shadow) !important}
+.glass::before,.fund-card::before,.news-event::before,.news-flat-card::before{content:'' !important;display:block !important;position:absolute !important;top:0 !important;left:0 !important;right:0 !important;height:48% !important;background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,0)) !important;pointer-events:none !important;border-radius:inherit !important;z-index:0 !important}
+.glass>*:not(.glow),.fund-card>*:not(.glow),.news-event>*:not(.glow),.news-flat-card>*:not(.glow){position:relative;z-index:1}
+.glass:hover,.fund-card:hover,.news-event:hover,.news-flat-card:hover{transform:translateY(-2px);box-shadow:0 24px 60px rgba(35,78,125,.16),0 8px 22px rgba(35,78,125,.08),inset 0 1px 0 rgba(255,255,255,.95) !important}
+.header{background:linear-gradient(145deg,rgba(255,255,255,.58),rgba(225,241,255,.34)) !important;border:1.2px solid rgba(255,255,255,.78) !important;box-shadow:0 28px 72px rgba(30,75,125,.16),0 8px 26px rgba(30,75,125,.08),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(150,195,235,.30) !important}
+.header::before{background:linear-gradient(180deg,rgba(255,255,255,.68),rgba(255,255,255,0)) !important;height:55% !important}
+.refresh-btn,.news-refresh-btn{background:rgba(255,255,255,.46) !important;backdrop-filter:blur(22px) saturate(190%);-webkit-backdrop-filter:blur(22px) saturate(190%);border:1px solid rgba(255,255,255,.76) !important;box-shadow:0 10px 28px rgba(30,75,125,.14),inset 0 1px 0 rgba(255,255,255,.95) !important}
+.sc-pro{background:linear-gradient(145deg,rgba(255,255,255,.58),rgba(229,243,255,.30)) !important;border-color:rgba(255,255,255,.72) !important;box-shadow:0 24px 68px rgba(20,60,110,.15),0 8px 24px rgba(20,60,110,.07),inset 0 1.5px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(180,215,245,.30) !important}
+.sc-pro::before{background:linear-gradient(180deg,rgba(255,255,255,.60),rgba(255,255,255,0)) !important}.sc-pro .border-glow::after{background:linear-gradient(145deg,rgba(255,255,255,.54),rgba(230,244,255,.28)) !important}
+.news-flat-card{border-radius:20px !important;padding:14px 15px !important;margin-bottom:12px !important;background:linear-gradient(145deg,rgba(255,255,255,.56),rgba(228,242,255,.30)) !important;box-shadow:0 16px 42px rgba(35,78,125,.12),0 4px 14px rgba(35,78,125,.06),inset 0 1px 0 rgba(255,255,255,.94) !important}
+.news-flat-card.breaking{background:linear-gradient(145deg,rgba(255,244,244,.56),rgba(255,226,226,.28)) !important;border-color:rgba(255,150,150,.48) !important;box-shadow:0 18px 46px rgba(180,55,55,.12),inset 0 1px 0 rgba(255,255,255,.92) !important}
+.news-event.hero{background:linear-gradient(145deg,rgba(235,248,255,.62),rgba(215,237,255,.30)) !important;border-color:rgba(135,193,247,.48) !important}
+.news-event::before,.news-event.hero::before{background:linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,0)) !important}
+.news-flat-title{font-size:13.5px !important;font-weight:700 !important;letter-spacing:-.1px}.news-flat-card .news-summary{color:#52677d !important}
+.news-ai{margin-top:8px !important;padding:8px 10px !important;border-radius:13px !important;background:rgba(220,238,255,.28) !important;border:1px solid rgba(150,195,235,.28) !important;backdrop-filter:blur(16px) saturate(170%);-webkit-backdrop-filter:blur(16px) saturate(170%)}
+.news-event-sector{background:rgba(255,255,255,.38) !important;border:1px solid rgba(255,255,255,.42)}.news-event-portfolio{background:rgba(255,237,200,.30) !important;border:1px solid rgba(245,166,35,.20);box-shadow:none !important}
+.news-filter,.port-time-tab,.fc-tg-tab,.ds-btn.secondary{background:rgba(255,255,255,.38) !important;border:1px solid rgba(255,255,255,.62) !important;backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);box-shadow:inset 0 1px 0 rgba(255,255,255,.78),0 4px 12px rgba(35,78,125,.05) !important}
+.news-filter.active,.port-time-tab.active{background:rgba(10,132,255,.82) !important;color:#fff !important;border-color:rgba(255,255,255,.45) !important}
+.add-form input,.ds-input,.ds-status,.port-overview-top,.port-metric,.port-time-gain,.ev-step,.ev-metric{background:rgba(255,255,255,.40) !important;backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%)}
+.tabbar{background:linear-gradient(180deg,rgba(255,255,255,.54),rgba(225,241,255,.30)) !important;backdrop-filter:blur(34px) saturate(210%) !important;-webkit-backdrop-filter:blur(34px) saturate(210%) !important;border:1px solid rgba(255,255,255,.78) !important;box-shadow:0 22px 70px rgba(25,65,110,.20),inset 0 1.5px 0 rgba(255,255,255,.94),inset 0 -1px 0 rgba(170,205,240,.28) !important}
+.glass-title .badge,.tag{background:rgba(10,132,255,.10) !important;box-shadow:none !important}
+</style>
 </head>
 <body>
 
@@ -2951,184 +2976,70 @@ function checkMarketResonance(newsItem){
   return {resonance:false, evidence:'暂未形成资金共振', from:null, sectors:sectorData};
 }
 
-// 新闻手动刷新函数（纯手动，无缓存，无自动刷新）
-async function refreshNewsOnly(force){
+// 新闻统一刷新：直接使用 /api/news 总接口，严格按真实发布时间排序
+async function refreshNewsOnly(force=true){
   if(state._newsLoading) return;
   state._newsLoading=true;
   const btn=$('newsRefreshBtn');
   if(btn) btn.classList.add('spin');
-  // 每次刷新清空AI缓存，确保用最新新闻重新生成解读
   state.newsAI={};
   const now=Date.now();
-  console.log('[新闻刷新] 开始手动刷新，USE_PROXY='+USE_PROXY);
-
   try{
-  // 优先来源：财联社、金十数据、华尔街见闻、同花顺iFinD、第一财经、东方财富7x24快讯、新浪财经
-  // 全部并行抓取，互不影响（每个加8秒超时保护）
-  const withTimeout=(p,ms=8000)=>Promise.race([
-    p,
-    new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms))
-  ]);
-  const results=await Promise.allSettled([
-    // Tier 1: 快讯（优先级：财联社 > 金十 > 华尔街见闻 > 同花顺 > 第一财经 > 东方财富7x24 > 新浪财经）
-    withTimeout(fetchCLSNews()),
-    withTimeout(fetchJin10News()),
-    withTimeout(fetchWSCN()),
-    withTimeout(fetchTHS()),
-    withTimeout(fetchYicaiNews()),
-    withTimeout(fetchOfficialNews()),
-    withTimeout(fetchEastmoneyFlash()),
-    withTimeout(fetchSinaNews()),
-    // Tier 2: 深度解读（财联社 + 第一财经的深度文章）
-    // 已在 Tier 1 中获取，这里直接复用
-    // Tier 3: 市场情绪
-    withTimeout(fetchGubaSentiment()),
-    withTimeout(fetchTHSForumSentiment())
-  ]);
-  // Tier 1 results
-  const cls=results[0].status==='fulfilled'?results[0].value:[];
-  const jin10=results[1].status==='fulfilled'?results[1].value:[];
-  const wscn=results[2].status==='fulfilled'?results[2].value:[];
-  const ths=results[3].status==='fulfilled'?results[3].value:[];
-  const yicai=results[4].status==='fulfilled'?results[4].value:[];
-  const off=results[5].status==='fulfilled'?results[5].value:[];
-  const emflash=results[6].status==='fulfilled'?results[6].value:[];
-  const sina=results[7].status==='fulfilled'?results[7].value:[];
-  // Tier 3 results
-  const guba=results[8].status==='fulfilled'?results[8].value:[];
-  const thsForum=results[9].status==='fulfilled'?results[9].value:[];
-
-  // 保存二级深度数据（财联社 + 第一财经的深度文章）
-  state.newsDeep=[...cls,...yicai].filter(x=>x.title).sort((a,b)=>b.timestamp-a.timestamp);
-  state.source.cls=cls.length?'财联社':'不可用';
-  state.source.yicai=yicai.length?'第一财经':'不可用';
-
-  // 保存三级情绪数据 + 计算全市场情绪
-  const allSentiment=[...guba,...thsForum];
-  state.newsSentiment=allSentiment;
-  state.sentimentOverall=allSentiment.length?analyzeSentiment(allSentiment):null;
-  state.source.guba=guba.length?'东方财富股吧':'不可用';
-  state.source.thsForum=thsForum.length?'同花顺社区':'不可用';
-
-  const all=[...cls,...jin10,...wscn,...ths,...yicai,...off,...emflash,...sina].filter(x=>x.title&&Number(x.timestamp)>0);
-  state.newsSources={cls,jin10,wscn,ths,yicai,off,emflash,sina};
-  console.log('[新闻刷新] 抓取结果: 财联社='+cls.length+' 金十='+jin10.length+' 华尔街见闻='+wscn.length+' 同花顺='+ths.length+' 第一财经='+yicai.length+' 东方财富='+off.length+' 东财7x24='+emflash.length+' 新浪='+sina.length+' 总计='+all.length);
-
-  if(all.length===0){
-    // 全部失败：保留上一批数据，显示错误提示
-    const errStrip=$('newsErrorStrip');
-    const errText=$('newsErrorText');
-    if(errStrip) errStrip.style.display='flex';
-    if(errText) errText.textContent='新闻源暂时无法更新，显示最近一次成功数据';
-    updateNewsEvidence();
-    return;
-  }
-
-  // 三源交叉验证 + 去重
-  let merged=crossValidateNews(all);
-
-  // 严格按真实发布时间从新到旧排序（绝不按相关度排序）
-  merged.sort((a,b)=>b.timestamp-a.timestamp);
-
-  // 去重（标题前40字相同视为重复）
-  const seen=new Set();
-  merged=merged.filter(x=>{
-    const k=x.title.replace(/\s+/g,'').slice(0,40);
-    if(seen.has(k)) return false;
-    seen.add(k);
-    return true;
-  });
-
-  // 硬核新闻过滤：只保留跟宏观经济、股市、热门行业相关的新闻，去掉娱乐八卦、广告、重复废话
-  merged=hardNewsFilter(merged);
-
-  // 按突发+时间排序，最多保留40条
-  // 严格按时间排序：同时间段内突发新闻优先，但绝不让昨天的突发新闻排到今天的普通新闻前面
-  merged.sort((a,b)=>{
-    const aBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(a.title)?1:0;
-    const bBreak=/突发|紧急|刚刚|重磅|快讯|速报|突然|即刻|最新|火速/.test(b.title)?1:0;
-    // 先按时间差判断：如果相差超过2小时，直接按时间排
-    const diff=Math.abs(b.timestamp-a.timestamp);
-    if(diff>7200000) return b.timestamp-a.timestamp;
-    // 2小时内：突发新闻优先
-    if(aBreak!==bBreak) return bBreak-aBreak;
-    return b.timestamp-a.timestamp;
-  });
-  merged=merged.slice(0,40);
-
-  // 只有在有新数据时才更新状态
-  if(merged.length>0){
-    state.news=merged;
+    const j=await proxyFetchJSON('news',12000);
+    let raw=Array.isArray(j)?j:(j?.items||j?.data?.items||j?.data||j?.news||[]);
+    if(!Array.isArray(raw)) raw=[];
+    const normalized=raw.map(x=>{
+      const ts=Number(x?.timestamp)>0?Number(x.timestamp):parseNewsTime(x?.time||x?.showTime||x?.display_time||x?.ctime||x?.publish_time||'',x?.source||'综合资讯');
+      const title=cleanHTML(x?.title||x?.resource?.title||x?.content_text||x?.content||'').replace(/\s+/g,' ').trim();
+      const summary=cleanHTML(x?.summary||x?.brief||x?.digest||x?.content_short||x?.resource?.content_text||'').replace(/\s+/g,' ').trim();
+      return {...x,title,summary,timestamp:ts,time:formatNewsTime(ts),source:x?.source||x?.sources?.join?.('、')||'综合资讯',sources:Array.isArray(x?.sources)&&x.sources.length?x.sources:[x?.source||'综合资讯'],url:x?.url||x?.uri||x?.articleUrl||''};
+    }).filter(x=>x.title&&x.timestamp>0);
+    if(!normalized.length){
+      const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
+      if(errStrip) errStrip.style.display='flex';
+      if(errText) errText.textContent='新闻接口暂时没有可用数据，保留最近一次成功数据';
+      updateNewsEvidence(); return;
+    }
+    const junk=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|奥运|世界杯|彩票|赌博|色情|低俗)/i;
+    let clean=normalized.filter(x=>x.title.length>=4&&x.title.length<=120&&!junk.test(x.title));
+    clean.sort((a,b)=>b.timestamp-a.timestamp);
+    const merged=[],used=new Set();
+    for(let i=0;i<clean.length;i++){
+      if(used.has(i)) continue;
+      const a=clean[i], aKey=a.title.replace(/[\s，。！？、；："“”‘’（）【】《》]/g,'').toLowerCase();
+      const group=[a]; used.add(i);
+      for(let k=i+1;k<clean.length;k++){
+        if(used.has(k)) continue;
+        const b=clean[k], bKey=b.title.replace(/[\s，。！？、；："“”‘’（）【】《》]/g,'').toLowerCase();
+        const exact=aKey===bKey, closeTime=Math.abs(a.timestamp-b.timestamp)<=60*60*1000;
+        const aw=extractKeyWords(a.title), bw=extractKeyWords(b.title), overlap=aw.filter(w=>bw.includes(w));
+        const sameEvent=closeTime&&aw.length>=2&&bw.length>=2&&overlap.length>=Math.min(3,Math.ceil(Math.min(aw.length,bw.length)*0.6));
+        if(exact||sameEvent){group.push(b);used.add(k);}
+      }
+      group.sort((x,y)=>y.timestamp-x.timestamp);
+      const main=group[0];
+      const sources=[...new Set(group.flatMap(x=>Array.isArray(x.sources)?x.sources:[x.source]).filter(Boolean))];
+      merged.push({...main,sources,source:sources.join('、'),multiSource:sources.length>=2,summary:group.reduce((best,x)=>x.summary.length>best.length?x.summary:best,main.summary||'')});
+    }
+    merged.sort((a,b)=>b.timestamp-a.timestamp);
+    state.news=merged.slice(0,50);
     state.newsLastFetch=now;
-    // 隐藏错误提示
-    const errStrip=$('newsErrorStrip');
-    if(errStrip) errStrip.style.display='none';
-  }
-
-  state.source.news=cls.length?'财联社':'不可用';
-  state.source.wscn=wscn.length?'华尔街见闻':'不可用';
-  state.source.ths=ths.length?'同花顺':'不可用';
-  state.source.jin10=jin10.length?'金十数据':'不可用';
-  state.source.yicai=yicai.length?'第一财经':'不可用';
-  state.source.emflash=emflash.length?'东方财富7x24':'不可用';
-  state.source.sina=sina.length?'新浪财经':'不可用';
-
-  renderNews();
-  updateNewsEvidence();
-  // AI解读单独异步处理，不阻塞新闻显示
-  explainNewsBatch().catch(()=>{});
-
+    state.newsSources={unified:state.news};
+    state.source.news='统一实时资讯接口';
+    state.source.cls='';state.source.jin10='';state.source.wscn='';state.source.ths='';state.source.yicai='';state.source.emflash='';state.source.sina='';
+    state.newsDeep=[];state.newsSentiment=[];state.sentimentOverall=null;
+    const errStrip=$('newsErrorStrip'); if(errStrip) errStrip.style.display='none';
+    renderNews(); updateNewsEvidence(); explainNewsBatch().catch(()=>{});
   }catch(e){
     console.error('refreshNews error:',e);
-    const errStrip=$('newsErrorStrip');
-    const errText=$('newsErrorText');
+    const errStrip=$('newsErrorStrip'),errText=$('newsErrorText');
     if(errStrip) errStrip.style.display='flex';
-    if(errText) errText.textContent='部分新闻源暂不可用，已显示最近成功数据。请稍后重试';
+    if(errText) errText.textContent='新闻接口暂时不可用，已保留最近一次成功数据';
     updateNewsEvidence();
   }finally{
     state._newsLoading=false;
     if(btn) btn.classList.remove('spin');
   }
-}
-
-function updateNewsEvidence(){
-  const el=$('newsEvidence');
-  if(!el) return;
-  const t1=[];
-  if(state.source.cls&&state.source.cls!=='不可用') t1.push('财联社');
-  if(state.source.jin10&&state.source.jin10!=='不可用') t1.push('金十数据');
-  if(state.source.wscn&&state.source.wscn!=='不可用') t1.push('华尔街见闻');
-  if(state.source.ths&&state.source.ths!=='不可用') t1.push('同花顺');
-  if(state.source.yicai&&state.source.yicai!=='不可用') t1.push('第一财经');
-  if(state.source.emflash&&state.source.emflash!=='不可用') t1.push('东方财富7x24');
-  if(state.source.sina&&state.source.sina!=='不可用') t1.push('新浪财经');
-  const t3=[];
-  if(state.source.guba&&state.source.guba!=='不可用') t3.push('股吧');
-  if(state.source.thsForum&&state.source.thsForum!=='不可用') t3.push('同花顺社区');
-  if(!t1.length&&!t3.length){
-    el.textContent='暂无可用资讯源 · 请检查网络连接';
-  }else{
-    const aiMode=getDSKey()?'DeepSeek':'规则版';
-    const sentTxt=state.sentimentOverall?` · 社区情绪：${state.sentimentOverall.labelText}`:'';
-    el.textContent=`快讯：${t1.length?t1.join('·'):'—'} | 情绪：${t3.length?t3.join('·'):'—'}${sentTxt} · ${aiMode}AI`;
-  }
-}
-
-// 硬核新闻过滤：只保留宏观经济、股市大盘、热门行业相关的新闻
-function hardNewsFilter(newsArr){
-  // 必选关键词（包含就保留）
-  const mustHave=/(降准|降息|加息|政策|国务院|证监会|央行|财政部|发改委|统计局|GDP|CPI|PPI|PMI|利率|汇率|货币|财政|减税|补贴|监管|股市|A股|大盘|指数|沪指|深指|创业板|科创板|北交所|基金|ETF|公募|私募|持仓|净值|半导体|芯片|AI|人工智能|算力|光模块|机器人|新能源|光伏|锂电|储能|医药|医疗|消费|地产|房地产|银行|黄金|原油|石油|铜|有色|煤炭|钢铁|美股|纳指|道指|标普|美联储|美债|美元|港股|恒生|南向|北向|业绩|财报|利润|营收|增持|减持|回购|分红|暴雷|亏损|退市|重组|停牌|涨价|降价|价格战|产能|供需|贸易|关税|制裁|出口|进口|中东|俄乌|地缘|战争|冲突|避险|涨停|跌停|牛市|熊市|抄底|抛售|崩盘|熔断|申购|赎回|新股|打新|中签|解禁|定增|并购|收购|举牌|质押|爆仓|强平|合约|期货|期权|杠杆|做空|做多|成交|缩量|放量|外资|流入|流出|主力|游资|机构|社融|M2|通缩|通胀|就业|失业|非农|议息|缩表|扩表|国债|地方债|城投|违约|信用|评级|上调|下调|目标价|研报|盈利|预增|预减|扭亏|戴帽|摘帽|ST)/;
-  // 必删关键词（包含就过滤掉）
-  const mustKill=/(明星|网红|直播|带货|综艺|电影|电视剧|娱乐|八卦|绯闻|相亲|选秀|演唱会|广告|推广|软文|优惠|折扣|秒杀|拼团|足球|篮球|比赛|奥运|世界杯|体育|彩票|赌博|色情|低俗)/;
-  return newsArr.filter(n=>{
-    const title=cleanHTML(n.title||'');
-    const t=title.toLowerCase();
-    if(mustKill.test(t)) return false;
-    if(title.length<4||title.length>80) return false;
-    if(n.multiSource) return true;
-    if(/(突发|紧急|刚刚|重磅|快讯|速报)/.test(t)) return true;
-    return mustHave.test(t);
-  });
 }
 
 // 兼容旧函数名
@@ -5801,11 +5712,15 @@ document.addEventListener('visibilitychange',()=>{
     state.lastUpdate=new Date();
     evidenceAI();
     updateSourceStatus();
-    // 新闻不自动刷新，只手动刷新
+    // 页面回到前台立即刷新新闻，避免后台停留后看到旧数据
+    refreshNewsOnly(true).catch(()=>{});
   }
 });
 
-// 新闻不自动刷新，只通过手动点击刷新按钮
+// 新闻独立自动刷新：每60秒检查一次最新资讯，同时保留手动刷新按钮
+
+// 新闻每60秒自动刷新：统一 /api/news，总是按真实发布时间排序
+setInterval(()=>{if(!document.hidden)refreshNewsOnly(true).catch(()=>{})},60000);
 
 // 盘中实时估值：交易时段每30秒刷新一次（只重拉行情价格，轻量）
 setInterval(()=>{if(!document.hidden&&isTradeTime())refreshPortfolioPrices()},30000);
