@@ -6,16 +6,18 @@
 <meta name="theme-color" content="#f6f7f9">
 <title>Fund AI Pro</title>
 <style>
-:root{--bg:#f6f7f9;--text:#111827;--sub:#737b87;--line:rgba(150,190,225,.28);--red:#e5484d;--green:#15966d}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{padding:18px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
-.dashboard{position:relative;overflow:hidden;max-width:760px;margin:0 auto;padding:22px;border:1px solid rgba(255,255,255,.9);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(247,250,253,.72));box-shadow:0 18px 45px rgba(50,75,100,.09),inset 0 1px 0 rgba(255,255,255,.95)}
-.dashboard:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(128,199,255,.18),transparent 25%,transparent 72%,rgba(255,255,255,.8))}
-.header,.grid,.fund,.big-money{position:relative;z-index:1}.header{display:flex;justify-content:space-between;align-items:flex-start}.brand{font-size:27px;font-weight:750;letter-spacing:-.7px}.subtitle{margin-top:3px;font-size:14px;color:var(--sub)}.status{margin-top:8px;font-size:12px;color:var(--sub)}
+:root{--bg:#f6f7f9;--text:#111827;--sub:#737b87;--line:rgba(150,190,225,.25);--red:#d94a4f;--green:#15966d}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{padding:14px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+.dashboard{position:relative;overflow:hidden;max-width:760px;margin:0 auto;padding:20px;border:1px solid rgba(255,255,255,.92);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(247,250,253,.76));box-shadow:0 18px 45px rgba(50,75,100,.09),inset 0 1px rgba(255,255,255,.96)}
+.dashboard:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(128,199,255,.14),transparent 24%,transparent 74%,rgba(255,255,255,.72))}
+.header,.grid,.money{position:relative;z-index:1}.header{display:flex;justify-content:space-between;align-items:flex-start}.brand{font-size:27px;font-weight:750;letter-spacing:-.7px}.subtitle{margin-top:3px;font-size:14px;color:var(--sub)}.status{margin-top:8px;font-size:12px;color:var(--sub)}
 .refresh{border:1px solid rgba(130,180,220,.28);border-radius:999px;padding:9px 14px;background:rgba(255,255,255,.68);color:#34404c;font-size:13px;font-weight:600;box-shadow:0 5px 15px rgba(70,100,130,.07);-webkit-tap-highlight-color:transparent}.refresh:active{transform:scale(.96)}.refresh.spinning{animation:spin .38s ease}@keyframes spin{to{transform:rotate(360deg)}}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.index{min-width:0;padding:15px;border-radius:23px;background:rgba(255,255,255,.64);border:1px solid rgba(150,190,225,.22);box-shadow:inset 0 1px rgba(255,255,255,.8)}.name{font-size:13px;color:var(--sub)}.value{margin-top:5px;font-size:25px;font-weight:720;letter-spacing:-.5px}.change{margin-top:2px;font-size:13px;font-weight:650}.up{color:var(--red)}.down{color:var(--green)}.spark{display:block;width:100%;height:30px;margin-top:8px}.spark polyline{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.fund{margin-top:13px;padding:17px;border-radius:25px;background:rgba(255,255,255,.66);border:1px solid rgba(150,190,225,.22);box-shadow:inset 0 1px rgba(255,255,255,.85)}.fund-title{display:flex;justify-content:space-between;align-items:center}.fund-title strong{font-size:16px}.fund-title span{font-size:12px;color:var(--sub)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.column{padding:12px;border-radius:18px;background:rgba(246,248,250,.72)}.column h3{margin:0 0 7px;font-size:13px}.row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(120,140,160,.1);font-size:13px}.row:last-child{border-bottom:0}.amount{font-weight:650;white-space:nowrap}.empty{color:var(--sub);font-size:13px;padding:8px 0}
-.big-money{margin-top:13px}.section-head{display:flex;justify-content:space-between;align-items:flex-end;padding:2px 3px 10px}.section-head strong{font-size:18px;letter-spacing:-.3px}.section-head span{font-size:12px;color:var(--sub)}.money-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.money-card{min-width:0;min-height:142px;padding:18px;border-radius:25px;background:rgba(255,255,255,.76);border:1px solid rgba(150,160,175,.24);box-shadow:0 8px 22px rgba(50,75,100,.05),inset 0 1px rgba(255,255,255,.92);display:flex;flex-direction:column;justify-content:space-between}.money-label{display:flex;align-items:center;gap:9px;color:#606875;font-size:16px;font-weight:600}.money-label small{font-size:13px;font-weight:500;color:#969ca5}.money-icon{font-size:24px;line-height:1}.money-value{margin-top:16px;text-align:right;font-size:31px;font-weight:760;letter-spacing:-1px;white-space:nowrap}.money-unit{font-size:17px;font-weight:600;margin-left:3px}.money-value.neutral{color:#262b33}.money-value.in{color:var(--red)}.money-value.out{color:var(--green)}
-@media(max-width:390px){body{padding:12px}.dashboard{padding:17px;border-radius:30px}.brand{font-size:24px}.index{padding:13px}.value{font-size:22px}.columns{gap:8px}.money-grid{gap:8px}.money-card{min-height:126px;padding:14px;border-radius:22px}.money-label{font-size:14px}.money-label small{font-size:11px}.money-value{font-size:24px}.money-unit{font-size:14px}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:19px}.index{min-width:0;padding:14px;border-radius:22px;background:rgba(255,255,255,.64);border:1px solid rgba(150,190,225,.21);box-shadow:inset 0 1px rgba(255,255,255,.82)}.name{font-size:13px;color:var(--sub)}.value{margin-top:5px;font-size:24px;font-weight:720;letter-spacing:-.5px}.change{margin-top:2px;font-size:13px;font-weight:650}.up{color:var(--red)}.down{color:var(--green)}.spark{display:block;width:100%;height:28px;margin-top:7px}.spark polyline{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.money{margin-top:14px;padding:16px;border-radius:27px;background:rgba(255,255,255,.68);border:1px solid rgba(150,190,225,.23);box-shadow:inset 0 1px rgba(255,255,255,.88)}
+.money-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}.money-title{font-size:18px;font-weight:750;letter-spacing:-.3px}.money-desc{margin-top:3px;font-size:12px;color:var(--sub)}.money-time{font-size:11px;color:var(--sub);white-space:nowrap}
+.big-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}.metric{min-width:0;padding:13px 13px 12px;border-radius:19px;background:rgba(248,250,252,.78);border:1px solid rgba(150,170,190,.13)}.metric-label{display:flex;align-items:center;gap:6px;color:#66707c;font-size:12px;white-space:nowrap;overflow:hidden}.metric-label b{color:#4c5560;font-weight:600}.metric-value{margin-top:7px;font-size:23px;font-weight:760;letter-spacing:-.7px;white-space:nowrap}.metric-unit{font-size:13px;font-weight:600;margin-left:3px}.metric-note{margin-top:2px;font-size:10px;color:#9aa1a9}
+.flow-title{display:flex;align-items:center;justify-content:space-between;margin:17px 2px 9px}.flow-title strong{font-size:15px}.flow-title span{font-size:11px;color:var(--sub)}.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.flow-col{min-width:0;padding:11px 12px;border-radius:19px;background:rgba(248,250,252,.72)}.flow-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.flow-head h3{margin:0;font-size:12px}.flow-head span{font-size:10px;color:var(--sub)}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(120,140,160,.1);font-size:12px}.row:last-child{border-bottom:0}.sector{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.amount{font-weight:680;white-space:nowrap}.empty{color:var(--sub);font-size:12px;padding:9px 0}
+@media(max-width:390px){body{padding:10px}.dashboard{padding:16px;border-radius:29px}.brand{font-size:24px}.index{padding:12px}.value{font-size:22px}.metric-value{font-size:20px}.flow-grid{gap:7px}.flow-col{padding:10px}.money{padding:14px}}
 @media(prefers-reduced-motion:reduce){.refresh.spinning{animation:none}}
 </style>
 </head>
@@ -31,26 +33,25 @@
 <article class="index"><div class="name">创业板指</div><div class="value" id="cyb">--</div><div class="change" id="cybChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,22 25,19 50,15 75,17 100,10 125,13 160,8" stroke="#15966d"/></svg></article>
 <article class="index"><div class="name">科创50</div><div class="value" id="kc50">--</div><div class="change" id="kc50Change">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,15 25,18 50,16 75,12 100,14 125,9 160,11" stroke="#15966d"/></svg></article>
 </section>
-<section class="fund" aria-label="资金小方向">
-<div class="fund-title"><strong>今日资金小方向</strong><span id="fundTime">资金流入哪些板块</span></div>
-<div class="columns"><div class="column"><h3 class="up">净流入 TOP5</h3><div id="inflow"><div class="empty">等待真实数据</div></div></div><div class="column"><h3 class="down">净流出 TOP5</h3><div id="outflow"><div class="empty">等待真实数据</div></div></div></div>
-</section>
-<section class="big-money" aria-label="大资金">
-<div class="section-head"><strong>大资金</strong><span>按资金规模观察市场</span></div>
-<div class="money-grid">
-<article class="money-card"><div class="money-label"><span class="money-icon" aria-hidden="true">👥</span><span>散户资金 <small>中+小单</small></span></div><div class="money-value in" id="retailMoney">--<span class="money-unit">亿</span></div></article>
-<article class="money-card"><div class="money-label"><span class="money-icon" aria-hidden="true">🏦</span><span>机构资金 <small>超大单</small></span></div><div class="money-value out" id="institutionMoney">--<span class="money-unit">亿</span></div></article>
-<article class="money-card"><div class="money-label"><span class="money-icon" aria-hidden="true">🎩</span><span>游资/大户 <small>大单</small></span></div><div class="money-value out" id="hotMoney">--<span class="money-unit">亿</span></div></article>
-<article class="money-card"><div class="money-label"><span class="money-icon" aria-hidden="true">📊</span><span>全市场成交 <small>总额</small></span></div><div class="money-value neutral" id="turnover">--<span class="money-unit">亿</span></div></article>
+<section class="money" aria-label="资金全景">
+<div class="money-head"><div><div class="money-title">资金全景</div><div class="money-desc">大资金决定方向 · 板块资金决定去向</div></div><div class="money-time" id="fundTime">等待数据</div></div>
+<div class="big-grid">
+<div class="metric"><div class="metric-label">👥 <b>散户资金</b> 中+小单</div><div class="metric-value up" id="retail">--<span class="metric-unit">亿</span></div><div class="metric-note">中单 + 小单</div></div>
+<div class="metric"><div class="metric-label">🏦 <b>机构资金</b> 超大单</div><div class="metric-value down" id="institution">--<span class="metric-unit">亿</span></div><div class="metric-note">超大单</div></div>
+<div class="metric"><div class="metric-label">🎩 <b>游资/大户</b> 大单</div><div class="metric-value down" id="large">--<span class="metric-unit">亿</span></div><div class="metric-note">大单</div></div>
+<div class="metric"><div class="metric-label">📊 <b>全市场成交</b> 总额</div><div class="metric-value" id="turnover">--<span class="metric-unit">亿</span></div><div class="metric-note">沪深市场</div></div>
+</div>
+<div class="flow-title"><strong>钱往哪里走</strong><span>板块净流入 / 净流出 TOP5</span></div>
+<div class="flow-grid">
+<div class="flow-col"><div class="flow-head"><h3 class="up">↗ 净流入 TOP5</h3><span>实时</span></div><div id="inflow"><div class="empty">等待真实数据</div></div></div>
+<div class="flow-col"><div class="flow-head"><h3 class="down">↘ 净流出 TOP5</h3><span>实时</span></div><div id="outflow"><div class="empty">等待真实数据</div></div></div>
 </div>
 </section>
 </main>
 <script>
-const $=id=>document.getElementById(id);
-const refresh=$('refresh');
-function updateTime(){const now=new Date();$('status').textContent=`更新 ${now.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · 点击刷新`;}
-refresh.addEventListener('click',()=>{refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');updateTime();});
-updateTime();
+const $=id=>document.getElementById(id);const refresh=$('refresh');
+function updateTime(){const now=new Date();$('status').textContent=`更新 ${now.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · 点击刷新`;$('fundTime').textContent='等待真实资金接口'}
+refresh.addEventListener('click',()=>{refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');updateTime()});updateTime();
 </script>
 </body>
 </html>
