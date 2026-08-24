@@ -24,34 +24,59 @@
 <body>
 <main class="dashboard">
 <header class="header">
-<div><div class="brand">Fund AI Pro</div><div class="subtitle">智能决策台</div><div class="status" id="status">准备更新 · 数据源待连接</div></div>
+<div><div class="brand">Fund AI Pro</div><div class="subtitle">智能决策台</div><div class="status" id="status">正在连接实时行情…</div></div>
 <button class="refresh" id="refresh" type="button">刷新 ↻</button>
 </header>
 <section class="grid" aria-label="四大指数">
-<article class="index"><div class="name">上证指数</div><div class="value" id="sse">--</div><div class="change" id="sseChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,20 25,17 50,19 75,13 100,15 125,9 160,12" stroke="#15966d"/></svg></article>
-<article class="index"><div class="name">深证成指</div><div class="value" id="sz">--</div><div class="change" id="szChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,12 25,14 50,11 75,18 100,15 125,20 160,17" stroke="#15966d"/></svg></article>
-<article class="index"><div class="name">创业板指</div><div class="value" id="cyb">--</div><div class="change" id="cybChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,22 25,19 50,15 75,17 100,10 125,13 160,8" stroke="#15966d"/></svg></article>
-<article class="index"><div class="name">科创50</div><div class="value" id="kc50">--</div><div class="change" id="kc50Change">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline points="0,15 25,18 50,16 75,12 100,14 125,9 160,11" stroke="#15966d"/></svg></article>
+<article class="index"><div class="name">上证指数</div><div class="value" id="sse">--</div><div class="change" id="sseChange">正在获取</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="sseSpark" points="0,20 25,17 50,19 75,13 100,15 125,9 160,12"/></svg></article>
+<article class="index"><div class="name">深证成指</div><div class="value" id="sz">--</div><div class="change" id="szChange">正在获取</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="szSpark" points="0,12 25,14 50,11 75,18 100,15 125,20 160,17"/></svg></article>
+<article class="index"><div class="name">创业板指</div><div class="value" id="cyb">--</div><div class="change" id="cybChange">正在获取</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="cybSpark" points="0,22 25,19 50,15 75,17 100,10 125,13 160,8"/></svg></article>
+<article class="index"><div class="name">科创50</div><div class="value" id="kc50">--</div><div class="change" id="kc50Change">正在获取</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="kc50Spark" points="0,15 25,18 50,16 75,12 100,14 125,9 160,11"/></svg></article>
 </section>
 <section class="money" aria-label="资金全景">
-<div class="money-head"><div><div class="money-title">资金全景</div><div class="money-desc">大资金决定方向 · 板块资金决定去向</div></div><div class="money-time" id="fundTime">等待数据</div></div>
+<div class="money-head"><div><div class="money-title">资金全景</div><div class="money-desc">大资金决定方向 · 板块资金决定去向</div></div><div class="money-time" id="fundTime">正在获取</div></div>
 <div class="metrics">
-<div class="metric"><div class="metric-label">👥 <b>散户资金</b> 中+小单</div><div class="metric-value up" id="retail">--<span class="metric-unit">亿</span></div><div class="metric-note">中单 + 小单</div></div>
-<div class="metric"><div class="metric-label">🏦 <b>机构资金</b> 超大单</div><div class="metric-value down" id="institution">--<span class="metric-unit">亿</span></div><div class="metric-note">超大单</div></div>
-<div class="metric"><div class="metric-label">🎩 <b>游资/大户</b> 大单</div><div class="metric-value down" id="large">--<span class="metric-unit">亿</span></div><div class="metric-note">大单</div></div>
+<div class="metric"><div class="metric-label">👥 <b>散户资金</b> 中+小单</div><div class="metric-value" id="retail">--<span class="metric-unit">亿</span></div><div class="metric-note">中单 + 小单</div></div>
+<div class="metric"><div class="metric-label">🏦 <b>机构/主力</b> 超大单</div><div class="metric-value" id="institution">--<span class="metric-unit">亿</span></div><div class="metric-note">超大单</div></div>
+<div class="metric"><div class="metric-label">🎩 <b>游资/大户</b> 大单</div><div class="metric-value" id="large">--<span class="metric-unit">亿</span></div><div class="metric-note">大单</div></div>
 <div class="metric"><div class="metric-label">📊 <b>全市场成交</b> 总额</div><div class="metric-value" id="turnover">--<span class="metric-unit">亿</span></div><div class="metric-note">沪深市场</div></div>
 </div>
-<div class="flow-title"><strong>钱往哪里走</strong><span>板块净流入 / 净流出 TOP5</span></div>
+<div class="flow-title"><strong>钱往哪里走</strong><span>行业板块净流入 / 净流出 TOP5</span></div>
 <div class="flow-grid">
-<div class="flow-col"><div class="flow-head"><h3 class="up">↗ 净流入 TOP5</h3><span>实时</span></div><div id="inflow"><div class="empty">等待真实数据</div></div></div>
-<div class="flow-col"><div class="flow-head"><h3 class="down">↘ 净流出 TOP5</h3><span>实时</span></div><div id="outflow"><div class="empty">等待真实数据</div></div></div>
+<div class="flow-col"><div class="flow-head"><h3 class="up">↗ 净流入 TOP5</h3><span>实时</span></div><div id="inflow"><div class="empty">正在获取真实数据</div></div></div>
+<div class="flow-col"><div class="flow-head"><h3 class="down">↘ 净流出 TOP5</h3><span>实时</span></div><div id="outflow"><div class="empty">正在获取真实数据</div></div></div>
 </div>
 </section>
 </main>
 <script>
-const $=id=>document.getElementById(id);const refresh=$('refresh');
-function updateTime(){const now=new Date();$('status').textContent=`更新 ${now.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · 点击刷新`;$('fundTime').textContent='等待真实资金接口'}
-refresh.addEventListener('click',()=>{refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');updateTime()});updateTime();
+const $=id=>document.getElementById(id);
+const refresh=$('refresh');
+const history={sse:[],sz:[],cyb:[],kc50:[]};
+const indexIds=['sse','sz','cyb','kc50'];
+const moneyIds={retail:'retail',institution:'institution',large:'large',turnover:'turnover'};
+let loading=false;
+function fmt(n,d=2){return Number.isFinite(n)?n.toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d}):'--'}
+function fmtMoney(n){return Number.isFinite(n)?`${n>=0?'+':''}${n.toFixed(2)}`:'--'}
+function setValue(id,value,pct){const el=$(id),change=$(id+'Change');el.textContent=fmt(value);change.textContent=Number.isFinite(pct)?`${pct>=0?'+':''}${pct.toFixed(2)}%`:'--';change.className=`change ${pct>=0?'up':'down'}`}
+function drawSpark(id,values,pct){if(values.length<2)return;const min=Math.min(...values),max=Math.max(...values),range=max-min||1;const points=values.map((v,i)=>`${(i/(values.length-1))*160},${27-((v-min)/range)*23}`).join(' ');const p=$(id+'Spark');p.setAttribute('points',points);p.setAttribute('stroke',pct>=0?'#d94a4f':'#15966d')}
+function renderFlows(id,rows,positive){const box=$(id);if(!rows?.length){box.innerHTML='<div class="empty">暂无可用数据</div>';return}box.innerHTML=rows.map((r,i)=>`<div class="row"><span class="sector">${i+1}. ${escapeHtml(r.name)}</span><span class="amount ${positive?'up':'down'}">${r.net>=0?'+':''}${r.net.toFixed(2)}亿</span></div>`).join('')}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function loadMarket(){
+ if(loading)return;loading=true;refresh.disabled=true;refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');
+ try{
+  const r=await fetch(`/api/market?_=${Date.now()}`,{cache:'no-store'});const d=await r.json();
+  if(!d?.indexes?.length)throw new Error('实时行情暂不可用');
+  d.indexes.forEach(x=>{setValue(x.id,x.price,x.pct);history[x.id].push(x.price);if(history[x.id].length>24)history[x.id].shift();drawSpark(x.id,history[x.id],x.pct)});
+  if(d.market){const retail=d.market.medium+d.market.small;const setMoney=(id,n)=>{const el=$(id);el.textContent=fmtMoney(n);el.className=`metric-value ${n>=0?'up':'down'}`;el.innerHTML=`${fmtMoney(n)}<span class="metric-unit">亿</span>`};setMoney(moneyIds.retail,retail);setMoney(moneyIds.institution,d.market.superLarge);setMoney(moneyIds.large,d.market.large);const t=$(moneyIds.turnover);t.className='metric-value';t.innerHTML=`${fmt(d.market.turnover)}<span class="metric-unit">亿</span>`}
+  renderFlows('inflow',d.sectors?.inflow,true);renderFlows('outflow',d.sectors?.outflow,false);
+  const valid=d.validation?.validatedCount||0;const source=valid===4?'东财 × 腾讯校验':'东财实时';$('status').textContent=`更新 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${source}`;$('fundTime').textContent=`实时 · ${d.latencyMs||0}ms`;
+ }catch(e){$('status').textContent='实时数据连接失败 · 请点击刷新';$('fundTime').textContent='数据暂不可用'}
+ finally{loading=false;refresh.disabled=false}
+}
+refresh.addEventListener('click',loadMarket);
+loadMarket();
+setInterval(()=>{if(!document.hidden)loadMarket()},10000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadMarket()});
 </script>
 </body>
 </html>
