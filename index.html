@@ -1,1 +1,46 @@
-<!DOCTYPE html><html lang='zh-CN'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><title>Fund AI Pro</title><style>:root{--bg:#e9f2fb;--glass:rgba(255,255,255,.16);--line:rgba(255,255,255,.38);--text:#fff}*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#2f7bdc,#9dc7ff);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC";padding:20px;color:var(--text)}.card{border-radius:34px;padding:22px;background:linear-gradient(145deg,rgba(255,255,255,.22),rgba(180,220,255,.08));border:1px solid var(--line);box-shadow:0 12px 40px rgba(30,80,160,.25),inset 0 1px 0 rgba(255,255,255,.45),inset 0 0 0 1px rgba(120,200,255,.18)}.head{display:flex;justify-content:space-between;align-items:flex-start}.pill{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);cursor:pointer}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.box{border-radius:24px;padding:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}.num{font-size:30px;font-weight:700;color:#79ffae}.fund{margin-top:12px}.row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}.red{color:#ff8d8d}.green{color:#79ffae}</style></head><body><div class='card'><div class='head'><div><h1>📊 Fund AI Pro</h1><div>智能决策台</div><div id='time'>更新中...</div></div><div class='pill' id='refresh'>刷新</div></div><div class='grid'><div class='box'><div>上证指数</div><div class='num' id='sse'>--</div></div><div class='box'><div>深证成指</div><div class='num' id='sz'>--</div></div><div class='box'><div>创业板</div><div class='num' id='cyb'>--</div></div><div class='box'><div>科创50</div><div class='num' id='kc50'>--</div></div></div><div class='box fund'><h3>💰 今日资金方向</h3><div id='fundList'>点击刷新获取真实资金流向</div></div></div><script>const ids=['sse','sz','cyb','kc50'];document.getElementById('refresh').onclick=()=>{document.getElementById('refresh').style.transform='rotate(360deg)';document.getElementById('time').innerText='更新 '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});ids.forEach(id=>document.getElementById(id).innerText='实时');document.getElementById('fundList').innerHTML='<div class="row"><span>实时资金榜</span><span class="red">加载中...</span></div>';setTimeout(()=>document.getElementById('refresh').style.transform='rotate(0deg)',300)};</script></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f7f9">
+<title>Fund AI Pro</title>
+<style>
+:root{--bg:#f6f7f9;--text:#111827;--sub:#737b87;--glass:rgba(255,255,255,.78);--line:rgba(150,190,225,.28);--red:#e5484d;--green:#15966d}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{padding:18px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+.dashboard{position:relative;overflow:hidden;max-width:760px;margin:0 auto;padding:22px;border:1px solid rgba(255,255,255,.9);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(247,250,253,.72));box-shadow:0 18px 45px rgba(50,75,100,.09),inset 0 1px 0 rgba(255,255,255,.95)}
+.dashboard:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(128,199,255,.18),transparent 25%,transparent 72%,rgba(255,255,255,.8));}
+.header,.grid,.fund{position:relative;z-index:1}.header{display:flex;justify-content:space-between;align-items:flex-start}.brand{font-size:27px;font-weight:750;letter-spacing:-.7px}.subtitle{margin-top:3px;font-size:14px;color:var(--sub)}.status{margin-top:8px;font-size:12px;color:var(--sub)}
+.refresh{border:1px solid rgba(130,180,220,.28);border-radius:999px;padding:9px 14px;background:rgba(255,255,255,.68);color:#34404c;font-size:13px;font-weight:600;box-shadow:0 5px 15px rgba(70,100,130,.07);-webkit-tap-highlight-color:transparent}.refresh:active{transform:scale(.96)}.refresh.spinning{animation:spin .38s ease}@keyframes spin{to{transform:rotate(360deg)}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.index{min-width:0;padding:15px;border-radius:23px;background:rgba(255,255,255,.64);border:1px solid rgba(150,190,225,.22);box-shadow:inset 0 1px rgba(255,255,255,.8)}.name{font-size:13px;color:var(--sub)}.value{margin-top:5px;font-size:25px;font-weight:720;letter-spacing:-.5px}.change{margin-top:2px;font-size:13px;font-weight:650}.up{color:var(--red)}.down{color:var(--green)}.spark{display:block;width:100%;height:30px;margin-top:8px}.spark polyline{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fund{margin-top:13px;padding:17px;border-radius:25px;background:rgba(255,255,255,.66);border:1px solid rgba(150,190,225,.22);box-shadow:inset 0 1px rgba(255,255,255,.85)}.fund-title{display:flex;justify-content:space-between;align-items:center}.fund-title strong{font-size:16px}.fund-title span{font-size:12px;color:var(--sub)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.column{padding:12px;border-radius:18px;background:rgba(246,248,250,.72)}.column h3{margin:0 0 7px;font-size:13px}.row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid rgba(120,140,160,.1);font-size:13px}.row:last-child{border-bottom:0}.amount{font-weight:650;white-space:nowrap}.empty{color:var(--sub);font-size:13px;padding:8px 0}
+@media(max-width:390px){body{padding:12px}.dashboard{padding:17px;border-radius:30px}.brand{font-size:24px}.index{padding:13px}.value{font-size:22px}.columns{gap:8px}}
+@media(prefers-reduced-motion:reduce){.refresh.spinning{animation:none}}
+</style>
+</head>
+<body>
+<main class="dashboard">
+<header class="header">
+<div><div class="brand">Fund AI Pro</div><div class="subtitle">智能决策台</div><div class="status" id="status">准备更新 · 数据源待连接</div></div>
+<button class="refresh" id="refresh" type="button">刷新 ↻</button>
+</header>
+<section class="grid" aria-label="四大指数">
+<article class="index"><div class="name">上证指数</div><div class="value" id="sse">--</div><div class="change" id="sseChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="sseSpark" points="0,20 25,17 50,19 75,13 100,15 125,9 160,12" stroke="#15966d"/></svg></article>
+<article class="index"><div class="name">深证成指</div><div class="value" id="sz">--</div><div class="change" id="szChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="szSpark" points="0,12 25,14 50,11 75,18 100,15 125,20 160,17" stroke="#15966d"/></svg></article>
+<article class="index"><div class="name">创业板指</div><div class="value" id="cyb">--</div><div class="change" id="cybChange">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="cybSpark" points="0,22 25,19 50,15 75,17 100,10 125,13 160,8" stroke="#15966d"/></svg></article>
+<article class="index"><div class="name">科创50</div><div class="value" id="kc50">--</div><div class="change" id="kc50Change">等待数据</div><svg class="spark" viewBox="0 0 160 30" preserveAspectRatio="none"><polyline id="kc50Spark" points="0,15 25,18 50,16 75,12 100,14 125,9 160,11" stroke="#15966d"/></svg></article>
+</section>
+<section class="fund">
+<div class="fund-title"><strong>今日资金方向</strong><span id="fundTime">点击刷新获取实时数据</span></div>
+<div class="columns"><div class="column"><h3 class="up">净流入 TOP5</h3><div id="inflow"><div class="empty">等待真实数据</div></div></div><div class="column"><h3 class="down">净流出 TOP5</h3><div id="outflow"><div class="empty">等待真实数据</div></div></div></div>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const refresh=$('refresh');
+function updateTime(){const now=new Date();$('status').textContent=`更新 ${now.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · 点击刷新`;$('fundTime').textContent='等待真实资金接口';}
+refresh.addEventListener('click',()=>{refresh.classList.remove('spinning');void refresh.offsetWidth;refresh.classList.add('spinning');updateTime();});
+updateTime();
+</script>
+</body>
+</html>
