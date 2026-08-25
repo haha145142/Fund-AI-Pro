@@ -1912,7 +1912,12 @@ function getFundSectorData(fundName){
 }
 
 /* ===== 基金涨跌原因分析（5维度） ===== */
+const FUND_AI_CACHE = new Map();
+
 function analyzeFundReason(fundName, fundPct){
+  const cacheKey = `${fundName}|${fundPct??0}`;
+  if(FUND_AI_CACHE.has(cacheKey)) return FUND_AI_CACHE.get(cacheKey);
+
   const sector=getFundSectorData(fundName);
   const sectorName=getFundSector(fundName);
   const pct=fundPct??0;
@@ -2006,15 +2011,67 @@ function analyzeFundReason(fundName, fundPct){
     driveDesc='当前缺乏明显的板块、资金或消息驱动信号';
   }
 
-  return {
+  // ===== AI综合评分 =====
+  let aiScore=50;
+  if(sectorFactor.has){
+    const ch=sector?.change||0;
+    if(ch>=1) aiScore+=12;
+    else if(ch>0) aiScore+=6;
+    else if(ch<=-1) aiScore-=12;
+  }
+  if(flowFactor.has){
+    const fl=sector?.flow||0;
+    if(fl>50000000) aiScore+=12;
+    else if(fl>0) aiScore+=6;
+    else if(fl<-50000000) aiScore-=12;
+  }
+  if(newsFactor.has) aiScore += newsFactor.count>=2 ? 8 : 4;
+  if(globalFactor.has) aiScore += 5;
+  aiScore=Math.max(0,Math.min(100,Math.round(aiScore)));
+
+  const riskLevel=aiScore>=75?'低风险偏强':(aiScore>=55?'中性观察':'风险偏高');
+  const action=aiScore>=75?'继续持有，观察趋势延续':(aiScore>=55?'保持仓位，等待确认':'注意回撤，控制仓位');
+  const confidence=(sectorFactor.has&&flowFactor.has)?'较高':'一般';
+
+  // V5.1 波段高低位判断
+  const absPct=Math.abs(pct);
+  const highLow =
+    aiScore>=80 && absPct>=1.5 ? '高位关注' :
+    aiScore<=45 ? '低位观察' :
+    '中低位震荡';
+
+  const positionZone =
+    aiScore>=80 && absPct>=1.5 ? '🔴 高风险区域' :
+    aiScore<=45 ? '🟢 低位观察区域' :
+    '🟡 中性区域';
+
+  const positionAdvice =
+    aiScore>=80 ? '已有上涨，避免追高，可分批持有' :
+    aiScore>=60 ? '趋势尚可，建议正常仓位' :
+    aiScore>=45 ? '等待信号确认，控制仓位' :
+    '弱势阶段，建议降低仓位';
+
+  const result = {
     sectorName,
     sectorFactor,
     flowFactor,
     newsFactor,
     globalFactor,
     driveType,
-    driveDesc
+    driveDesc,
+    aiScore,
+    riskLevel,
+    action,
+    confidence,
+    highLow,
+    positionZone,
+    positionAdvice
   };
+
+  FUND_AI_CACHE.set(cacheKey,result);
+  if(FUND_AI_CACHE.size>300) FUND_AI_CACHE.clear();
+
+  return result;
 }
 
 /* ===== 板块 SVG 图标（锤子风格·粗线条圆润） ===== */
@@ -4857,10 +4914,18 @@ function renderPortfolio(){
           <div class="fc-reason-body" id="reasonBody_${i}" style="display:none">
             <div class="fc-reason-ai">
               <div class="fc-reason-drive">
-                <span class="drive-label">AI判断</span>
+                <span class="drive-label">AI评分 ${safe(analyzeFundReason(d.name||p.name||'', d.pct).aiScore)}分</span>
                 <span class="drive-type">${safe(analyzeFundReason(d.name||p.name||'', d.pct).driveType)}</span>
               </div>
-              <div class="fc-reason-desc">${safe(analyzeFundReason(d.name||p.name||'', d.pct).driveDesc)}</div>
+              <div class="fc-reason-desc">
+                风险：${safe(analyzeFundReason(d.name||p.name||'', d.pct).riskLevel)}
+                <br>
+                建议：${safe(analyzeFundReason(d.name||p.name||'', d.pct).action)}
+                <br>
+                置信度：${safe(analyzeFundReason(d.name||p.name||'', d.pct).confidence)}
+                <br>
+                依据：${safe(analyzeFundReason(d.name||p.name||'', d.pct).driveDesc)}
+              </div>
             </div>
             <div class="fc-reason-grid">
               <div class="fc-reason-item">
