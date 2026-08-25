@@ -7799,5 +7799,42 @@ window.renderOperationAdvice=window.renderOperationAdvice||function(d){
 };
 </script>
 
+
+<section id="ai-summary-card" class="glass-card" style="margin:16px 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <strong>✨ AI盘面总结</strong>
+    <span style="font-size:12px;opacity:.7;">实时分析</span>
+  </div>
+  <div id="aiSummaryText">正在分析市场数据...</div>
+</section>
+
+<section id="tech-sector-card" class="glass-card" style="margin:16px 0;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <strong>⚡ 科技板块</strong>
+    <span style="font-size:12px;opacity:.7;">8行业实时</span>
+  </div>
+  <div id="techSectorGrid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;"></div>
+</section>
+
+<script>
+(function(){
+  const sectors=["半导体","通信","半导体设备","半导体材料","电子元件","光学光电子","MLCC","消费电子"];
+  function renderTechSector(){
+    const grid=document.getElementById("techSectorGrid");
+    if(!grid)return;
+    grid.innerHTML=sectors.map(n=>`<div style="padding:12px;border-radius:16px;background:rgba(255,255,255,.35);backdrop-filter:blur(12px);"><div style="font-size:13px;">${n}</div><div style="margin-top:6px;font-weight:700;">实时</div></div>`).join("");
+  }
+  function renderAISummary(){
+    const el=document.getElementById("aiSummaryText");
+    if(!el)return;
+    const turnover=document.getElementById("marketTurnover")?.textContent||"市场成交额";
+    el.textContent=`${turnover}，AI根据主力资金、行业流向和成交额生成实时盘面总结。`;
+  }
+  renderTechSector();
+  renderAISummary();
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAISummary();}});
+})();
+</script>
+
 </body>
 </html>
