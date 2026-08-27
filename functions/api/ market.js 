@@ -1,0 +1,5 @@
+export function onRequest() {
+  return new Response(JSON.stringify({ok:true, source:"market", data:[]}), {
+    headers: {"content-type":"application/json;charset=utf-8"}
+  });
+}
