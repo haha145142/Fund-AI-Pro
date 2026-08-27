@@ -1,74 +1,94 @@
 // Cloudflare Pages Function · /api/ai/analyze
-// AI 结论「交叉验证」：DeepSeek（主）→ 规则引擎（备，永远可用）
-// 策略：有 Key 先调 DeepSeek；任一异常 → 自动降级规则版结构化结论
-//       返回 { code, source:'deepseek'|'rule', data, fallback? }
-// Key 存服务端环境变量，浏览器无需填写（"其余交给 DeepSeek"）
+// GET  → 返回规则版今日判断（保证前端不卡空）
+// POST → 优先 DeepSeek，失败降级规则版
 
-import { fetchWithTimeout, UA, jsonResp } from '../_lib.js';
+export async function onRequest(context) {
+  const { request, env } = context;
+  const cors = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json;charset=utf-8',
+  };
 
-const SYSTEM = '你是专业基金投资助手。基于结构化市场快照给出审慎、非投资建议的判断，输出严格 JSON：{summary,risks:[],tips:[],keyQuote}。';
-
-function buildPrompt(type, snapshot) {
-  return `请基于以下市场快照给出今日判断（JSON：{summary,risks,tips,keyQuote}）：\n类型=${type}\n快照=${JSON.stringify(snapshot || {})}`;
-}
-
-function ruleSummary(s = {}) {
-  const m = s.marketState?.label || '震荡';
-  return `今日市场${m}，${s.action?.title || '建议持有为主'}：${s.action?.desc || ''}（规则版结论，未调用大模型）`;
-}
-
-// 主：DeepSeek
-async function callDeepSeek(apiKey, type, snapshot) {
-  const upstream = await fetchWithTimeout(
-    'https://api.deepseek.com/v1/chat/completions',
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'system', content: SYSTEM },
-          { role: 'user', content: buildPrompt(type, snapshot) },
-        ],
-        response_format: { type: 'json_object' },
-      }),
-    },
-    30_000
-  );
-  if (!upstream.ok) throw new Error('DeepSeek HTTP ' + upstream.status);
-  const j = await upstream.json();
-  const text = j?.choices?.[0]?.message?.content || '';
-  let data; try { data = JSON.parse(text); } catch (e) { data = { summary: text }; }
-  return data;
-}
-
-export async function onRequestPost({ request, env }) {
-  let body = {};
-  try { body = await request.json(); } catch (e) { /* allow empty */ }
-  const { type = 'daily', snapshot = {} } = body;
-  const apiKey = env?.DEEPSEEK_API_KEY;
-
-  // 无 Key → 直接规则版（不报错，离线可用）
-  if (!apiKey) {
-    return jsonResp({ code: 0, source: 'rule', fallback: true, data: { summary: ruleSummary(snapshot) } });
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers: cors });
   }
 
+  // 尝试获取市场快照，拿不到也不影响降级
+  let market = null;
   try {
-    const data = await callDeepSeek(apiKey, type, snapshot);
-    return jsonResp({ code: 0, source: 'deepseek', data });
-  } catch (e) {
-    // DeepSeek 失败 → 自动降级规则版（交叉容灾）
-    return jsonResp({
-      code: 0,
-      source: 'rule',
-      fallback: true,
-      reason: e?.message || String(e),
-      data: { summary: ruleSummary(snapshot) },
-    });
-  }
-}
+    const r = await fetch(new URL('/api/market', request.url), { headers: { 'User-Agent': 'Fund-AI-Pro' } });
+    if (r.ok) { const j = await r.json(); market = j.indexes || []; }
+  } catch (e) {}
 
-// GET：前端探测服务端是否配了 Key
-export async function onRequestGet({ env }) {
-  return jsonResp({ code: 0, configured: Boolean(env?.DEEPSEEK_API_KEY) });
+  // ===== 规则版生成（同步，永不卡） =====
+  function ruleVersion() {
+    const upCount = (market || []).filter(i => (i.changePercent || 0) > 0).length;
+    const downCount = (market || []).filter(i => (i.changePercent || 0) < 0).length;
+    const avg = market && market.length
+      ? market.reduce((s, i) => s + (i.changePercent || 0), 0) / market.length
+      : 0;
+    const sentiment = avg > 0.5 ? '偏多' : avg < -0.5 ? '偏空' : '震荡';
+    const direction = avg > 0 ? '上涨' : '下跌';
+
+    return {
+      summary: `今日大盘整体${direction}，${sentiment}。上涨 ${upCount} 个 / 下跌 ${downCount} 个指数。`,
+      advice: avg > 0.5
+        ? '可关注强势板块，但避免追高；仓位中等，设好止盈。'
+        : avg < -0.5
+        ? '控制仓位为主，等待企稳信号；勿盲目抄底。'
+        : '市场震荡，适合观望或小仓位高抛低吸。',
+      risk: avg > 1 ? '中高' : avg < -1 ? '中高' : '中等',
+      data: { upCount, downCount, avg: +avg.toFixed(2), sentiment },
+    };
+  }
+
+  // ===== POST：调 DeepSeek =====
+  if (request.method === 'POST') {
+    let body = {};
+    try { body = await request.json(); } catch (e) {}
+
+    const apiKey = env.DEEPSEEK_API_KEY || body.apiKey;
+    const userMsg = (body.messages || []).find(m => m.role === 'user')?.content
+      || body.prompt
+      || '请基于当前市场数据，给出今日 A 股基金投资建议。';
+
+    if (apiKey) {
+      try {
+        const resp = await fetch('https://api.deepseek.com/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+          body: JSON.stringify({
+            model: body.model || 'deepseek-chat',
+            messages: [
+              { role: 'system', content: '你是 Fund AI Pro 基金投资助手，输出简洁专业的今日市场判断与仓位建议，中文。' },
+              { role: 'user', content: userMsg },
+            ],
+            temperature: 0.5,
+            max_tokens: 600,
+          }),
+        });
+        if (resp.ok) {
+          const j = await resp.json();
+          const text = j.choices?.[0]?.message?.content || '';
+          const rule = ruleVersion();
+          return new Response(JSON.stringify({
+            code: 0,
+            source: 'deepseek',
+            summary: text.split('\n')[0] || rule.summary,
+            advice: text || rule.advice,
+            risk: rule.risk,
+            data: rule.data,
+          }), { headers: cors });
+        }
+      } catch (e) {}
+    }
+
+    // 无 Key 或调用失败 → 规则降级
+    const rule = ruleVersion();
+    return new Response(JSON.stringify({ code: 0, source: 'rule', ...rule }), { headers: cors });
+  }
+
+  // ===== GET：直接返回规则版 =====
+  const rule = ruleVersion();
+  return new Response(JSON.stringify({ code: 0, source: 'rule', ...rule }), { headers: cors });
 }
