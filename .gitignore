@@ -1,0 +1,11 @@
+test-*.js
+verify*.py
+analyze.py
+pack*.py
+SPECFICATION.md
+TEST_REPORT.md
+ai-decision-engine.js
+ai-decision-render.js
+*.zip
+__pycache__/
+node_modules/
